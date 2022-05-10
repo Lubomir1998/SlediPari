@@ -1,0 +1,92 @@
+[
+  {
+    "clothes": 0.0,
+    "workout": 1.2,
+    "remont": 0.0,
+    "food": {
+      "home": 3.0,
+      "restaurant": 0.0
+    },
+    "smetki": {
+      "tok": 0.0,
+      "voda": 0.0,
+      "toplo": 0.0,
+      "internet": 0.0,
+      "vhod": 0.0,
+      "telefon": 0.0
+    },
+    "transport": {
+      "public": 0.0,
+      "taxi": 0.0,
+      "car": 0.0
+    },
+    "posuda": 0.0,
+    "travel": 0.0,
+    "gifts": 20.0,
+    "snacks": 0.0,
+    "medicine": 0.0,
+    "cosmetics": {
+      "higien": 0.0,
+      "other": 0.0
+    },
+    "domPotrebi": 0.0,
+    "preparati": {
+      "clean": 0.0,
+      "wash": 0.0
+    },
+    "machove": 0.0,
+    "furniture": 0.0,
+    "tehnika": 0.0,
+    "education": 0.0,
+    "entertainment": 0.0,
+    "subscriptions": 0.0,
+    "tattoo": 0.0,
+    "toys": 0.0,
+    "id": "2022-1-8"
+  },
+  {
+    "clothes": 20.4,
+    "workout": 1.2,
+    "remont": 0.0,
+    "food": {
+      "home": 3.0,
+      "restaurant": 40.0
+    },
+    "smetki": {
+      "tok": 0.0,
+      "voda": 0.0,
+      "toplo": 0.0,
+      "internet": 0.0,
+      "vhod": 0.0,
+      "telefon": 0.0
+    },
+    "transport": {
+      "public": 0.0,
+      "taxi": 0.0,
+      "car": 0.0
+    },
+    "posuda": 0.0,
+    "travel": 0.0,
+    "gifts": 0.0,
+    "snacks": 0.0,
+    "medicine": 0.0,
+    "cosmetics": {
+      "higien": 0.0,
+      "other": 0.0
+    },
+    "domPotrebi": 0.0,
+    "preparati": {
+      "clean": 0.0,
+      "wash": 0.0
+    },
+    "machove": 0.0,
+    "furniture": 0.0,
+    "tehnika": 0.0,
+    "education": 0.0,
+    "entertainment": 0.0,
+    "subscriptions": 0.0,
+    "tattoo": 0.0,
+    "toys": 0.0,
+    "id": "2022-1-7"
+  }
+]

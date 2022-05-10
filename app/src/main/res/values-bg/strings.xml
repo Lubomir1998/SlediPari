@@ -1,0 +1,76 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <string name="something_went_wrong">Нещо се обърка</string>
+    <string name="spendings">Разходи</string>
+    <string name="loading">Зареждане</string>
+    <string name="error">Грешка</string>
+    <string name="month">месец</string>
+    <string name="all">Всички</string>
+    <string name="total">Общо</string>
+
+    <string name="clothes">Дрехи</string>
+    <string name="workout">Тренировки</string>
+    <string name="food">Храна</string>
+    <string name="health">Лекарства</string>
+    <string name="gifts">Подаръци</string>
+    <string name="snacks">Сладки</string>
+    <string name="travel">Пътувания</string>
+    <string name="machove">Мачове</string>
+    <string name="cosmetics">Козметика</string>
+    <string name="furniture">Обзавеждане</string>
+    <string name="transport">Транспорт</string>
+    <string name="smetki">Сметки</string>
+    <string name="preparati">Препарати</string>
+    <string name="education">Образование</string>
+    <string name="toys">Играчки</string>
+    <string name="entertainment">Забавление</string>
+    <string name="tok">Ток</string>
+    <string name="taxi">Такси</string>
+    <string name="car">Кола</string>
+    <string name="internet">Интернет</string>
+    <string name="tattoo">Татуировка</string>
+    <string name="home">Домашна</string>
+    <string name="restaurant">Ресторант</string>
+    <string name="clean">Почистване</string>
+    <string name="wash">Пране</string>
+    <string name="telefon">Телефон</string>
+    <string name="voda">Вода</string>
+    <string name="toplo">Топлофикация</string>
+    <string name="vhod">Входна такса</string>
+    <string name="publicT">Обществен транспорт</string>
+    <string name="higien">Хигиена</string>
+    <string name="other">Други</string>
+    <string name="tehnika">Техника</string>
+    <string name="posuda">Кухн. посуда</string>
+    <string name="remont">Ремонт</string>
+    <string name="domPot">Дом. потреби</string>
+    <string name="subscribtions">Абонаменти</string>
+
+    <string name="food_home">Храна - Вкъщи</string>
+    <string name="food_res">Храна - Ресторант</string>
+
+    <string name="smetki_tok">Сметки - Ток</string>
+    <string name="smetki_voda">Сметки - Вода</string>
+    <string name="smetki_toplo">Сметки - Парно</string>
+    <string name="smetki_internet">Сметки - Интернет</string>
+    <string name="smetki_telefon">Сметки - Телефон</string>
+    <string name="smetki_vhod">Сметки - Вход</string>
+
+    <string name="transport_public">Транспорт - Градски</string>
+    <string name="transport_car">Транспорт - Кола</string>
+    <string name="transport_taxi">Транспорт - Такси</string>
+
+    <string name="cosmetics_higien">Козметика - Хигиена</string>
+    <string name="cosmetics_other">Козметика - Други</string>
+
+    <string name="preparati_clean">Препарати - Чистене</string>
+    <string name="preparati_wash">Препарати - Пране</string>
+
+    <string name="sum">Сума</string>
+    <string name="add">Похарчи</string>
+
+    <string name="nothing_selected">Избери опция</string>
+    <string name="enter_price">Въведи валидна цена</string>
+
+    <string name="leva">лв</string>
+</resources>

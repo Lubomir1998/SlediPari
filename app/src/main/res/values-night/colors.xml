@@ -1,0 +1,11 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <color name="label">#FFFFFF</color>
+    <color name="system_gray">#8E8E93</color>
+    <color name="system_gray2">#636366</color>
+    <color name="system_gray3">#48484A</color>
+    <color name="system_gray4">#3A3A3C</color>
+    <color name="system_gray5">#2C2C2E</color>
+    <color name="system_gray6">#1C1C1E</color>
+    <color name="background">#000</color>
+</resources>
