@@ -5,7 +5,7 @@ import android.widget.Toast
 import androidx.compose.foundation.*
 import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.lazy.LazyRow
-import androidx.compose.foundation.lazy.items
+import androidx.compose.foundation.lazy.itemsIndexed
 import androidx.compose.foundation.shape.CircleShape
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.foundation.text.KeyboardOptions
@@ -45,6 +45,8 @@ fun MonthScreen(
     view: View
 ) {
 
+    val context = LocalContext.current
+
     val currentMonthId by remember {
         viewModel.monthId
     }
@@ -78,7 +80,7 @@ fun MonthScreen(
     }
 
     errorMessage?.let {
-        Toast.makeText(LocalContext.current, it, Toast.LENGTH_LONG).show()
+        Toast.makeText(context, it, Toast.LENGTH_LONG).show()
     }
 
     LaunchedEffect(key1 = true) {
@@ -427,6 +429,7 @@ fun MonthItem(
                     id = R.color.system_gray6
                 )
             )
+            .padding(7.dp)
             .clickable {
                 onClick()
             }
@@ -527,13 +530,22 @@ fun AllMonthsRow(
     onClick: (Month) -> Unit
 ) {
     LazyRow(
-        contentPadding = PaddingValues(16.dp),
-        modifier = modifier.fillMaxWidth()
+        contentPadding = PaddingValues(
+            horizontal = 16.dp,
+            vertical = 10.dp
+        ),
+        modifier = modifier
+            .fillMaxWidth()
+            .border(
+                width = 1.dp,
+                color = colorResource(id = R.color.system_gray3)
+            )
     ) {
-        items(allMonths) { month ->
+        itemsIndexed(allMonths) { index, month ->
             MonthItem(
                 monthId = month.id,
-                currentMonthId = currentMonthId
+                currentMonthId = currentMonthId,
+                modifier = Modifier.padding(start = if (index != 0) 24.dp else 0.dp)
             ) {
                 onClick(month)
             }
