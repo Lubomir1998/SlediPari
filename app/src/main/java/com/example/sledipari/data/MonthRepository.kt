@@ -7,6 +7,7 @@ import com.example.sledipari.api.MonthApi
 import com.example.sledipari.api.models.PostSpendingRequest
 import com.example.sledipari.data.db.MonthDao
 import com.example.sledipari.data.models.Month
+import com.example.sledipari.utility.extensions.checkForInternetConnection
 import com.example.sledipari.utility.formatDate
 import com.example.sledipari.utility.isCurrent
 import javax.inject.Inject
@@ -30,9 +31,10 @@ class MonthRepository @Inject constructor(
         }
     }
 
-    suspend fun getCurrentMonthLocal(): Month? {
+    suspend fun getMonthLocal(monthId: String): Month? {
+
         return try {
-            dao.getMonth(System.currentTimeMillis().formatDate("MM-yyyy"))
+            dao.getMonth(monthId)
         } catch (e: Exception) {
             null
         }
@@ -47,7 +49,7 @@ class MonthRepository @Inject constructor(
         }
     }
 
-    suspend fun getAllMonths(): Resource<List<Month>> {
+    suspend fun getAllMonthsLocal(): Resource<List<Month>> {
 
         return try {
             val months = dao.getAllMonths()
@@ -57,7 +59,7 @@ class MonthRepository @Inject constructor(
         }
     }
 
-    suspend fun restoreAllMonths(): Resource<Boolean> {
+    suspend fun getAllMonths(): Resource<Boolean> {
 
         return try {
             val months = api.getAllMonths()

@@ -38,13 +38,13 @@ class MonthRepositoryTest {
     @Test
     fun testGetMonth() = runBlocking {
 
-        repo.restoreAllMonths()
+        repo.getAllMonths()
         repo.getMonth("2022-1-8")
-        Assert.assertEquals(2, repo.getAllMonths().data?.size)
+        Assert.assertEquals(2, repo.getAllMonthsLocal().data?.size)
         Assert.assertEquals(3.0f, repo.getMonth("2022-1-8").data?.home)
         Assert.assertEquals(0.0f, repo.getMonth("2022-1-8").data?.domPotrebi)
 
-        Assert.assertEquals(2, repo.getAllMonths().data?.size)
+        Assert.assertEquals(2, repo.getAllMonthsLocal().data?.size)
         Assert.assertEquals(20.4f, repo.getMonth("2022-1-7").data?.clothes)
     }
 
@@ -89,8 +89,8 @@ class MonthRepositoryTest {
     @Test
     fun testRestoreMonths() = runBlocking {
 
-        repo.restoreAllMonths()
-        Assert.assertEquals(2, repo.getAllMonths().data?.size)
+        repo.getAllMonths()
+        Assert.assertEquals(2, repo.getAllMonthsLocal().data?.size)
         Assert.assertEquals(1.2f, dao.getMonth("2022-1-8").workout)
         Assert.assertEquals(0.0f, dao.getMonth("2022-1-8").tok)
         Assert.assertEquals(20.0f, dao.getMonth("2022-1-8").gifts)

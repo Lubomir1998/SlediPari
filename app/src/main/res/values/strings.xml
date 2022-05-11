@@ -73,4 +73,6 @@
     <string name="enter_price">Enter a valid price</string>
 
     <string name="leva">lv</string>
+
+    <string name="no_internet">No internet. Check your connection</string>
 </resources>

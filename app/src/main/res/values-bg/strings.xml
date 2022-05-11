@@ -73,4 +73,6 @@
     <string name="enter_price">Въведи валидна цена</string>
 
     <string name="leva">лв</string>
+
+    <string name="no_internet">Няма интернет. Провери връзката</string>
 </resources>

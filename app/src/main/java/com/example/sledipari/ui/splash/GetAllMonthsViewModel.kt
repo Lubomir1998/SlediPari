@@ -19,7 +19,7 @@ class GetAllMonthsViewModel
 
         viewModelScope.launch {
 
-            repo.restoreAllMonths()
+            repo.getAllMonths()
             isLoading.value = false
             completion()
         }

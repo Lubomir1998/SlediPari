@@ -24,17 +24,12 @@ class GetMonthViewModel
     context: Context
 ): ViewModel() {
 
-    //******
-    val o = Month(food = 180f, home = 90f, restaurant = 90f, clothes = 10f, workout = 120f, machove = 5f, entertainment = 30f, tehnika = 12f, id = "05-2022")
-    val b = listOf(Month(id = "05-2022"), Month(id = "04-2022"),Month(id = "03-2022"),Month(id = "02-2022"),Month(id = "01-2022"))
-    //****
-
     var isLoading = mutableStateOf(false)
     var errorMessage = mutableStateOf<String?>(null)
 
     var month = mutableStateOf<Month?>(null)
     var monthId = mutableStateOf(System.currentTimeMillis().formatDate("MM-yyyy"))
-    var allMonths = mutableStateOf(b)
+    var allMonths = mutableStateOf(listOf<Month>())
 
     var isSpendingSuccessful = mutableStateOf(false)
     var hasCompleted = mutableStateOf(false)
@@ -43,10 +38,10 @@ class GetMonthViewModel
     var totalSum = mutableStateOf(month.value?.totalSum() ?: 0f)
     var currentList = mutableStateOf(month.value?.toList() ?: listOf())
 
-    fun getMonthLocal() {
+    fun getMonthLocal(monthId: String) {
 
         viewModelScope.launch {
-            month.value = repo.getCurrentMonthLocal()
+            month.value = repo.getMonthLocal(monthId)
         }
     }
 
@@ -79,7 +74,7 @@ class GetMonthViewModel
 
         viewModelScope.launch {
 
-            when (val allMonthsResult = repo.getAllMonths()) {
+            when (val allMonthsResult = repo.getAllMonthsLocal()) {
                 is Resource.Success -> {
 
                     // we force unwrap which is not a good practice

@@ -32,6 +32,7 @@ import com.example.sledipari.data.models.Month
 import com.example.sledipari.ui.MainActivity
 import com.example.sledipari.ui.home
 import com.example.sledipari.utility.*
+import com.example.sledipari.utility.extensions.checkForInternetConnection
 import com.example.sledipari.utility.extensions.hideKeyboard
 import com.example.sledipari.utility.extensions.toLocalizable
 import com.example.sledipari.utility.extensions.toPercent
@@ -84,11 +85,16 @@ fun MonthScreen(
     }
 
     LaunchedEffect(key1 = true) {
-        viewModel.getMonthLocal()
+        viewModel.getMonthLocal(currentMonthId)
     }
 
     LaunchedEffect(key1 = currentMonthId) {
-        viewModel.getMonth(currentMonthId)
+        if (context.checkForInternetConnection()) {
+            viewModel.getMonth(currentMonthId)
+        } else {
+            viewModel.getMonthLocal(currentMonthId)
+        }
+
         viewModel.getAllMonths()
     }
 
