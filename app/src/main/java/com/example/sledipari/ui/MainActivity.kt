@@ -8,9 +8,9 @@ import androidx.lifecycle.viewmodel.compose.viewModel
 import androidx.navigation.compose.NavHost
 import androidx.navigation.compose.composable
 import androidx.navigation.compose.rememberNavController
-import com.example.sledipari.ui.splash.GetAllMonthsViewModel
 import com.example.sledipari.ui.main.GetMonthViewModel
 import com.example.sledipari.ui.main.MonthScreen
+import com.example.sledipari.ui.splash.GetAllMonthsViewModel
 import dagger.hilt.android.AndroidEntryPoint
 
 @AndroidEntryPoint
@@ -37,13 +37,14 @@ class MainActivity : ComponentActivity() {
 
                 composable("main_screen") {
                     MonthScreen(
-                        viewModel = getMonthViewModel
+                        viewModel = getMonthViewModel,
+                        activity = this@MainActivity,
+                        view = window.decorView.rootView
                     )
                 }
             }
 
 
         }
-
     }
 }

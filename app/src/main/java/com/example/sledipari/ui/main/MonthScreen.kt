@@ -1,5 +1,6 @@
 package com.example.sledipari.ui.main
 
+import android.view.View
 import android.widget.Toast
 import androidx.compose.foundation.*
 import androidx.compose.foundation.layout.*
@@ -28,8 +29,10 @@ import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import com.example.sledipari.R
 import com.example.sledipari.data.models.Month
+import com.example.sledipari.ui.MainActivity
 import com.example.sledipari.ui.home
 import com.example.sledipari.utility.*
+import com.example.sledipari.utility.extensions.hideKeyboard
 import com.example.sledipari.utility.extensions.toLocalizable
 import com.example.sledipari.utility.extensions.toPercent
 import kotlinx.coroutines.launch
@@ -37,7 +40,9 @@ import kotlinx.coroutines.launch
 @ExperimentalMaterialApi
 @Composable
 fun MonthScreen(
-    viewModel: GetMonthViewModel
+    viewModel: GetMonthViewModel,
+    activity: MainActivity,
+    view: View
 ) {
 
     val currentMonthId by remember {
@@ -101,7 +106,9 @@ fun MonthScreen(
         sheetContent = {
             BottomSheetContent(
                 bottomSheetScaffoldState = bottomSheetScaffoldState,
-                viewModel = viewModel
+                viewModel = viewModel,
+                activity = activity,
+                view = view
             )
         },
         sheetPeekHeight = 0.dp
@@ -125,6 +132,8 @@ fun MonthScreen(
 @Composable fun BottomSheetContent(
     bottomSheetScaffoldState: BottomSheetScaffoldState,
     viewModel: GetMonthViewModel,
+    activity: MainActivity,
+    view: View,
     modifier: Modifier = Modifier
 ) {
 
@@ -216,6 +225,7 @@ fun MonthScreen(
                 )
                 DropdownMenu(
                     expanded = isExpanded,
+                    modifier = Modifier.background(colorResource(id = R.color.background)),
                     onDismissRequest = { isExpanded = false }
                 ) {
                     options.entries.forEach {
@@ -260,6 +270,8 @@ fun MonthScreen(
             colors = ButtonDefaults.buttonColors(backgroundColor = home),
             enabled = !isLoading,
             onClick = {
+                activity.hideKeyboard(view)
+
                 if (currentSelectedOption == null) {
                     Toast.makeText(context, context.getString(R.string.nothing_selected), Toast.LENGTH_SHORT).show()
                     return@Button
