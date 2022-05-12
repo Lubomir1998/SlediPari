@@ -6,6 +6,7 @@ import androidx.compose.foundation.*
 import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.lazy.LazyRow
 import androidx.compose.foundation.lazy.itemsIndexed
+import androidx.compose.foundation.lazy.rememberLazyListState
 import androidx.compose.foundation.shape.CircleShape
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.foundation.text.KeyboardOptions
@@ -181,6 +182,8 @@ fun MonthScreen(
     }
 
     LaunchedEffect(key1 = hasCompleted) {
+
+        viewModel.hasCompleted.value = false
 
         if (isSpendingSuccessful) {
             sumText = ""
@@ -535,7 +538,16 @@ fun AllMonthsRow(
     modifier: Modifier = Modifier,
     onClick: (Month) -> Unit
 ) {
+
+    val listState = rememberLazyListState()
+    LaunchedEffect(allMonths) {
+        if (allMonths.isNotEmpty()) {
+            listState.scrollToItem(allMonths.size - 1)
+        }
+    }
+
     LazyRow(
+        state = listState,
         contentPadding = PaddingValues(
             horizontal = 16.dp,
             vertical = 10.dp
