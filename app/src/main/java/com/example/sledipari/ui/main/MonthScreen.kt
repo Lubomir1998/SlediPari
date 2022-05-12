@@ -33,10 +33,7 @@ import com.example.sledipari.data.models.Month
 import com.example.sledipari.ui.MainActivity
 import com.example.sledipari.ui.home
 import com.example.sledipari.utility.*
-import com.example.sledipari.utility.extensions.checkForInternetConnection
-import com.example.sledipari.utility.extensions.hideKeyboard
-import com.example.sledipari.utility.extensions.toLocalizable
-import com.example.sledipari.utility.extensions.toPercent
+import com.example.sledipari.utility.extensions.*
 import kotlinx.coroutines.launch
 
 @ExperimentalMaterialApi
@@ -488,7 +485,7 @@ fun SpendingItem(
         )
 
         Text(
-            text = "- ${String.format("%.2f", sum)} " + stringResource(id = R.string.leva),
+            text = "- ${sum.formatPrice()} " + stringResource(id = R.string.leva),
             fontSize = 16.sp,
             color = colorResource(id = R.color.label)
         )
@@ -638,19 +635,9 @@ fun TotalSumRow(
         modifier = modifier.fillMaxWidth(0.6f)
     ) {
         Text(
-            text = stringResource(id = R.string.total) + " ${String.format("%.2f", totalSum)} " + stringResource(id = R.string.leva),
+            text = stringResource(id = R.string.total) + " ${totalSum.formatPrice()} " + stringResource(id = R.string.leva),
             fontSize = 18.sp,
             color = colorResource(id = R.color.label)
         )
     }
-}
-
-@Preview
-@Composable
-fun Allmonthsprev() {
-    AllMonthsRow(
-        allMonths = listOf(Month(id = "05-2022"), Month(id = "04-2022"),Month(id = "03-2022"),Month(id = "02-2022"),Month(id = "01-2022")),
-        currentMonthId = "05-2022",
-        onClick = {}
-    )
 }
