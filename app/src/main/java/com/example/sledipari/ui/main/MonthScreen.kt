@@ -25,7 +25,6 @@ import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.res.colorResource
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.input.KeyboardType
-import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import com.example.sledipari.R
@@ -359,6 +358,9 @@ fun MonthContent(
             currentMonthId = currentMonthId
         ) { month ->
             viewModel.monthId.value = month.id
+            if (currentCategory != context.getString(R.string.all) && month.getCurrentCategoryValue(context, currentCategory) == 0f) {
+                viewModel.changeCategory(context.getString(R.string.all))
+            }
         }
 
         Spacer(modifier = Modifier.size(10.dp))

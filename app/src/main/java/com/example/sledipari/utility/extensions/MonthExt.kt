@@ -1,6 +1,8 @@
 package com.example.sledipari.utility
 
+import android.content.Context
 import androidx.compose.ui.graphics.Color
+import com.example.sledipari.R
 import com.example.sledipari.data.models.Month
 import com.example.sledipari.ui.*
 
@@ -84,4 +86,15 @@ fun getMonthValueAndColor(month: Month, name: String): Pair<Pair<Float, String>,
 fun Month.isCurrent(): Boolean {
 
     return this.id == System.currentTimeMillis().formatDate("MM-yyyy")
+}
+
+fun Month.getCurrentCategoryValue(context: Context, category: String): Float {
+    return when (category) {
+        context.getString(R.string.food) -> this.food
+        context.getString(R.string.smetki) -> this.smetki
+        context.getString(R.string.transport) -> this.transport
+        context.getString(R.string.cosmetics) -> this.cosmetics
+        context.getString(R.string.preparati) -> this.preparati
+        else -> 99999f
+    }
 }
