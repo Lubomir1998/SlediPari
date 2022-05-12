@@ -416,6 +416,8 @@ fun MonthContent(
                     else -> Unit
                 }
             }
+        } ?: run {
+            Text(text = stringResource(id = R.string.nothing_for_now), color = colorResource(id = R.color.label), fontSize = 18.sp)
         }
 
     }

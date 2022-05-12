@@ -68,11 +68,10 @@
 
     <string name="sum">Sum</string>
     <string name="add">Spend</string>
-
     <string name="nothing_selected">Select an option</string>
     <string name="enter_price">Enter a valid price</string>
-
     <string name="leva">lv</string>
 
     <string name="no_internet">No internet. Check your connection</string>
+    <string name="nothing_for_now">Nothing for now</string>
 </resources>
