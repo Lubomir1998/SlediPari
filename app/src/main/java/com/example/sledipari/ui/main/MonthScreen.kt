@@ -418,7 +418,11 @@ fun MonthContent(
                 }
             }
         } ?: run {
-            Text(text = stringResource(id = R.string.nothing_for_now), color = colorResource(id = R.color.label), fontSize = 18.sp)
+            Text(
+                text = stringResource(id = R.string.nothing_for_now),
+                color = colorResource(id = R.color.label),
+                fontSize = 22.sp
+            )
         }
 
     }
