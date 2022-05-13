@@ -266,6 +266,7 @@ fun MonthScreen(
                         }
                     }
                 },
+                colors = TextFieldDefaults.textFieldColors(textColor = colorResource(id = R.color.label)),
                 singleLine = true,
                 keyboardOptions = KeyboardOptions(keyboardType = KeyboardType.Number)
             )
