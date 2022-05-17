@@ -96,9 +96,34 @@ fun MonthScreen(
     }
 
     LaunchedEffect(key1 = currentMonth) {
-        currentMonth?.let {
-            viewModel.changeList(it.toList())
-            viewModel.changeTotalSum(it.totalSum())
+        currentMonth?.let { month ->
+
+            when(currentCategory) {
+                context.getString(R.string.food) -> {
+                    viewModel.changeTotalSum(month.restaurant + month.home)
+                    viewModel.changeList(foodToList(month))
+                }
+                context.getString(R.string.smetki) -> {
+                    viewModel.changeTotalSum(month.tok + month.voda + month.toplo + month.internet + month.telefon + month.vhod)
+                    viewModel.changeList(smetkiToList(month))
+                }
+                context.getString(R.string.transport) -> {
+                    viewModel.changeTotalSum(month.publicT + month.taxi + month.car)
+                    viewModel.changeList(transportToList(month))
+                }
+                context.getString(R.string.cosmetics) -> {
+                    viewModel.changeTotalSum(month.higien + month.other)
+                    viewModel.changeList(cosmeticsToList(month))
+                }
+                context.getString(R.string.preparati) -> {
+                    viewModel.changeTotalSum(month.clean + month.wash)
+                    viewModel.changeList(preparatiToList(month))
+                }
+                context.getString(R.string.all) -> {
+                    viewModel.changeList(month.toList())
+                    viewModel.changeTotalSum(month.totalSum())
+                }
+            }
         }
     }
 
