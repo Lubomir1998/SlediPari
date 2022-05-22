@@ -47,11 +47,11 @@
     <string name="subscribtions">Абонаменти</string>
 
     <string name="food_home">Храна - Вкъщи</string>
-    <string name="food_res">Храна - Ресторант</string>
+    <string name="food_res">Храна - Навън</string>
 
     <string name="smetki_tok">Сметки - Ток</string>
     <string name="smetki_voda">Сметки - Вода</string>
-    <string name="smetki_toplo">Сметки - Парно</string>
+    <string name="smetki_toplo">Сметки - Топлофикация</string>
     <string name="smetki_internet">Сметки - Интернет</string>
     <string name="smetki_telefon">Сметки - Телефон</string>
     <string name="smetki_vhod">Сметки - Вход</string>
