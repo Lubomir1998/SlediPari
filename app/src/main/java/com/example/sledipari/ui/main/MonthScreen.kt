@@ -25,6 +25,7 @@ import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.res.colorResource
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.input.KeyboardType
+import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import com.example.sledipari.R
@@ -489,12 +490,14 @@ fun SpendingItem(
     color: Color,
     name: String,
     sum: Float,
+    total: Float,
     highlighted: Boolean,
     modifier: Modifier = Modifier,
     onClick: () -> Unit
 ) {
     Row(
         horizontalArrangement = Arrangement.Start,
+        verticalAlignment = Alignment.CenterVertically,
         modifier = modifier
             .fillMaxWidth()
             .padding(16.dp)
@@ -515,12 +518,18 @@ fun SpendingItem(
             text = name.toLocalizable(LocalContext.current) + if (highlighted) " *" else "",
             fontSize = 16.sp,
             color = colorResource(id = R.color.label),
-            modifier = Modifier.padding(horizontal = 10.dp)
+            modifier = Modifier.padding(start = 7.dp)
         )
 
         Text(
-            text = "- ${sum.formatPrice()} " + stringResource(id = R.string.leva),
+            text = " - ${sum.formatPrice()} " + stringResource(id = R.string.leva),
             fontSize = 16.sp,
+            color = colorResource(id = R.color.label)
+        )
+
+        Text(
+            text = "  (${String.format("%.2f", sum.toPercent(total))} %)",
+            fontSize = 12.sp,
             color = colorResource(id = R.color.label)
         )
     }
@@ -645,6 +654,7 @@ fun PieChart(
                 color = it.second,
                 name = it.first.second,
                 sum = it.first.first,
+                total = totalSum,
                 highlighted = it.first.second == "food"
                         || it.first.second == "smetki"
                         || it.first.second == "transport"
@@ -674,4 +684,10 @@ fun TotalSumRow(
             color = colorResource(id = R.color.label)
         )
     }
+}
+
+@Preview
+@Composable
+fun PreviewSpendingItem() {
+    SpendingItem(color = Color.Blue, name = "clothes", sum = 40f, total = 122f, highlighted = true) {}
 }
