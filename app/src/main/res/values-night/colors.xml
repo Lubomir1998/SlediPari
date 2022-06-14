@@ -1,6 +1,7 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
     <color name="label">#FFFFFF</color>
+    <color name="secondarylabel">#8D8D93</color>
     <color name="system_gray">#8E8E93</color>
     <color name="system_gray2">#636366</color>
     <color name="system_gray3">#48484A</color>

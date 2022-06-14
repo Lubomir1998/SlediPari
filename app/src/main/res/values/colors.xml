@@ -8,6 +8,7 @@
     <color name="black">#FF000000</color>
     <color name="white">#FFFFFFFF</color>
     <color name="label">#000000</color>
+    <color name="secondarylabel">#8A8A8E</color>
     <color name="system_gray">#8E8E93</color>
     <color name="system_gray2">#AEAEB2</color>
     <color name="system_gray3">#C7C7CC</color>

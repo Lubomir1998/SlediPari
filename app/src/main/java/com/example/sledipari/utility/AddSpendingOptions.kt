@@ -25,6 +25,7 @@ fun addingOptions(context: Context): HashMap<String, String> {
         context.getString(R.string.snacks) to "snacks",
         context.getString(R.string.health) to "medicine",
         context.getString(R.string.domPot) to "domPotrebi",
+        context.getString(R.string.tehnika) to "tehnika",
         context.getString(R.string.machove) to "machove",
         context.getString(R.string.furniture) to "furniture",
         context.getString(R.string.education) to "education",
@@ -34,6 +35,7 @@ fun addingOptions(context: Context): HashMap<String, String> {
         context.getString(R.string.cosmetics_higien) to "higien",
         context.getString(R.string.cosmetics_other) to "other",
         context.getString(R.string.preparati_clean) to "clean",
-        context.getString(R.string.preparati_wash) to "wash"
+        context.getString(R.string.preparati_wash) to "wash",
+        context.getString(R.string.subscribtions) to "subscribtions"
     )
 }

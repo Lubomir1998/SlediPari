@@ -467,7 +467,7 @@ fun MonthItem(
             .clip(RoundedCornerShape(10.dp))
             .background(
                 color = if (monthId == currentMonthId) colorResource(id = R.color.system_gray3) else colorResource(
-                    id = R.color.system_gray6
+                    id = R.color.background
                 )
             )
             .padding(7.dp)
@@ -530,7 +530,8 @@ fun SpendingItem(
         Text(
             text = "  (${String.format("%.2f", sum.toPercent(total))} %)",
             fontSize = 12.sp,
-            color = colorResource(id = R.color.label)
+            color = colorResource(id = R.color.secondarylabel),
+            modifier = Modifier.padding(start = 7.dp)
         )
     }
 }
