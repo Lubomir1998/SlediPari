@@ -528,7 +528,7 @@ fun SpendingItem(
         )
 
         Text(
-            text = "  (${String.format("%.2f", sum.toPercent(total))} %)",
+            text = " (${String.format("%.2f", sum.toPercent(total))} %)",
             fontSize = 12.sp,
             color = colorResource(id = R.color.secondarylabel),
             modifier = Modifier.padding(start = 7.dp)
