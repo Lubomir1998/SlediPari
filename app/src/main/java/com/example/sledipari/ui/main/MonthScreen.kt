@@ -87,12 +87,7 @@ fun MonthScreen(
     }
 
     LaunchedEffect(key1 = currentMonthId) {
-        if (context.checkForInternetConnection()) {
-            viewModel.getMonth(currentMonthId)
-        } else {
-            viewModel.getMonthLocal(currentMonthId)
-        }
-
+        viewModel.getMonthLocal(currentMonthId)
         viewModel.getAllMonths()
     }
 
