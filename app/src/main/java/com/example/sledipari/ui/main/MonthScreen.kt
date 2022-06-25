@@ -211,6 +211,7 @@ fun MonthScreen(
             sumText = ""
             currentSelectedOption = null
             bottomSheetScaffoldState.bottomSheetState.collapse()
+            viewModel.getAllMonths()
             viewModel.getMonth(viewModel.monthId.value)
         }
     }

@@ -26,7 +26,7 @@ class ExampleUnitTest {
 //        val date = SimpleDateFormat("dd-MM-yyyy").parse("14-02-2018")
 //        assertEquals(1L, date?.time)
 
-        val a = "02-2018"
+        val a = "2018-02"
         assertEquals("Feb 2018", a.toReadableDate())
 
     }

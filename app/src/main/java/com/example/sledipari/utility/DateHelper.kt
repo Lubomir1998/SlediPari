@@ -14,6 +14,6 @@ fun Long.formatDate(pattern: String): String {
 @SuppressLint("SimpleDateFormat")
 fun String.toReadableDate(): String {
 
-    val date = SimpleDateFormat("MM-yyyy").parse(this)
+    val date = SimpleDateFormat("yyyy-MM").parse(this)
     return date.time.formatDate("MMM yyy")
 }

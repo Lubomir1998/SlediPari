@@ -10,9 +10,9 @@ import com.example.sledipari.api.models.PostSpendingRequest
 import com.example.sledipari.data.MonthRepository
 import com.example.sledipari.data.models.Month
 import com.example.sledipari.utility.Resource
+import com.example.sledipari.utility.extensions.toList
+import com.example.sledipari.utility.extensions.totalSum
 import com.example.sledipari.utility.formatDate
-import com.example.sledipari.utility.toList
-import com.example.sledipari.utility.totalSum
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.launch
 import javax.inject.Inject
@@ -28,7 +28,7 @@ class GetMonthViewModel
     var errorMessage = mutableStateOf<String?>(null)
 
     var month = mutableStateOf<Month?>(null)
-    var monthId = mutableStateOf(System.currentTimeMillis().formatDate("MM-yyyy"))
+    var monthId = mutableStateOf(System.currentTimeMillis().formatDate("yyyy-MM"))
     var allMonths = mutableStateOf(listOf<Month>())
 
     var isSpendingSuccessful = mutableStateOf(false)
@@ -97,7 +97,7 @@ class GetMonthViewModel
         viewModelScope.launch {
 
             val request = PostSpendingRequest(
-                monthId = System.currentTimeMillis().formatDate("MM-yyyy"),
+                monthId = System.currentTimeMillis().formatDate("yyyy-MM"),
                 title = title,
                 price = price
             )

@@ -1,11 +1,11 @@
-package com.example.sledipari.utility
+package com.example.sledipari.utility.extensions
 
 import android.content.Context
 import androidx.compose.ui.graphics.Color
 import com.example.sledipari.R
 import com.example.sledipari.data.models.Month
 import com.example.sledipari.ui.*
-
+import com.example.sledipari.utility.formatDate
 
 fun Month.toList(): List<Pair<Pair<Float, String>, Color>> {
 
@@ -85,7 +85,7 @@ fun getMonthValueAndColor(month: Month, name: String): Pair<Pair<Float, String>,
 
 fun Month.isCurrent(): Boolean {
 
-    return this.id == System.currentTimeMillis().formatDate("MM-yyyy")
+    return this.id == System.currentTimeMillis().formatDate("yyyy-MM")
 }
 
 fun Month.getCurrentCategoryValue(context: Context, category: String): Float {

@@ -12,6 +12,6 @@ interface MonthDao {
     @Query("SELECT * FROM Month WHERE id = :month")
     suspend fun getMonth(month: String): Month
 
-    @Query("SELECT * FROM Month")
+    @Query("SELECT * FROM Month ORDER BY id ASC")
     suspend fun getAllMonths(): List<Month>
 }

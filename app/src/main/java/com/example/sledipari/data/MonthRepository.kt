@@ -7,9 +7,7 @@ import com.example.sledipari.api.MonthApi
 import com.example.sledipari.api.models.PostSpendingRequest
 import com.example.sledipari.data.db.MonthDao
 import com.example.sledipari.data.models.Month
-import com.example.sledipari.utility.extensions.checkForInternetConnection
-import com.example.sledipari.utility.formatDate
-import com.example.sledipari.utility.isCurrent
+import com.example.sledipari.utility.extensions.isCurrent
 import javax.inject.Inject
 
 class MonthRepository @Inject constructor(
