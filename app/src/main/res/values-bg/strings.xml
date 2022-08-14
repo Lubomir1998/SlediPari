@@ -72,6 +72,10 @@
     <string name="enter_price">Въведи валидна цена</string>
     <string name="leva">лв</string>
 
+    <string name="frizior">Фризьор</string>
+    <string name="cosmetic">Козметик</string>
+    <string name="manikior">Маникюр</string>
+
     <string name="no_internet">Няма интернет. Провери връзката</string>
     <string name="nothing_for_now">Нищо за сега</string>
 </resources>

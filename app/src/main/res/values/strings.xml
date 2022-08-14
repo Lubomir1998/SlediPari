@@ -30,7 +30,7 @@
     <string name="internet">Internet</string>
     <string name="tattoo">Tattoo</string>
     <string name="home">Home</string>
-    <string name="restaurant">Restaurant</string>
+    <string name="restaurant">Outside</string>
     <string name="clean">Clean</string>
     <string name="wash">Wash</string>
     <string name="telefon">Phone</string>
@@ -71,6 +71,10 @@
     <string name="nothing_selected">Select an option</string>
     <string name="enter_price">Enter a valid price</string>
     <string name="leva">lv</string>
+
+    <string name="frizior">Hairdresser</string>
+    <string name="cosmetic">Cosmetic</string>
+    <string name="manikior">Nails</string>
 
     <string name="no_internet">No internet. Check your connection</string>
     <string name="nothing_for_now">Nothing for now</string>

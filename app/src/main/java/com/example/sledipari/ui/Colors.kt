@@ -24,6 +24,7 @@ val entertainment = Color(0xFFCAFB03)
 val subscriptions = Color(0xFF94FEDF)
 val tattoo = Color(0xFFD594FE)
 val toys = Color(0xFFEAFE94)
+val frizior = Color(0xFF573DFF)
 
 //Food
 val home = Color(0xFF1BDBFF)
@@ -49,3 +50,8 @@ val other = Color(0xFFCE65FE)
 //Preparati
 val clean = Color(0xFF08FC37)
 val wash = Color(0xFFCE65FE)
+
+// Frizior
+val friziorSub = Color(0xFF573DFF)
+val cosmetic = Color(0xFF4CF716)
+val manikior = Color(0xFFF71A3C)

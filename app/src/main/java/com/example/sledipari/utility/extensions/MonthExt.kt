@@ -42,6 +42,7 @@ fun Month.totalSum(): Float {
             this.snacks +
             this.medicine +
             this.cosmetics +
+            this.frizior +
             this.domPotrebi +
             this.preparati +
             this.machove +
@@ -79,6 +80,7 @@ fun getMonthValueAndColor(month: Month, name: String): Pair<Pair<Float, String>,
         "transport" -> Pair(Pair(month.transport, name), transport)
         "cosmetics" -> Pair(Pair(month.cosmetics, name), cosmetics)
         "preparati" -> Pair(Pair(month.preparati, name), preparati)
+        "frizior" -> Pair(Pair(month.frizior, name), frizior)
         else -> null
     }
 }
@@ -95,6 +97,7 @@ fun Month.getCurrentCategoryValue(context: Context, category: String): Float {
         context.getString(R.string.transport) -> this.transport
         context.getString(R.string.cosmetics) -> this.cosmetics
         context.getString(R.string.preparati) -> this.preparati
+        context.getString(R.string.frizior) -> this.frizior
         else -> 99999f
     }
 }

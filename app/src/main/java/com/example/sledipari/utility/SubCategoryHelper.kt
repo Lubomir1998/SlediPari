@@ -2,6 +2,7 @@ package com.example.sledipari.utility
 
 import android.content.Context
 import androidx.compose.ui.graphics.Color
+import com.example.data.models.Frizior
 import com.example.sledipari.R
 import com.example.sledipari.api.models.*
 import com.example.sledipari.data.models.Month
@@ -15,6 +16,7 @@ fun String.getTitle(context: Context): String {
         "transport" -> context.getString(R.string.transport)
         "cosmetics" -> context.getString(R.string.cosmetics)
         "preparati" -> context.getString(R.string.preparati)
+        "frizior" -> context.getString(R.string.frizior)
         else -> ""
     }
 }
@@ -48,6 +50,27 @@ fun smetkiToList(month: Month): List<Pair<Pair<Float, String>, Color>> {
     for (member in Smetki::class.members) {
 
         val value = getSmetkiValueAndColor(month, member.name) ?: continue
+        if (value.first.first != 0f) {
+            mutableList.add(value)
+        }
+    }
+
+    mutableList.sortWith(compareBy {
+        it.first.first
+    })
+
+    list = mutableList.reversed()
+    return list
+}
+
+fun friziorToList(month: Month): List<Pair<Pair<Float, String>, Color>> {
+
+    val list: List<Pair<Pair<Float, String>, Color>>
+    val mutableList = mutableListOf<Pair<Pair<Float, String>, Color>>()
+
+    for (member in Frizior::class.members) {
+
+        val value = getFriziorValueAndColor(month, member.name) ?: continue
         if (value.first.first != 0f) {
             mutableList.add(value)
         }
@@ -142,6 +165,16 @@ fun getSmetkiValueAndColor(month: Month, name: String): Pair<Pair<Float, String>
         "internet" -> Pair(Pair(month.internet, name), internet)
         "vhod" -> Pair(Pair(month.vhod, name), vhod)
         "telefon" -> Pair(Pair(month.telefon, name), telefon)
+        else -> null
+    }
+}
+
+fun getFriziorValueAndColor(month: Month, name: String): Pair<Pair<Float, String>, Color>? {
+
+    return when (name) {
+        "friziorSub" -> Pair(Pair(month.friziorSub, name), friziorSub)
+        "cosmetic" -> Pair(Pair(month.cosmetic, name), cosmetic)
+        "manikior" -> Pair(Pair(month.manikior, name), manikior)
         else -> null
     }
 }

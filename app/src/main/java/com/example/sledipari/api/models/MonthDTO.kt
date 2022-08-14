@@ -1,5 +1,6 @@
 package com.example.sledipari.api.models
 
+import com.example.data.models.Frizior
 import kotlinx.serialization.Serializable
 
 @Serializable
@@ -16,6 +17,7 @@ data class MonthDTO(
     var snacks: Float = 0.0f,
     var medicine: Float = 0.0f,
     var cosmetics: Cosmetics = Cosmetics(),
+    var frizior: Frizior = Frizior(),
     var domPotrebi: Float = 0.0f,
     var preparati: Preparati = Preparati(),
     var machove: Float = 0.0f,

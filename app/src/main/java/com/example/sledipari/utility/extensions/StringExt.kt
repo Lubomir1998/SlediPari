@@ -42,6 +42,10 @@ fun String.toLocalizable(context: Context): String {
         "other" -> context.getString(R.string.other)
         "clean" -> context.getString(R.string.clean)
         "wash" -> context.getString(R.string.wash)
+        "frizior" -> context.getString(R.string.frizior)
+        "friziorSub" -> context.getString(R.string.frizior)
+        "cosmetic" -> context.getString(R.string.cosmetic)
+        "manikior" -> context.getString(R.string.manikior)
         else -> ""
     }
 }

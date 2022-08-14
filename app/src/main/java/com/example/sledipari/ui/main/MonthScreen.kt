@@ -115,6 +115,10 @@ fun MonthScreen(
                     viewModel.changeTotalSum(month.clean + month.wash)
                     viewModel.changeList(preparatiToList(month))
                 }
+                context.getString(R.string.frizior) -> {
+                    viewModel.changeTotalSum(month.friziorSub + month.cosmetic + month.manikior)
+                    viewModel.changeList(friziorToList(month))
+                }
                 context.getString(R.string.all) -> {
                     viewModel.changeList(month.toList())
                     viewModel.changeTotalSum(month.totalSum())
@@ -436,6 +440,10 @@ fun MonthContent(
                         viewModel.changeTotalSum(month.clean + month.wash)
                         viewModel.changeList(preparatiToList(month))
                     }
+                    "frizior" -> {
+                        viewModel.changeTotalSum(month.friziorSub + month.cosmetic + month.manikior)
+                        viewModel.changeList(friziorToList(month))
+                    }
                     else -> Unit
                 }
             }
@@ -657,6 +665,7 @@ fun PieChart(
                         || it.first.second == "transport"
                         || it.first.second == "cosmetics"
                         || it.first.second == "preparati"
+                        || it.first.second == "frizior"
             ) {
                 onClick(it.first.second)
             }
