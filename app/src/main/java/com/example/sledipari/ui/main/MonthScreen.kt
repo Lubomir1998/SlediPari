@@ -169,12 +169,21 @@ fun MonthScreen(
 
     val context = LocalContext.current
     val options = addingOptions(context)
+    val quantityOptions = (1..10).toList()
 
     var currentSelectedOption by remember {
         mutableStateOf<Pair<String, String>?>(null)
     }
 
-    var isExpanded by remember {
+    var currentSelectedQuantity by remember {
+        mutableStateOf(1)
+    }
+
+    var isCategoriesExpanded by remember {
+        mutableStateOf(false)
+    }
+
+    var isQuantityExpanded by remember {
         mutableStateOf(false)
     }
 
@@ -209,6 +218,7 @@ fun MonthScreen(
         if (isSpendingSuccessful) {
             sumText = ""
             currentSelectedOption = null
+            currentSelectedQuantity = 1
             bottomSheetScaffoldState.bottomSheetState.collapse()
             viewModel.getAllMonths()
             viewModel.getMonth(viewModel.monthId.value)
@@ -234,52 +244,22 @@ fun MonthScreen(
 
         Row(
             horizontalArrangement = Arrangement.SpaceBetween,
-            modifier = Modifier.padding(20.dp)
+            modifier = Modifier
+                .fillMaxWidth()
+                .padding(20.dp)
         ) {
-            Row(
-                verticalAlignment = Alignment.CenterVertically,
-                modifier = Modifier.clickable {
-                    isExpanded = !isExpanded
-                }
-            ) {
-                Text(
-                    text = currentSelectedOption?.first ?: "--",
-                    fontSize = 16.sp,
-                    color = colorResource(id = R.color.label)
-                )
-                Spacer(modifier = Modifier.size(5.dp))
-                Icon(
-                    imageVector = Icons.Default.ArrowDropDown,
-                    contentDescription = null,
-                    tint = colorResource(id = R.color.label),
-                    modifier = Modifier
-                        .padding(16.dp)
-                        .size(36.dp)
-                )
-                DropdownMenu(
-                    expanded = isExpanded,
-                    modifier = Modifier.background(colorResource(id = R.color.background)),
-                    onDismissRequest = { isExpanded = false }
-                ) {
-                    options.entries.forEach {
-                        Text(
-                            text = it.key,
-                            fontSize = 16.sp,
-                            color = colorResource(id = R.color.label),
-                            modifier = Modifier
-                                .fillMaxWidth()
-                                .padding(
-                                    vertical = 8.dp,
-                                    horizontal = 16.dp
-                                )
-                                .clickable {
-                                    currentSelectedOption = Pair(it.key, it.value)
-                                    isExpanded = false
-                                }
-                        )
-                    }
-                }
-            }
+
+            DropDownMenuCategories(
+                isCategoriesExpanded = isCategoriesExpanded,
+                currentSelectedOption = currentSelectedOption,
+                options = options,
+                onCategoryArrowClick = { isCategoriesExpanded = it },
+                onSelectCategory = {
+                    currentSelectedOption = it
+                    isCategoriesExpanded = false
+                },
+                onDismiss = { isCategoriesExpanded = false }
+            )
 
             TextField(
                 value = sumText,
@@ -295,7 +275,20 @@ fun MonthScreen(
                 },
                 colors = TextFieldDefaults.textFieldColors(textColor = colorResource(id = R.color.label)),
                 singleLine = true,
-                keyboardOptions = KeyboardOptions(keyboardType = KeyboardType.Number)
+                keyboardOptions = KeyboardOptions(keyboardType = KeyboardType.Number),
+                modifier = Modifier.width(130.dp)
+            )
+
+            DropDownMenuQuantity(
+                isQuantityExpanded = isQuantityExpanded,
+                currentSelectedOption = currentSelectedQuantity,
+                options = quantityOptions,
+                onQuantityArrowClick = { isQuantityExpanded = it },
+                onSelectQuantity = {
+                    currentSelectedQuantity = it
+                    isQuantityExpanded = false
+                },
+                onDismiss = { isQuantityExpanded = false }
             )
         }
 
@@ -317,7 +310,7 @@ fun MonthScreen(
                     return@Button
                 }
 
-                viewModel.addSpending(currentSelectedOption!!.second, sumText.toFloat())
+                viewModel.addSpending(currentSelectedOption!!.second, sumText.toFloat() * currentSelectedQuantity)
             }
         ) {
             Text(
@@ -690,6 +683,114 @@ fun TotalSumRow(
             fontSize = 18.sp,
             color = colorResource(id = R.color.label)
         )
+    }
+}
+
+@Composable
+fun DropDownMenuCategories(
+    isCategoriesExpanded: Boolean,
+    currentSelectedOption: Pair<String, String>?,
+    options:  HashMap<String, String>,
+    onCategoryArrowClick: ((Boolean) -> Unit),
+    onSelectCategory: ((Pair<String, String>?) -> Unit),
+    onDismiss: (() -> Unit)
+) {
+    Row(
+        verticalAlignment = Alignment.CenterVertically,
+        modifier = Modifier.clickable {
+            onCategoryArrowClick(!isCategoriesExpanded)
+        }
+    ) {
+        Text(
+            text = currentSelectedOption?.first ?: "--",
+            fontSize = 16.sp,
+            color = colorResource(id = R.color.label)
+        )
+        Spacer(modifier = Modifier.size(5.dp))
+        Icon(
+            imageVector = Icons.Default.ArrowDropDown,
+            contentDescription = null,
+            tint = colorResource(id = R.color.label),
+            modifier = Modifier
+                .padding(16.dp)
+                .size(36.dp)
+        )
+        DropdownMenu(
+            expanded = isCategoriesExpanded,
+            modifier = Modifier.background(colorResource(id = R.color.background)),
+            onDismissRequest = onDismiss
+        ) {
+            options.entries.forEach {
+                Text(
+                    text = it.key,
+                    fontSize = 16.sp,
+                    color = colorResource(id = R.color.label),
+                    modifier = Modifier
+                        .fillMaxWidth()
+                        .padding(
+                            vertical = 8.dp,
+                            horizontal = 16.dp
+                        )
+                        .clickable {
+                            onSelectCategory(Pair(it.key, it.value))
+                        }
+                )
+            }
+        }
+    }
+}
+
+@Composable
+fun DropDownMenuQuantity(
+    isQuantityExpanded: Boolean,
+    currentSelectedOption: Int,
+    options:  List<Int>,
+    onQuantityArrowClick: ((Boolean) -> Unit),
+    onSelectQuantity: ((Int) -> Unit),
+    onDismiss: (() -> Unit)
+) {
+    Row(
+        verticalAlignment = Alignment.CenterVertically,
+        modifier = Modifier.clickable {
+            onQuantityArrowClick(!isQuantityExpanded)
+        }
+    ) {
+        Text(
+            text = "x$currentSelectedOption",
+            fontSize = 16.sp,
+            color = colorResource(id = R.color.label)
+        )
+        Spacer(modifier = Modifier.size(5.dp))
+        Icon(
+            imageVector = Icons.Default.ArrowDropDown,
+            contentDescription = null,
+            tint = colorResource(id = R.color.label),
+            modifier = Modifier
+                .padding(6.dp)
+                .size(36.dp)
+        )
+        DropdownMenu(
+            expanded = isQuantityExpanded,
+            modifier = Modifier.background(colorResource(id = R.color.background)),
+            onDismissRequest = onDismiss
+        ) {
+            options.forEach {
+                Text(
+                    text = it.toString(),
+                    fontSize = 16.sp,
+                    color = colorResource(id = R.color.label),
+                    modifier = Modifier
+                        .fillMaxWidth()
+                        .padding(
+                            vertical = 8.dp,
+                            horizontal = 16.dp
+                        )
+                        .clickable {
+                            onSelectQuantity(it)
+                        }
+                )
+            }
+        }
     }
 }
 
