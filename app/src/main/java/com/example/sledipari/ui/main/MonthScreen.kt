@@ -267,6 +267,7 @@ fun MonthScreen(
                             fontSize = 16.sp,
                             color = colorResource(id = R.color.label),
                             modifier = Modifier
+                                .fillMaxWidth()
                                 .padding(
                                     vertical = 8.dp,
                                     horizontal = 16.dp
