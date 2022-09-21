@@ -1,13 +1,17 @@
 package com.example.sledipari.di
 
 import android.content.Context
+import android.content.SharedPreferences
 import androidx.room.Room
+import androidx.security.crypto.EncryptedSharedPreferences
+import androidx.security.crypto.MasterKey
 import com.example.sledipari.utility.Constants.BASE_URL
 import com.example.sledipari.utility.Constants.BASE_URL_LOCALHOST
 import com.example.sledipari.utility.Constants.USE_LOCALHOST
 import com.example.sledipari.api.MonthApi
 import com.example.sledipari.data.db.MonthsDatabase
 import com.example.sledipari.jsonInstance
+import com.example.sledipari.utility.Constants.ENCRYPTED_SHARED_PREFS_NAME
 import dagger.Module
 import dagger.Provides
 import dagger.hilt.InstallIn
@@ -53,4 +57,19 @@ object AppModule {
     @Provides
     fun provideDao(db: MonthsDatabase) = db.getDao()
 
+    @Singleton
+    @Provides
+    fun provideEncryptedSharedPreferences(@ApplicationContext context: Context): SharedPreferences {
+        val masterKey = MasterKey.Builder(context)
+            .setKeyScheme(MasterKey.KeyScheme.AES256_GCM)
+            .build()
+
+        return EncryptedSharedPreferences.create(
+            context,
+            ENCRYPTED_SHARED_PREFS_NAME,
+            masterKey,
+            EncryptedSharedPreferences.PrefKeyEncryptionScheme.AES256_SIV,
+            EncryptedSharedPreferences.PrefValueEncryptionScheme.AES256_GCM
+        )
+    }
 }

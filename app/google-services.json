@@ -1,0 +1,47 @@
+{
+  "project_info": {
+    "project_number": "211279226192",
+    "project_id": "sledipari",
+    "storage_bucket": "sledipari.appspot.com"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:211279226192:android:0e76b0a705989a75c17855",
+        "android_client_info": {
+          "package_name": "com.example.sledipari"
+        }
+      },
+      "oauth_client": [
+        {
+          "client_id": "211279226192-3i24h9eii6cf5csh9emqmssshqo53b2v.apps.googleusercontent.com",
+          "client_type": 1,
+          "android_info": {
+            "package_name": "com.example.sledipari",
+            "certificate_hash": "61e20c5cfcd1dcc3b09a63787bf74a71019a4a1b"
+          }
+        },
+        {
+          "client_id": "211279226192-739sr5poegfbkd0gnhunt892f4vkf42s.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": "AIzaSyAh15_DeOw_FGbIodjkW4KcSBBT5ru8OVI"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": [
+            {
+              "client_id": "211279226192-739sr5poegfbkd0gnhunt892f4vkf42s.apps.googleusercontent.com",
+              "client_type": 3
+            }
+          ]
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}
