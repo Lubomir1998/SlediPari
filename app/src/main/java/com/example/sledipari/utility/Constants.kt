@@ -1,5 +1,7 @@
 package com.example.sledipari.utility
 
+import com.example.sledipari.BuildConfig
+
 object Constants {
 
     const val USE_LOCALHOST = true
@@ -11,4 +13,8 @@ object Constants {
     const val KEY_FIREBASE_TOKEN = "KEY_FIREBASE_TOKEN"
 
     const val SLEDI_PARI_TOPIC = "SLEDI_PARI_TOPIC"
+    const val SERVER_KEY = BuildConfig.SERVER_KEY
+    const val SENDER_ID = BuildConfig.SENDER_ID
+
+    const val CHANNEL_ID = "CHANNEL_ID"
 }

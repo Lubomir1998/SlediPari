@@ -2,9 +2,8 @@ package com.example.sledipari.utility
 
 import android.content.Context
 import androidx.compose.ui.graphics.Color
-import com.example.data.models.Frizior
 import com.example.sledipari.R
-import com.example.sledipari.api.models.*
+import com.example.sledipari.api.models.categories.*
 import com.example.sledipari.data.models.Month
 import com.example.sledipari.ui.*
 

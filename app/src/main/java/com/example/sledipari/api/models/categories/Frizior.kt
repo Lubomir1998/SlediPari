@@ -1,4 +1,4 @@
-package com.example.data.models
+package com.example.sledipari.api.models.categories
 
 import kotlinx.serialization.Serializable
 

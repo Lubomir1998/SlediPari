@@ -1,6 +1,6 @@
 package com.example.sledipari.api.models
 
-import com.example.data.models.Frizior
+import com.example.sledipari.api.models.categories.*
 import kotlinx.serialization.Serializable
 
 @Serializable

@@ -11,6 +11,8 @@ import androidx.navigation.compose.rememberNavController
 import com.example.sledipari.ui.main.GetMonthViewModel
 import com.example.sledipari.ui.main.MonthScreen
 import com.example.sledipari.ui.splash.GetAllMonthsViewModel
+import com.example.sledipari.utility.Constants.SLEDI_PARI_TOPIC
+import com.google.firebase.messaging.FirebaseMessaging
 import dagger.hilt.android.AndroidEntryPoint
 
 @AndroidEntryPoint
@@ -18,6 +20,9 @@ class MainActivity : ComponentActivity() {
     @ExperimentalMaterialApi
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
+
+        FirebaseMessaging.getInstance().subscribeToTopic(SLEDI_PARI_TOPIC)
+
         setContent {
 
             val navController = rememberNavController()

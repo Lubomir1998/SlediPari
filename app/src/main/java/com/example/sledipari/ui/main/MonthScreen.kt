@@ -310,7 +310,7 @@ fun MonthScreen(
                     return@Button
                 }
 
-                viewModel.addSpending(currentSelectedOption!!.second, sumText.toFloat() * currentSelectedQuantity)
+                viewModel.addSpending(currentSelectedOption!!, sumText.toFloat() * currentSelectedQuantity)
             }
         ) {
             Text(

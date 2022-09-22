@@ -5,6 +5,7 @@ import android.content.SharedPreferences
 import androidx.room.Room
 import androidx.security.crypto.EncryptedSharedPreferences
 import androidx.security.crypto.MasterKey
+import com.example.sledipari.api.FirebasePushNotificationsApi
 import com.example.sledipari.utility.Constants.BASE_URL
 import com.example.sledipari.utility.Constants.BASE_URL_LOCALHOST
 import com.example.sledipari.utility.Constants.USE_LOCALHOST
@@ -37,6 +38,15 @@ object AppModule {
     @Provides
     fun provideMonthApi() =
         MonthApi(HttpClient(CIO) {
+            install(JsonFeature) {
+                serializer = KotlinxSerializer(jsonInstance)
+            }
+        })
+
+    @Singleton
+    @Provides
+    fun provideFcmApi() =
+        FirebasePushNotificationsApi(HttpClient(CIO) {
             install(JsonFeature) {
                 serializer = KotlinxSerializer(jsonInstance)
             }
