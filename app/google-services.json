@@ -37,6 +37,13 @@
             {
               "client_id": "211279226192-739sr5poegfbkd0gnhunt892f4vkf42s.apps.googleusercontent.com",
               "client_type": 3
+            },
+            {
+              "client_id": "211279226192-hmaeiugkb3a6755icsqd1k1k786pms5h.apps.googleusercontent.com",
+              "client_type": 2,
+              "ios_info": {
+                "bundle_id": "com.async.await.SlediPari"
+              }
             }
           ]
         }
