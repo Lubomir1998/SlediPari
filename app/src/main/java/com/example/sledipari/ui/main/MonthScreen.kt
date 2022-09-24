@@ -187,6 +187,10 @@ fun MonthScreen(
         mutableStateOf(false)
     }
 
+    var sendNotificationsChecked by remember {
+        mutableStateOf(false)
+    }
+
     val isLoading by remember {
         viewModel.isLoading
     }
@@ -292,6 +296,10 @@ fun MonthScreen(
             )
         }
 
+        Spacer(modifier = Modifier.size(24.dp))
+
+        Switch(checked = sendNotificationsChecked, onCheckedChange = { sendNotificationsChecked = it })
+
         Spacer(modifier = Modifier.size(50.dp))
 
         Button(
@@ -310,7 +318,7 @@ fun MonthScreen(
                     return@Button
                 }
 
-                viewModel.addSpending(currentSelectedOption!!, sumText.toFloat() * currentSelectedQuantity)
+                viewModel.addSpending(currentSelectedOption!!, sumText.toFloat() * currentSelectedQuantity, sendNotificationsChecked)
             }
         ) {
             Text(

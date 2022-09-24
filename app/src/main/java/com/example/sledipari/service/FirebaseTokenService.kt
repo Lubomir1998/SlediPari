@@ -43,7 +43,7 @@ class FirebaseTokenService: FirebaseMessagingService() {
         }
 
         intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP)
-        val pendingIntent = PendingIntent.getActivity(this, 0, intent, PendingIntent.FLAG_ONE_SHOT)
+        val pendingIntent = PendingIntent.getActivity(this, 0, intent, PendingIntent.FLAG_IMMUTABLE)
 
         val vibrateArray = longArrayOf(1000)
 

@@ -114,7 +114,7 @@ class GetMonthViewModel
         } catch (e: Exception) { }
     }
 
-    fun addSpending(title: Pair<String, String>, price: Float) {
+    fun addSpending(title: Pair<String, String>, price: Float, sendNotification: Boolean = false) {
         isLoading.value = true
 
         viewModelScope.launch {
@@ -129,13 +129,7 @@ class GetMonthViewModel
                 is Resource.Success -> {
 
                     isSpendingSuccessful.value = addSpendingResult.data ?: false
-                    if (title.first == context.getString(R.string.smetki_internet) ||
-                        title.first == context.getString(R.string.smetki_tok) ||
-                        title.first == context.getString(R.string.smetki_toplo) ||
-                        title.first == context.getString(R.string.smetki_voda) ||
-                        title.first == context.getString(R.string.smetki_vhod) ||
-                        title.first == context.getString(R.string.smetki_telefon)
-                    ) {
+                    if (sendNotification) {
                         sendPushNotification(title.first, price)
                     }
                 }
