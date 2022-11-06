@@ -78,4 +78,9 @@
 
     <string name="no_internet">No internet. Check your connection</string>
     <string name="nothing_for_now">Nothing for now</string>
+
+    <string name="price">Price</string>
+    <string name="quantity">Quantity</string>
+    <string name="spending_type">Spending type</string>
+    <string name="send_notification">Send notification</string>
 </resources>

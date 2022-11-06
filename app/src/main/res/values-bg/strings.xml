@@ -78,4 +78,9 @@
 
     <string name="no_internet">Няма интернет. Провери връзката</string>
     <string name="nothing_for_now">Нищо за сега</string>
+
+    <string name="price">Цена</string>
+    <string name="quantity">Количество</string>
+    <string name="spending_type">Тип на разход</string>
+    <string name="send_notification">Изпрати известие</string>
 </resources>
