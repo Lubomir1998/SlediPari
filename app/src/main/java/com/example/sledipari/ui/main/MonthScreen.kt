@@ -351,20 +351,27 @@ fun MonthScreen(
                 )
             }
 
+            Divider(
+                modifier = Modifier
+                    .height(1.dp)
+                    .padding(start = 10.dp)
+                    .background(colorResource(id = R.color.divider))
+            )
+
             // send notification
-//            Row(
-//                verticalAlignment = Alignment.CenterVertically,
-//                horizontalArrangement = Arrangement.SpaceBetween,
-//                modifier = modifier
-//                    .fillMaxWidth()
-//                    .padding(horizontal = 10.dp)
-//            ) {
-//                Text(
-//                    text = context.getString(R.string.send_notification),
-//                    color = colorResource(id = R.color.label)
-//                )
-//                Switch(checked = sendNotificationsChecked, onCheckedChange = { sendNotificationsChecked = it })
-//            }
+            Row(
+                verticalAlignment = Alignment.CenterVertically,
+                horizontalArrangement = Arrangement.SpaceBetween,
+                modifier = modifier
+                    .fillMaxWidth()
+                    .padding(10.dp)
+            ) {
+                Text(
+                    text = context.getString(R.string.send_notification),
+                    color = colorResource(id = R.color.label)
+                )
+                Switch(checked = sendNotificationsChecked, onCheckedChange = { sendNotificationsChecked = it })
+            }
         }
 
         Spacer(modifier = Modifier.size(50.dp))
