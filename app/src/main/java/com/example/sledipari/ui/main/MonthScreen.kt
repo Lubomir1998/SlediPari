@@ -395,6 +395,34 @@ fun MonthScreen(
             )
         }
 
+        Spacer(modifier = Modifier.size(30.dp))
+
+        Button(
+            colors = ButtonDefaults.buttonColors(backgroundColor = Color.Red),
+            enabled = !isLoading,
+            onClick = {
+                activity.hideKeyboard(view)
+
+                if (currentSelectedOption == null) {
+                    Toast.makeText(context, context.getString(R.string.nothing_selected), Toast.LENGTH_SHORT).show()
+                    return@Button
+                }
+
+                if (sumText.trim().isEmpty()) {
+                    Toast.makeText(context, context.getString(R.string.enter_price), Toast.LENGTH_SHORT).show()
+                    return@Button
+                }
+
+                viewModel.addSpending(currentSelectedOption!!, sumText.toFloat() * currentSelectedQuantity, sendNotificationsChecked, false)
+            }
+        ) {
+            Text(
+                text = context.getString(R.string.undo),
+                fontSize = 10.sp,
+                color = Color.White
+            )
+        }
+
         Spacer(modifier = Modifier.size(20.dp))
 
         if (isLoading) {

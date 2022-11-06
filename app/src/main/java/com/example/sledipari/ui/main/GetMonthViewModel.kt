@@ -114,7 +114,7 @@ class GetMonthViewModel
         } catch (e: Exception) { }
     }
 
-    fun addSpending(title: Pair<String, String>, price: Float, sendNotification: Boolean = false) {
+    fun addSpending(title: Pair<String, String>, price: Float, sendNotification: Boolean = false, post: Boolean = true) {
         isLoading.value = true
 
         viewModelScope.launch {
@@ -125,7 +125,7 @@ class GetMonthViewModel
                 price = price
             )
 
-            when (val addSpendingResult = repo.postSpending(request)) {
+            when (val addSpendingResult = repo.postSpending(request, post)) {
                 is Resource.Success -> {
 
                     isSpendingSuccessful.value = addSpendingResult.data ?: false

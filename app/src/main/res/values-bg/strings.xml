@@ -83,4 +83,6 @@
     <string name="quantity">Количество</string>
     <string name="spending_type">Тип на разход</string>
     <string name="send_notification">Изпрати известие</string>
+
+    <string name="undo">Върни</string>
 </resources>

@@ -26,6 +26,16 @@ class MonthApi(private val httpClient: HttpClient) {
         return response
     }
 
+    suspend fun undoSpending(postRequest: PostSpendingRequest): Boolean {
+
+        val response = httpClient.post<Boolean>(baseUrl() + "removeExpense") {
+            contentType(ContentType.Application.Json)
+            body = postRequest
+        }
+
+        return response
+    }
+
     suspend fun getAllMonths(): List<MonthDTO> {
 
         return httpClient.get( baseUrl() + "getAllMonths")

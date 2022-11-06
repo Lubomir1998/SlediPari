@@ -38,10 +38,15 @@ class MonthRepository @Inject constructor(
         }
     }
 
-    suspend fun postSpending(request: PostSpendingRequest): Resource<Boolean> {
+    suspend fun postSpending(request: PostSpendingRequest, post: Boolean = true): Resource<Boolean> {
 
         return try {
-            Resource.Success(api.postSpending(request))
+            if (post) {
+                Resource.Success(api.postSpending(request))
+            }
+            else {
+                Resource.Success(api.undoSpending(request))
+            }
         } catch (e: Exception) {
             Resource.Error(e.localizedMessage ?: context.getString(R.string.something_went_wrong))
         }
