@@ -224,7 +224,7 @@ fun MonthScreen(
             currentSelectedOption = null
             currentSelectedQuantity = 1
             bottomSheetScaffoldState.bottomSheetState.collapse()
-            viewModel.getAllMonths()
+            viewModel.getAllMonthsFromServer()
             viewModel.getMonth(viewModel.monthId.value)
         }
     }
@@ -245,7 +245,6 @@ fun MonthScreen(
                 .clip(RoundedCornerShape(100.dp))
                 .background(colorResource(id = R.color.system_gray5))
         )
-
 
         Column(
             modifier = Modifier
