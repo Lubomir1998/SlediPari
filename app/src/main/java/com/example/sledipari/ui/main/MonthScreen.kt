@@ -638,7 +638,7 @@ fun PieChart(
 
             var anglesSum = 0f
 
-            list.forEach { result ->
+            list.reversed().forEach { result ->
 
                 drawArc(
                     color = result.second,
