@@ -9,4 +9,7 @@
     <color name="system_gray5">#2C2C2E</color>
     <color name="system_gray6">#1C1C1E</color>
     <color name="background">#000</color>
+
+    <color name="section">#48484A</color>
+    <color name="divider">#AEAEB2</color>
 </resources>

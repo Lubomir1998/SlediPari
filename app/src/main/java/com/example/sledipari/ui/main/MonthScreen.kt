@@ -246,59 +246,126 @@ fun MonthScreen(
                 .background(colorResource(id = R.color.system_gray5))
         )
 
-        Row(
-            horizontalArrangement = Arrangement.SpaceBetween,
+
+        Column(
             modifier = Modifier
                 .fillMaxWidth()
-                .padding(20.dp)
+                .padding(12.dp)
+                .clip(RoundedCornerShape(12.dp))
+                .background(colorResource(id = R.color.section))
         ) {
 
-            DropDownMenuCategories(
-                isCategoriesExpanded = isCategoriesExpanded,
-                currentSelectedOption = currentSelectedOption,
-                options = options,
-                onCategoryArrowClick = { isCategoriesExpanded = it },
-                onSelectCategory = {
-                    currentSelectedOption = it
-                    isCategoriesExpanded = false
-                },
-                onDismiss = { isCategoriesExpanded = false }
+            // spending type
+            Row(
+                verticalAlignment = Alignment.CenterVertically,
+                horizontalArrangement = Arrangement.SpaceBetween,
+                modifier = modifier
+                    .fillMaxWidth()
+                    .padding(horizontal = 10.dp)
+            ) {
+                Text(
+                    text = context.getString(R.string.spending_type),
+                    color = colorResource(id = R.color.label)
+                )
+                DropDownMenuCategories(
+                    isCategoriesExpanded = isCategoriesExpanded,
+                    currentSelectedOption = currentSelectedOption,
+                    options = options,
+                    onCategoryArrowClick = { isCategoriesExpanded = it },
+                    onSelectCategory = {
+                        currentSelectedOption = it
+                        isCategoriesExpanded = false
+                    },
+                    onDismiss = { isCategoriesExpanded = false }
+                )
+            }
+
+            Divider(
+                modifier = Modifier
+                    .height(1.dp)
+                    .padding(start = 10.dp)
+                    .background(colorResource(id = R.color.divider))
             )
 
-            TextField(
-                value = sumText,
-                onValueChange = {
-                    sumText = if (it.isEmpty()){
-                        it
-                    } else {
-                        when (it.toDoubleOrNull()) {
-                            null -> sumText //old value
-                            else -> it   //new value
+            // price
+            Row(
+                verticalAlignment = Alignment.CenterVertically,
+                horizontalArrangement = Arrangement.SpaceBetween,
+                modifier = modifier
+                    .fillMaxWidth()
+                    .padding(horizontal = 10.dp)
+            ) {
+                Text(
+                    text = context.getString(R.string.price),
+                    color = colorResource(id = R.color.label)
+                )
+                TextField(
+                    value = sumText,
+                    onValueChange = {
+                        sumText = if (it.isEmpty()){
+                            it
+                        } else {
+                            when (it.toDoubleOrNull()) {
+                                null -> sumText //old value
+                                else -> it   //new value
+                            }
                         }
-                    }
-                },
-                colors = TextFieldDefaults.textFieldColors(textColor = colorResource(id = R.color.label)),
-                singleLine = true,
-                keyboardOptions = KeyboardOptions(keyboardType = KeyboardType.Number),
-                modifier = Modifier.width(130.dp)
+                    },
+                    colors = TextFieldDefaults.textFieldColors(textColor = colorResource(id = R.color.label)),
+                    singleLine = true,
+                    keyboardOptions = KeyboardOptions(keyboardType = KeyboardType.Number),
+                    modifier = Modifier
+                        .width(130.dp)
+                )
+            }
+
+            Divider(
+                modifier = Modifier
+                    .height(1.dp)
+                    .padding(start = 10.dp)
+                    .background(colorResource(id = R.color.divider))
             )
 
-            DropDownMenuQuantity(
-                isQuantityExpanded = isQuantityExpanded,
-                currentSelectedOption = currentSelectedQuantity,
-                options = quantityOptions,
-                onQuantityArrowClick = { isQuantityExpanded = it },
-                onSelectQuantity = {
-                    currentSelectedQuantity = it
-                    isQuantityExpanded = false
-                },
-                onDismiss = { isQuantityExpanded = false }
-            )
+            // quantity
+            Row(
+                verticalAlignment = Alignment.CenterVertically,
+                horizontalArrangement = Arrangement.SpaceBetween,
+                modifier = modifier
+                    .fillMaxWidth()
+                    .padding(horizontal = 10.dp)
+            ) {
+                Text(
+                    text = context.getString(R.string.quantity),
+                    color = colorResource(id = R.color.label)
+                )
+                DropDownMenuQuantity(
+                    isQuantityExpanded = isQuantityExpanded,
+                    currentSelectedOption = currentSelectedQuantity,
+                    options = quantityOptions,
+                    onQuantityArrowClick = { isQuantityExpanded = it },
+                    onSelectQuantity = {
+                        currentSelectedQuantity = it
+                        isQuantityExpanded = false
+                    },
+                    onDismiss = { isQuantityExpanded = false }
+                )
+            }
+
+            // send notification
+//            Row(
+//                verticalAlignment = Alignment.CenterVertically,
+//                horizontalArrangement = Arrangement.SpaceBetween,
+//                modifier = modifier
+//                    .fillMaxWidth()
+//                    .padding(horizontal = 10.dp)
+//            ) {
+//                Text(
+//                    text = context.getString(R.string.send_notification),
+//                    color = colorResource(id = R.color.label)
+//                )
+//                Switch(checked = sendNotificationsChecked, onCheckedChange = { sendNotificationsChecked = it })
+//            }
         }
-
-        Spacer(modifier = Modifier.size(24.dp))
-
-        Switch(checked = sendNotificationsChecked, onCheckedChange = { sendNotificationsChecked = it })
 
         Spacer(modifier = Modifier.size(50.dp))
 
