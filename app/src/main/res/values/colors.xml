@@ -19,4 +19,5 @@
 
     <color name="section">#FFFFFF</color>
     <color name="divider">#AEAEB2</color>
+    <color name="icon_tint">#007AFF</color>
 </resources>

@@ -85,4 +85,6 @@
     <string name="send_notification">Изпрати известие</string>
 
     <string name="undo">Върни</string>
+    <string name="settings">Настройки</string>
+    <string name="history">История</string>
 </resources>

@@ -15,6 +15,7 @@ import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.Add
 import androidx.compose.material.icons.filled.ArrowBack
 import androidx.compose.material.icons.filled.ArrowDropDown
+import androidx.compose.material.icons.filled.Settings
 import androidx.compose.runtime.*
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
@@ -28,6 +29,7 @@ import androidx.compose.ui.text.input.KeyboardType
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
+import androidx.navigation.NavController
 import com.example.sledipari.R
 import com.example.sledipari.data.models.Month
 import com.example.sledipari.ui.MainActivity
@@ -39,6 +41,7 @@ import kotlinx.coroutines.launch
 @ExperimentalMaterialApi
 @Composable
 fun MonthScreen(
+    navController: NavController,
     viewModel: GetMonthViewModel,
     activity: MainActivity,
     view: View
@@ -144,6 +147,7 @@ fun MonthScreen(
         sheetPeekHeight = 0.dp
     ) {
         MonthContent(
+            navController = navController,
             allMonths = allMonths,
             currentMonthId = currentMonthId,
             currentMonth = currentMonth,
@@ -440,6 +444,7 @@ fun MonthScreen(
 @ExperimentalMaterialApi
 @Composable
 fun MonthContent(
+    navController: NavController,
     allMonths: List<Month>,
     currentMonthId: String,
     currentMonth: Month?,
@@ -463,13 +468,25 @@ fun MonthContent(
             .verticalScroll(rememberScrollState())
     ) {
         Row(
-            horizontalArrangement = Arrangement.End,
+            horizontalArrangement = Arrangement.SpaceBetween,
             modifier = Modifier.fillMaxWidth()
         ) {
             Icon(
+                imageVector = Icons.Default.Settings,
+                contentDescription = null,
+                tint = colorResource(id = R.color.icon_tint),
+                modifier = Modifier
+                    .padding(16.dp)
+                    .size(36.dp)
+                    .clickable {
+                        navController.navigate("settings_screen")
+                    }
+            )
+
+            Icon(
                 imageVector = Icons.Default.Add,
                 contentDescription = null,
-                tint = colorResource(id = R.color.label),
+                tint = colorResource(id = R.color.icon_tint),
                 modifier = Modifier
                     .padding(16.dp)
                     .size(36.dp)
