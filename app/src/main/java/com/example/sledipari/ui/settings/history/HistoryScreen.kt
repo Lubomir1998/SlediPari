@@ -71,18 +71,37 @@ fun HistoryScreen(
                 viewModel.getHistory()
             }
 
-            LazyColumn(
-                modifier = Modifier
-                    .fillMaxSize()
-                    .background(colorResource(id = R.color.system_gray5))
-            ) {
-                items(historyItems) { item ->
+            if (historyItems.isNotEmpty()) {
 
-                    HistoryItem(
-                        activity = activity,
-                        transaction = item
+                LazyColumn(
+                    modifier = Modifier
+                        .fillMaxSize()
+                        .background(colorResource(id = R.color.system_gray5))
+                ) {
+                    items(historyItems) { item ->
+
+                        HistoryItem(
+                            activity = activity,
+                            transaction = item
+                        )
+                    }
+                }
+            }
+            else {
+                Box(
+                    contentAlignment = Alignment.Center,
+                    modifier = Modifier
+                        .fillMaxSize()
+                        .background(colorResource(id = R.color.system_gray5))
+                ) {
+
+                    Text(
+                        text = stringResource(id = R.string.nothing_for_now),
+                        color = colorResource(id = R.color.label),
+                        fontSize = 16.sp
                     )
                 }
+
             }
         })
 
