@@ -12,6 +12,7 @@ import com.example.sledipari.ui.main.GetMonthViewModel
 import com.example.sledipari.ui.main.MonthScreen
 import com.example.sledipari.ui.settings.SettingsScreen
 import com.example.sledipari.ui.settings.history.HistoryScreen
+import com.example.sledipari.ui.settings.history.HistoryViewModel
 import com.example.sledipari.ui.splash.GetAllMonthsViewModel
 import com.example.sledipari.utility.Constants.SLEDI_PARI_TOPIC
 import com.google.firebase.messaging.FirebaseMessaging
@@ -30,6 +31,7 @@ class MainActivity : ComponentActivity() {
             val navController = rememberNavController()
             val getMonthViewModel: GetMonthViewModel = viewModel()
             val getAllMonthsViewModel: GetAllMonthsViewModel = viewModel()
+            val historyViewModel: HistoryViewModel = viewModel()
 
             NavHost(
                 navController = navController,
@@ -59,7 +61,9 @@ class MainActivity : ComponentActivity() {
 
                 composable("history_screen") {
                     HistoryScreen(
-                        navController = navController
+                        navController = navController,
+                        viewModel = historyViewModel,
+                        activity = this@MainActivity
                     )
                 }
             }

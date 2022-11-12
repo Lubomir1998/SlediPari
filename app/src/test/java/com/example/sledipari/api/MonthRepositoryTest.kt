@@ -7,6 +7,10 @@ import com.example.sledipari.data.MonthRepository
 import com.example.sledipari.data.db.MonthDao
 import com.example.sledipari.data.db.MonthsDatabase
 import com.example.sledipari.data.models.Month
+import com.example.sledipari.data.models.Transaction
+import com.example.sledipari.ui.clothes
+import com.example.sledipari.ui.getRGB
+import com.example.sledipari.ui.remont
 import kotlinx.coroutines.runBlocking
 import org.junit.After
 import org.junit.Assert
@@ -94,6 +98,41 @@ class MonthRepositoryTest {
         Assert.assertEquals(1.2f, dao.getMonth("2022-1-8").workout)
         Assert.assertEquals(0.0f, dao.getMonth("2022-1-8").tok)
         Assert.assertEquals(20.0f, dao.getMonth("2022-1-8").gifts)
+    }
+
+    @Test
+    fun testColorValues() = runBlocking {
+
+        val color1 = "clothes".getRGB()
+        val color2 = "remont".getRGB()
+
+        repo.addTransactionInHistory(
+            Transaction(
+                price = 10f,
+                red = color1.first,
+                green = color1.second,
+                blue = color1.third,
+                undo = false,
+                timestamp = 123L
+            )
+        )
+
+        repo.addTransactionInHistory(
+            Transaction(
+                price = 10f,
+                red = color2.first,
+                green = color2.second,
+                blue = color2.third,
+                undo = false,
+                timestamp = 543L
+            )
+        )
+
+        val historyItems = repo.getHistory()
+        Assert.assertEquals(543L, historyItems.first().timestamp)
+        Assert.assertEquals(remont.red, historyItems.first().red)
+        Assert.assertEquals(remont.green, historyItems.first().green)
+        Assert.assertEquals(remont.blue, historyItems.first().blue)
     }
 
 }

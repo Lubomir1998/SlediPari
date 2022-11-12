@@ -7,6 +7,7 @@ import com.example.sledipari.api.MonthApi
 import com.example.sledipari.api.models.PostSpendingRequest
 import com.example.sledipari.data.db.MonthDao
 import com.example.sledipari.data.models.Month
+import com.example.sledipari.data.models.Transaction
 import com.example.sledipari.utility.extensions.isCurrent
 import javax.inject.Inject
 
@@ -75,6 +76,16 @@ class MonthRepository @Inject constructor(
         } catch (e: Exception) {
             Resource.Error(e.localizedMessage ?: context.getString(R.string.something_went_wrong))
         }
+    }
+
+    suspend fun addTransactionInHistory(transaction: Transaction) {
+
+        dao.insertTransaction(transaction)
+    }
+
+    suspend fun getHistory(): List<Transaction> {
+
+        return dao.getAllTransactions()
     }
 
 }

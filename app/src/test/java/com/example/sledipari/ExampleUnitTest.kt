@@ -1,15 +1,11 @@
 package com.example.sledipari
 
-import android.content.Context
-import androidx.test.core.app.ApplicationProvider
-import com.example.sledipari.utility.formatDate
 import com.example.sledipari.utility.toReadableDate
 import org.junit.Test
 
 import org.junit.Assert.*
 import org.junit.runner.RunWith
 import org.robolectric.RobolectricTestRunner
-import java.text.SimpleDateFormat
 
 /**
  * Example local unit test, which will execute on the development machine (host).

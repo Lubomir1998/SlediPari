@@ -14,6 +14,7 @@ import com.example.sledipari.api.models.pushnotifications.NotificationData
 import com.example.sledipari.api.models.pushnotifications.PushNotification
 import com.example.sledipari.data.MonthRepository
 import com.example.sledipari.data.models.Month
+import com.example.sledipari.data.models.Transaction
 import com.example.sledipari.utility.Constants.SLEDI_PARI_TOPIC
 import com.example.sledipari.utility.Resource
 import com.example.sledipari.utility.extensions.formatPrice
@@ -124,7 +125,7 @@ class GetMonthViewModel
         }
     }
 
-    fun addSpending(title: Pair<String, String>, price: Float, sendNotification: Boolean = false, post: Boolean = true) {
+    fun addSpending(title: Pair<String, String>, price: Float, rgbColor: Triple<Float, Float, Float>, sendNotification: Boolean = false, post: Boolean = true) {
         isLoading.value = true
 
         viewModelScope.launch {
@@ -139,8 +140,22 @@ class GetMonthViewModel
                 is Resource.Success -> {
 
                     isSpendingSuccessful.value = addSpendingResult.data ?: false
-                    if (sendNotification) {
-                        sendPushNotification(title.first, price)
+
+                    if (addSpendingResult.data!!) {
+                        repo.addTransactionInHistory(
+                            Transaction(
+                                price = price,
+                                title = title.second,
+                                red = rgbColor.first,
+                                green = rgbColor.second,
+                                blue = rgbColor.third,
+                                undo = !post,
+                                timestamp = System.currentTimeMillis()
+                            )
+                        )
+                        if (sendNotification) {
+                            sendPushNotification(title.first, price)
+                        }
                     }
                 }
 

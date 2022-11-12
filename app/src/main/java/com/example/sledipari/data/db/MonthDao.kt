@@ -2,6 +2,7 @@ package com.example.sledipari.data.db
 
 import androidx.room.*
 import com.example.sledipari.data.models.Month
+import com.example.sledipari.data.models.Transaction
 
 @Dao
 interface MonthDao {
@@ -14,4 +15,10 @@ interface MonthDao {
 
     @Query("SELECT * FROM Month ORDER BY id ASC")
     suspend fun getAllMonths(): List<Month>
+
+    @Insert(onConflict = OnConflictStrategy.REPLACE)
+    suspend fun insertTransaction(transaction: Transaction)
+
+    @Query("SELECT * FROM `Transaction` ORDER BY timestamp DESC")
+    suspend fun getAllTransactions(): List<Transaction>
 }

@@ -33,6 +33,7 @@ import androidx.navigation.NavController
 import com.example.sledipari.R
 import com.example.sledipari.data.models.Month
 import com.example.sledipari.ui.MainActivity
+import com.example.sledipari.ui.getRGB
 import com.example.sledipari.ui.home
 import com.example.sledipari.utility.*
 import com.example.sledipari.utility.extensions.*
@@ -395,7 +396,7 @@ fun MonthScreen(
                     return@Button
                 }
 
-                viewModel.addSpending(currentSelectedOption!!, sumText.toFloat() * currentSelectedQuantity, sendNotificationsChecked)
+                viewModel.addSpending(currentSelectedOption!!, sumText.toFloat() * currentSelectedQuantity, currentSelectedOption!!.second.getRGB(), sendNotificationsChecked)
             }
         ) {
             Text(
@@ -423,7 +424,7 @@ fun MonthScreen(
                     return@Button
                 }
 
-                viewModel.addSpending(currentSelectedOption!!, sumText.toFloat() * currentSelectedQuantity, sendNotificationsChecked, false)
+                viewModel.addSpending(currentSelectedOption!!, sumText.toFloat() * currentSelectedQuantity, currentSelectedOption!!.second.getRGB(), sendNotificationsChecked, false)
             }
         ) {
             Text(
