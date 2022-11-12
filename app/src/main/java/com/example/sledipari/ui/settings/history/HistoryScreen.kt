@@ -88,20 +88,8 @@ fun HistoryScreen(
                 }
             }
             else {
-                Box(
-                    contentAlignment = Alignment.Center,
-                    modifier = Modifier
-                        .fillMaxSize()
-                        .background(colorResource(id = R.color.system_gray5))
-                ) {
 
-                    Text(
-                        text = stringResource(id = R.string.nothing_for_now),
-                        color = colorResource(id = R.color.label),
-                        fontSize = 16.sp
-                    )
-                }
-
+                EmptyState()
             }
         })
 
@@ -188,5 +176,25 @@ fun HistoryItem(
             }
         }
 
+    }
+}
+
+@Composable
+fun EmptyState(
+    modifier: Modifier = Modifier
+) {
+
+    Box(
+        contentAlignment = Alignment.Center,
+        modifier = modifier
+            .fillMaxSize()
+            .background(colorResource(id = R.color.system_gray5))
+    ) {
+
+        Text(
+            text = stringResource(id = R.string.nothing_for_now),
+            color = colorResource(id = R.color.label),
+            fontSize = 16.sp
+        )
     }
 }
