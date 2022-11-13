@@ -18,6 +18,8 @@ android {
         versionName "1.0"
         buildConfigField("String", "SERVER_KEY", SERVER_KEY)
         buildConfigField("String", "SENDER_ID", SENDER_ID)
+        buildConfigField("String", "BASE_URL", BASE_URL)
+        buildConfigField("String", "BASE_URL_LOCALHOST", BASE_URL_LOCALHOST)
 
         testInstrumentationRunner "androidx.test.runner.AndroidJUnitRunner"
         vectorDrawables {
