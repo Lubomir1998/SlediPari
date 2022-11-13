@@ -8,7 +8,9 @@ import com.example.sledipari.api.models.PostSpendingRequest
 import com.example.sledipari.data.db.MonthDao
 import com.example.sledipari.data.models.Month
 import com.example.sledipari.data.models.Transaction
+import com.example.sledipari.utility.Constants.HISTORY_DURATION
 import com.example.sledipari.utility.extensions.isCurrent
+import com.example.sledipari.utility.formatDate
 import javax.inject.Inject
 
 class MonthRepository @Inject constructor(
@@ -86,6 +88,28 @@ class MonthRepository @Inject constructor(
     suspend fun getHistory(): List<Transaction> {
 
         return dao.getAllTransactions()
+    }
+
+    suspend fun deleteSomeHistory() {
+
+        try {
+
+            val history = getHistory()
+            val currentDate = System.currentTimeMillis()
+
+            for (transaction in history) {
+
+                if (currentDate - transaction.timestamp > HISTORY_DURATION) {
+
+                    try {
+                        dao.deleteTransaction(transaction.timestamp)
+                    } catch (e: Exception) {
+                        continue
+                    }
+                }
+            }
+
+        } catch (e: Exception) { }
     }
 
 }

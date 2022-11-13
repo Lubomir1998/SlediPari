@@ -21,4 +21,7 @@ interface MonthDao {
 
     @Query("SELECT * FROM `Transaction` ORDER BY timestamp DESC")
     suspend fun getAllTransactions(): List<Transaction>
+
+    @Query("DELETE FROM `Transaction` WHERE timestamp = :date")
+    suspend fun deleteTransaction(date: Long)
 }

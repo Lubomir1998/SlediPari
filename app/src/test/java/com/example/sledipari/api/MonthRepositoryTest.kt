@@ -1,14 +1,11 @@
 package com.example.sledipari.api
 
-import android.content.Context
 import androidx.room.Room
-import androidx.test.core.app.ApplicationProvider
 import com.example.sledipari.data.MonthRepository
 import com.example.sledipari.data.db.MonthDao
 import com.example.sledipari.data.db.MonthsDatabase
 import com.example.sledipari.data.models.Month
 import com.example.sledipari.data.models.Transaction
-import com.example.sledipari.ui.clothes
 import com.example.sledipari.ui.getRGB
 import com.example.sledipari.ui.remont
 import kotlinx.coroutines.runBlocking
@@ -28,7 +25,6 @@ class MonthRepositoryTest {
 
     @Before
     fun setUp() {
-        val context = ApplicationProvider.getApplicationContext<Context>()
         db = Room.inMemoryDatabaseBuilder(context, MonthsDatabase::class.java).build()
         dao = db.getDao()
         repo = MonthRepository(MonthApi(mockHttpClient), dao, context)
@@ -109,6 +105,7 @@ class MonthRepositoryTest {
         repo.addTransactionInHistory(
             Transaction(
                 price = 10f,
+                title = "clothes",
                 red = color1.first,
                 green = color1.second,
                 blue = color1.third,
@@ -120,6 +117,7 @@ class MonthRepositoryTest {
         repo.addTransactionInHistory(
             Transaction(
                 price = 10f,
+                title = "remont",
                 red = color2.first,
                 green = color2.second,
                 blue = color2.third,

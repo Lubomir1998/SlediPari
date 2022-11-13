@@ -1,5 +1,10 @@
 package com.example.sledipari.api
 
+import android.content.Context
+import androidx.room.Room
+import androidx.test.core.app.ApplicationProvider
+import com.example.sledipari.data.MonthRepository
+import com.example.sledipari.data.db.MonthsDatabase
 import com.example.sledipari.jsonInstance
 import io.ktor.client.*
 import io.ktor.client.engine.mock.*
@@ -46,3 +51,5 @@ val mockHttpClient = HttpClient(engine) {
         serializer = KotlinxSerializer(jsonInstance)
     }
 }
+
+val context = ApplicationProvider.getApplicationContext<Context>()

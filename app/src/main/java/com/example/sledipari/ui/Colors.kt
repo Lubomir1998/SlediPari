@@ -63,7 +63,7 @@ fun String.getRGB(): Triple<Float, Float, Float> {
         "remont" -> Triple(remont.red, remont.green, remont.blue)
         "posuda" -> Triple(posuda.red, posuda.green, posuda.blue)
         "travel" -> Triple(travel.red, travel.green, travel.blue)
-        "gifts " -> Triple(gifts.red, gifts.green, gifts.blue)
+        "gifts" -> Triple(gifts.red, gifts.green, gifts.blue)
         "snacks" -> Triple(snacks.red, snacks.green, snacks.blue)
         "medicine" -> Triple(medicine.red, medicine.green, medicine.blue)
         "domPotrebi" -> Triple(domPotrebi.red, domPotrebi.green, domPotrebi.blue)
@@ -80,7 +80,7 @@ fun String.getRGB(): Triple<Float, Float, Float> {
         "higien", "other" -> Triple(cosmetics.red, cosmetics.green, cosmetics.blue)
         "clean", "wash" -> Triple(preparati.red, preparati.green, preparati.blue)
         "friziorSub", "cosmetic", "manikior" -> Triple(frizior.red, frizior.green, frizior.blue)
-        "publicT", "taxi", "car" -> Triple(transport.red, transport.green, transport.blue)
+        "public", "taxi", "car" -> Triple(transport.red, transport.green, transport.blue)
         else -> Triple(0f, 0f, 0f)
     }
 }

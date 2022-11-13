@@ -17,4 +17,18 @@ object Constants {
     const val SENDER_ID = BuildConfig.SENDER_ID
 
     const val CHANNEL_ID = "CHANNEL_ID"
+
+    val HISTORY_DURATION = if (USE_LOCALHOST) {
+        1000L * 60 * 5
+    } else {
+        1000L * 60 * 60 * 24 * 7
+    }
+
+    val DELETE_HISTORY_INTERVAL = if (USE_LOCALHOST) {
+        1000L * 60 * 2
+    } else {
+        1000L * 60 * 60 * 24
+    }
+
+    const val HISTORY_TIMESTAMP = "history_timestamp"
 }

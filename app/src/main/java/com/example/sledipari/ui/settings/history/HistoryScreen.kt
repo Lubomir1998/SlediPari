@@ -16,9 +16,9 @@ import androidx.compose.ui.draw.clip
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.res.colorResource
+import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.font.FontWeight
-import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import androidx.navigation.NavController
@@ -129,12 +129,29 @@ fun HistoryItem(
                     bottom = 12.dp
                 )
         ) {
-            Text(
-                text = transaction.title.toLocalizable(LocalContext.current),
-                fontSize = 18.sp,
-                color = colorResource(id = R.color.label),
-                fontWeight = FontWeight.Bold
-            )
+            Row(
+                verticalAlignment = Alignment.CenterVertically,
+                modifier = Modifier
+                    .fillMaxWidth()
+            ) {
+                Text(
+                    text = transaction.title.toLocalizable(LocalContext.current),
+                    fontSize = 18.sp,
+                    color = colorResource(id = R.color.label),
+                    fontWeight = FontWeight.Bold
+                )
+
+                if (transaction.undo) {
+
+                    Spacer(modifier = Modifier.width(24.dp))
+
+                    Icon(
+                        painter = painterResource(id = R.drawable.undo_icon),
+                        contentDescription = null,
+                        tint = Color.Red
+                    )
+                }
+            }
 
             Row(
                 modifier = Modifier
@@ -158,21 +175,10 @@ fun HistoryItem(
                 Spacer(modifier = Modifier.width(24.dp))
 
                 Text(
-                    text = transaction.timestamp.formatDate("d MMM yyyy"),
+                    text = transaction.timestamp.formatDate("d MMM yyyy, HH:mm"),
                     fontSize = 18.sp,
                     color = colorResource(id = R.color.label)
                 )
-
-                if (transaction.undo) {
-
-                    Spacer(modifier = Modifier.width(24.dp))
-
-                    Text(
-                        text = "undo",
-                        fontSize = 18.sp,
-                        color = Color.Red
-                    )
-                }
             }
         }
 
