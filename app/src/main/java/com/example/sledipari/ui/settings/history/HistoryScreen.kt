@@ -1,5 +1,6 @@
 package com.example.sledipari.ui.settings.history
 
+import android.widget.Toast
 import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.lazy.LazyColumn
@@ -37,6 +38,12 @@ fun HistoryScreen(
 ) {
 
     val historyItems by viewModel.history.collectAsState()
+    val error by viewModel.error.collectAsState()
+    val isLoading by viewModel.isLoading.collectAsState()
+
+    error?.let {
+        Toast.makeText(LocalContext.current, it, Toast.LENGTH_LONG).show()
+    }
 
     Scaffold(
         topBar = {
