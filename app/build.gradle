@@ -25,7 +25,6 @@ android {
         vectorDrawables {
             useSupportLibrary true
         }
-        signingConfig signingConfigs.debug
     }
 
     buildTypes {
