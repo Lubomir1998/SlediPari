@@ -50,37 +50,14 @@ fun MonthScreen(
 
     val context = LocalContext.current
 
-    val currentMonthId by remember {
-        viewModel.monthId
-    }
-
-    val currentMonth by remember {
-        viewModel.month
-    }
-
-    val allMonths by remember {
-        viewModel.allMonths
-    }
-
-    val isLoading by remember {
-        viewModel.isLoading
-    }
-
-    val errorMessage by remember {
-        viewModel.errorMessage
-    }
-
-    val currentCategory by remember {
-        viewModel.currentCategory
-    }
-
-    val totalSum by remember {
-        viewModel.totalSum
-    }
-
-    val currentList by remember {
-        viewModel.currentList
-    }
+    val currentMonthId by viewModel.monthId.collectAsState()
+    val currentMonth by viewModel.month.collectAsState()
+    val allMonths by viewModel.allMonths.collectAsState()
+    val isLoading by viewModel.isLoading.collectAsState()
+    val errorMessage by viewModel.errorMessage.collectAsState()
+    val currentCategory by viewModel.currentCategory.collectAsState()
+    val totalSum by viewModel.totalSum.collectAsState()
+    val currentList by viewModel.currentList.collectAsState()
 
     errorMessage?.let {
         Toast.makeText(context, it, Toast.LENGTH_LONG).show()
@@ -196,21 +173,13 @@ fun MonthScreen(
         mutableStateOf(false)
     }
 
-    val isLoading by remember {
-        viewModel.isLoading
-    }
+    val isLoading by viewModel.isLoading.collectAsState()
 
-    val hasCompleted by remember {
-        viewModel.hasCompleted
-    }
+    val hasCompleted by viewModel.hasCompleted.collectAsState()
 
-    val isSpendingSuccessful by remember {
-        viewModel.isSpendingSuccessful
-    }
+    val isSpendingSuccessful by viewModel.isSpendingSuccessful.collectAsState()
 
-    val errorMessage by remember {
-        viewModel.errorMessage
-    }
+    val errorMessage by viewModel.errorMessage.collectAsState()
 
     var sumText by remember {
         mutableStateOf("")
@@ -222,7 +191,7 @@ fun MonthScreen(
 
     LaunchedEffect(key1 = hasCompleted) {
 
-        viewModel.hasCompleted.value = false
+        viewModel.resetHasCompleted()
 
         if (isSpendingSuccessful) {
             sumText = ""
@@ -505,7 +474,7 @@ fun MonthContent(
             allMonths = allMonths,
             currentMonthId = currentMonthId
         ) { month ->
-            viewModel.monthId.value = month.id
+            viewModel.updateMonthId(month.id)
             if (currentCategory != context.getString(R.string.all) && month.getCurrentCategoryValue(context, currentCategory) == 0f) {
                 viewModel.changeCategory(context.getString(R.string.all))
             }

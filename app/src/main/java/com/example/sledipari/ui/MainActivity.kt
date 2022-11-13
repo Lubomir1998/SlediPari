@@ -63,8 +63,7 @@ class MainActivity : ComponentActivity() {
                 composable("history_screen") {
                     HistoryScreen(
                         navController = navController,
-                        viewModel = historyViewModel,
-                        activity = this@MainActivity
+                        viewModel = historyViewModel
                     )
                 }
             }

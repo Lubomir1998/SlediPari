@@ -2,7 +2,6 @@ package com.example.sledipari.ui.main
 
 import android.annotation.SuppressLint
 import android.content.Context
-import androidx.compose.runtime.mutableStateOf
 import androidx.compose.ui.graphics.Color
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
@@ -21,6 +20,9 @@ import com.example.sledipari.utility.extensions.toList
 import com.example.sledipari.utility.extensions.totalSum
 import com.example.sledipari.utility.formatDate
 import dagger.hilt.android.lifecycle.HiltViewModel
+import kotlinx.coroutines.flow.MutableStateFlow
+import kotlinx.coroutines.flow.StateFlow
+import kotlinx.coroutines.flow.asStateFlow
 import kotlinx.coroutines.launch
 import javax.inject.Inject
 
@@ -32,29 +34,45 @@ class GetMonthViewModel
     @SuppressLint("StaticFieldLeak") private val context: Context
 ): ViewModel() {
 
-    var isLoading = mutableStateOf(false)
-    var errorMessage = mutableStateOf<String?>(null)
+    private val _isLoading = MutableStateFlow(false)
+    val isLoading = _isLoading.asStateFlow()
 
-    var month = mutableStateOf<Month?>(null)
-    var monthId = mutableStateOf(System.currentTimeMillis().formatDate("yyyy-MM"))
-    var allMonths = mutableStateOf(listOf<Month>())
+    private val _errorMessage = MutableStateFlow<String?>(null)
+    val errorMessage = _errorMessage.asStateFlow()
 
-    var isSpendingSuccessful = mutableStateOf(false)
-    var hasCompleted = mutableStateOf(false)
+    private val _month = MutableStateFlow<Month?>(null)
+    val month = _month.asStateFlow()
 
-    var currentCategory = mutableStateOf(context.getString(R.string.all))
-    var totalSum = mutableStateOf(month.value?.totalSum() ?: 0f)
-    var currentList = mutableStateOf(month.value?.toList() ?: listOf())
+    private val _monthId = MutableStateFlow(System.currentTimeMillis().formatDate("yyyy-MM"))
+    val monthId = _monthId.asStateFlow()
+
+    private val _allMonths = MutableStateFlow(listOf<Month>())
+    val allMonths = _allMonths.asStateFlow()
+
+    private val _isSpendingSuccessful = MutableStateFlow(false)
+    val isSpendingSuccessful = _isSpendingSuccessful.asStateFlow()
+
+    private val _hasCompleted = MutableStateFlow(false)
+    val hasCompleted = _hasCompleted.asStateFlow()
+
+    private val _currentCategory = MutableStateFlow(context.getString(R.string.all))
+    val currentCategory = _currentCategory.asStateFlow()
+
+    private val _totalSum = MutableStateFlow(_month.value?.totalSum() ?: 0f)
+    val totalSum: StateFlow<Float> = _totalSum
+
+    private val _currentList = MutableStateFlow(_month.value?.toList() ?: listOf())
+    val currentList = _currentList.asStateFlow()
 
     fun getMonthLocal(monthId: String) {
 
         viewModelScope.launch {
-            month.value = repo.getMonthLocal(monthId)
+            _month.value = repo.getMonthLocal(monthId)
         }
     }
 
     fun getMonth(timestamp: String) {
-        isLoading.value = true
+        _isLoading.value = true
 
         viewModelScope.launch {
 
@@ -64,17 +82,17 @@ class GetMonthViewModel
                     // we force unwrap which is not a good practice
                     // but here since we are in success state
                     // it is guaranteed the data is not null
-                    month.value = monthResult.data
-                    monthId.value = month.value!!.id
+                    _month.value = monthResult.data
+                    _monthId.value = _month.value!!.id
                 }
 
                 is Resource.Error -> {
 
-                    errorMessage.value = monthResult.message
+                    _errorMessage.value = monthResult.message
                 }
             }
 
-            isLoading.value = false
+            _isLoading.value = false
         }
     }
 
@@ -88,12 +106,12 @@ class GetMonthViewModel
                     // we force unwrap which is not a good practice
                     // but here since we are in success state
                     // it is guaranteed the data is not null
-                    allMonths.value = allMonthsResult.data!!
+                    _allMonths.value = allMonthsResult.data!!
                 }
 
                 is Resource.Error -> {
 
-                    errorMessage.value = allMonthsResult.message
+                    _errorMessage.value = allMonthsResult.message
                 }
             }
         }
@@ -125,7 +143,7 @@ class GetMonthViewModel
     }
 
     fun addSpending(title: Pair<String, String>, price: Float, rgbColor: Triple<Float, Float, Float>, sendNotification: Boolean = false, post: Boolean = true) {
-        isLoading.value = true
+        _isLoading.value = true
 
         viewModelScope.launch {
 
@@ -138,7 +156,7 @@ class GetMonthViewModel
             when (val addSpendingResult = repo.postSpending(request, post)) {
                 is Resource.Success -> {
 
-                    isSpendingSuccessful.value = addSpendingResult.data ?: false
+                    _isSpendingSuccessful.value = addSpendingResult.data ?: false
 
                     if (addSpendingResult.data!!) {
                         repo.addTransactionInHistory(
@@ -160,27 +178,35 @@ class GetMonthViewModel
 
                 is Resource.Error -> {
 
-                    errorMessage.value = addSpendingResult.message
+                    _errorMessage.value = addSpendingResult.message
                 }
             }
 
-            isLoading.value = false
-            hasCompleted.value = true
+            _isLoading.value = false
+            _hasCompleted.value = true
         }
     }
 
     fun changeCategory(name: String) {
 
-        currentCategory.value = name
+        _currentCategory.value = name
     }
 
     fun changeTotalSum(sum: Float) {
 
-        totalSum.value = sum
+        _totalSum.value = sum
     }
 
     fun changeList(list: List<Pair<Pair<Float, String>, Color>>) {
 
-        currentList.value = list
+        _currentList.value = list
+    }
+
+    fun updateMonthId(monthId: String) {
+        _monthId.value = monthId
+    }
+
+    fun resetHasCompleted() {
+        _hasCompleted.value = false
     }
 }

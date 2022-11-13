@@ -2,15 +2,14 @@ package com.example.sledipari.data
 
 import android.content.Context
 import com.example.sledipari.R
-import com.example.sledipari.utility.Resource
 import com.example.sledipari.api.MonthApi
 import com.example.sledipari.api.models.PostSpendingRequest
 import com.example.sledipari.data.db.MonthDao
 import com.example.sledipari.data.models.Month
 import com.example.sledipari.data.models.Transaction
 import com.example.sledipari.utility.Constants.HISTORY_DURATION
+import com.example.sledipari.utility.Resource
 import com.example.sledipari.utility.extensions.isCurrent
-import com.example.sledipari.utility.formatDate
 import javax.inject.Inject
 
 class MonthRepository @Inject constructor(

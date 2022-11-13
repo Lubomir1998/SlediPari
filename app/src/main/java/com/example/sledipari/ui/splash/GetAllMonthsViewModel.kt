@@ -12,6 +12,7 @@ import kotlinx.coroutines.Deferred
 import kotlinx.coroutines.async
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.StateFlow
+import kotlinx.coroutines.flow.asStateFlow
 import kotlinx.coroutines.launch
 import javax.inject.Inject
 
@@ -23,10 +24,10 @@ class GetAllMonthsViewModel
 ): ViewModel() {
 
     private val _loading = MutableStateFlow(false)
-    val loading: StateFlow<Boolean> = _loading
+    val loading = _loading.asStateFlow()
 
     private val _completed = MutableStateFlow(false)
-    val completed: StateFlow<Boolean> = _completed
+    val completed = _completed.asStateFlow()
 
     fun restoreAllMonths() {
         _loading.value = true

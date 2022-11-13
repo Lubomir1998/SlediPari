@@ -26,24 +26,27 @@ class HistoryViewModel
     private val context: Context
 ): ViewModel() {
 
-    var history = mutableStateOf(listOf<Transaction>())
+    private val _history = MutableStateFlow(listOf<Transaction>())
+    val history = _history.asStateFlow()
 
-    var error = mutableStateOf<String?>(null)
+    private val _error = MutableStateFlow<String?>(null)
+    val error = _error.asStateFlow()
 
-    var isLoading = mutableStateOf(false)
+    private val _isLoading = MutableStateFlow(false)
+    val isLoading = _isLoading.asStateFlow()
 
     fun getHistory() {
 
-        isLoading.value = true
+        _isLoading.value = true
 
         viewModelScope.launch {
 
             try {
-                history.value = repo.getHistory()
+                _history.value = repo.getHistory()
             } catch (e: Exception) {
-                error.value = e.localizedMessage ?: context.getString(R.string.something_went_wrong)
+                _error.value = e.localizedMessage ?: context.getString(R.string.something_went_wrong)
             } finally {
-                isLoading.value = false
+                _isLoading.value = false
             }
         }
     }

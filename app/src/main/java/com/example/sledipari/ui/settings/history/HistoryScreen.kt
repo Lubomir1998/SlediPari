@@ -1,7 +1,6 @@
 package com.example.sledipari.ui.settings.history
 
 import androidx.compose.foundation.background
-import androidx.compose.foundation.border
 import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.items
@@ -9,7 +8,10 @@ import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material.*
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.ArrowBack
-import androidx.compose.runtime.*
+import androidx.compose.runtime.Composable
+import androidx.compose.runtime.LaunchedEffect
+import androidx.compose.runtime.collectAsState
+import androidx.compose.runtime.getValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
@@ -24,7 +26,6 @@ import androidx.compose.ui.unit.sp
 import androidx.navigation.NavController
 import com.example.sledipari.R
 import com.example.sledipari.data.models.Transaction
-import com.example.sledipari.ui.MainActivity
 import com.example.sledipari.utility.extensions.formatPrice
 import com.example.sledipari.utility.extensions.toLocalizable
 import com.example.sledipari.utility.formatDate
@@ -32,13 +33,10 @@ import com.example.sledipari.utility.formatDate
 @Composable
 fun HistoryScreen(
     navController: NavController,
-    viewModel: HistoryViewModel,
-    activity: MainActivity
+    viewModel: HistoryViewModel
 ) {
 
-    val historyItems by remember {
-        viewModel.history
-    }
+    val historyItems by viewModel.history.collectAsState()
 
     Scaffold(
         topBar = {
@@ -80,10 +78,7 @@ fun HistoryScreen(
                 ) {
                     items(historyItems) { item ->
 
-                        HistoryItem(
-                            activity = activity,
-                            transaction = item
-                        )
+                        HistoryItem(transaction = item)
                     }
                 }
             }
@@ -97,7 +92,6 @@ fun HistoryScreen(
 
 @Composable
 fun HistoryItem(
-    activity: MainActivity,
     transaction: Transaction,
     modifier: Modifier = Modifier
 ) {
