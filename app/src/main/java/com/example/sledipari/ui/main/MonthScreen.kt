@@ -12,10 +12,7 @@ import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.foundation.text.KeyboardOptions
 import androidx.compose.material.*
 import androidx.compose.material.icons.Icons
-import androidx.compose.material.icons.filled.Add
-import androidx.compose.material.icons.filled.ArrowBack
-import androidx.compose.material.icons.filled.ArrowDropDown
-import androidx.compose.material.icons.filled.Settings
+import androidx.compose.material.icons.filled.*
 import androidx.compose.runtime.*
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
@@ -25,7 +22,11 @@ import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.res.colorResource
 import androidx.compose.ui.res.stringResource
+import androidx.compose.ui.text.SpanStyle
+import androidx.compose.ui.text.TextStyle
+import androidx.compose.ui.text.buildAnnotatedString
 import androidx.compose.ui.text.input.KeyboardType
+import androidx.compose.ui.text.withStyle
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
@@ -501,6 +502,7 @@ fun MonthContent(
             Spacer(modifier = Modifier.size(10.dp))
 
             PieChart(
+                navController = navController,
                 list = currentList,
                 totalSum = totalSum,
                 modifier = Modifier.padding(
@@ -581,6 +583,7 @@ fun MonthItem(
 
 @Composable
 fun SpendingItem(
+    navController: NavController,
     color: Color,
     name: String,
     sum: Float,
@@ -590,43 +593,68 @@ fun SpendingItem(
     onClick: () -> Unit
 ) {
     Row(
-        horizontalArrangement = Arrangement.Start,
+        horizontalArrangement = Arrangement.SpaceBetween,
         verticalAlignment = Alignment.CenterVertically,
         modifier = modifier
             .fillMaxWidth()
             .padding(16.dp)
-            .clickable {
-                if (highlighted) {
-                    onClick()
-                }
-            }
     ) {
-        Box(
+        Row(
+            horizontalArrangement = Arrangement.Start,
+            verticalAlignment = Alignment.CenterVertically,
             modifier = Modifier
-                .size(20.dp)
-                .clip(CircleShape)
-                .background(color = color)
-        )
+                .weight(9f)
+                .clickable {
+                    if (highlighted) {
+                        onClick()
+                    }
+                }
+        ) {
+            Box(
+                modifier = Modifier
+                    .size(20.dp)
+                    .clip(CircleShape)
+                    .background(color = color)
+            )
 
-        Text(
-            text = name.toLocalizable(LocalContext.current) + if (highlighted) " *" else "",
-            fontSize = 16.sp,
-            color = colorResource(id = R.color.label),
-            modifier = Modifier.padding(start = 7.dp)
-        )
+            Spacer(modifier = Modifier.width(10.dp))
+            
+            Text(
+                text = buildAnnotatedString {
+                    withStyle(
+                        style = SpanStyle(
+                            color = colorResource(id = R.color.label),
+                            fontSize = 16.sp
+                        )
+                    ) {
+                        append("$name ${if (highlighted) "*" else ""} - ${sum.formatPrice()} ${stringResource(id = R.string.leva)}")
+                    }
 
-        Text(
-            text = " - ${sum.formatPrice()} " + stringResource(id = R.string.leva),
-            fontSize = 16.sp,
-            color = colorResource(id = R.color.label)
-        )
+                    withStyle(
+                        style = SpanStyle(
+                            color = colorResource(id = R.color.secondarylabel),
+                            fontSize = 12.sp
+                        )
+                    ) {
+                        append(" (${String.format("%.2f", sum.toPercent(total))} %)")
+                    }
+                }
+            )
+        }
 
-        Text(
-            text = " (${String.format("%.2f", sum.toPercent(total))} %)",
-            fontSize = 12.sp,
-            color = colorResource(id = R.color.secondarylabel),
-            modifier = Modifier.padding(start = 7.dp)
-        )
+        if (!highlighted) {
+            Icon(
+                imageVector = Icons.Default.Info,
+                contentDescription = null,
+                tint = colorResource(id = R.color.icon_tint),
+                modifier = Modifier
+                    .size(24.dp)
+                    .weight(1f)
+                    .clickable {
+                        navController.navigate("info_screen/$name/${color.red}/${color.green}/${color.blue}")
+                    }
+            )
+        }
     }
 }
 
@@ -708,6 +736,7 @@ fun AllMonthsRow(
 
 @Composable
 fun PieChart(
+    navController: NavController,
     list: List<Pair<Pair<Float, String>, Color>>,
     totalSum: Float,
     modifier: Modifier = Modifier,
@@ -746,8 +775,9 @@ fun PieChart(
 
         list.forEach {
             SpendingItem(
+                navController = navController,
                 color = it.second,
-                name = it.first.second,
+                name = it.first.second.toLocalizable(LocalContext.current),
                 sum = it.first.first,
                 total = totalSum,
                 highlighted = it.first.second == "food"
@@ -888,10 +918,4 @@ fun DropDownMenuQuantity(
             }
         }
     }
-}
-
-@Preview
-@Composable
-fun PreviewSpendingItem() {
-    SpendingItem(color = Color.Blue, name = "clothes", sum = 40f, total = 122f, highlighted = true) {}
 }

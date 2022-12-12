@@ -4,10 +4,14 @@ import android.os.Bundle
 import androidx.activity.ComponentActivity
 import androidx.activity.compose.setContent
 import androidx.compose.material.ExperimentalMaterialApi
+import androidx.compose.ui.platform.LocalContext
 import androidx.lifecycle.viewmodel.compose.viewModel
+import androidx.navigation.NavType
 import androidx.navigation.compose.NavHost
 import androidx.navigation.compose.composable
 import androidx.navigation.compose.rememberNavController
+import androidx.navigation.navArgument
+import com.example.sledipari.ui.info.InfoScreen
 import com.example.sledipari.ui.main.GetMonthViewModel
 import com.example.sledipari.ui.main.MonthScreen
 import com.example.sledipari.ui.settings.SettingsScreen
@@ -16,6 +20,7 @@ import com.example.sledipari.ui.settings.history.HistoryViewModel
 import com.example.sledipari.ui.splash.GetAllMonthsViewModel
 import com.example.sledipari.ui.splash.SplashScreen
 import com.example.sledipari.utility.Constants.SLEDI_PARI_TOPIC
+import com.example.sledipari.utility.extensions.toLocalizable
 import com.google.firebase.messaging.FirebaseMessaging
 import dagger.hilt.android.AndroidEntryPoint
 
@@ -64,6 +69,39 @@ class MainActivity : ComponentActivity() {
                     HistoryScreen(
                         navController = navController,
                         viewModel = historyViewModel
+                    )
+                }
+
+                composable(
+                    "info_screen/{title}/{red}/{green}/{blue}",
+                    arguments = listOf(
+                        navArgument("title") {
+                            type = NavType.StringType
+                        },
+                        navArgument("red") {
+                            type = NavType.FloatType
+                        },
+                        navArgument("green") {
+                            type = NavType.FloatType
+                        },
+                        navArgument("blue") {
+                            type = NavType.FloatType
+                        }
+                    )
+                ) {
+
+                    val title = it.arguments?.getString("title") ?: ""
+
+                    val rgb = Triple(
+                        it.arguments?.getFloat("red") ?: 0f,
+                        it.arguments?.getFloat("green") ?: 0f,
+                        it.arguments?.getFloat("blue") ?: 0f
+                    )
+
+                    InfoScreen(
+                        navController = navController,
+                        title = title,
+                        rgbColor = rgb
                     )
                 }
             }

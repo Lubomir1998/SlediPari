@@ -70,30 +70,29 @@ fun HistoryScreen(
                 contentColor = Color.White,
                 elevation = 12.dp
             )
-        }, content = {
+        }) {
+        LaunchedEffect(key1 = true) {
+            viewModel.getHistory()
+        }
 
-            LaunchedEffect(key1 = true) {
-                viewModel.getHistory()
-            }
+        if (historyItems.isNotEmpty()) {
 
-            if (historyItems.isNotEmpty()) {
+            LazyColumn(
+                modifier = Modifier
+                    .fillMaxSize()
+                    .background(colorResource(id = R.color.system_gray5))
+            ) {
+                items(historyItems) { item ->
 
-                LazyColumn(
-                    modifier = Modifier
-                        .fillMaxSize()
-                        .background(colorResource(id = R.color.system_gray5))
-                ) {
-                    items(historyItems) { item ->
-
-                        HistoryItem(transaction = item)
-                    }
+                    HistoryItem(transaction = item)
                 }
             }
-            else {
+        }
+        else {
 
-                EmptyState()
-            }
-        })
+            EmptyState()
+        }
+    }
 
 }
 
