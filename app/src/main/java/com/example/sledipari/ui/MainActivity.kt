@@ -23,9 +23,13 @@ import com.example.sledipari.utility.Constants.SLEDI_PARI_TOPIC
 import com.example.sledipari.utility.extensions.toLocalizable
 import com.google.firebase.messaging.FirebaseMessaging
 import dagger.hilt.android.AndroidEntryPoint
+import kotlinx.serialization.ExperimentalSerializationApi
+import kotlinx.serialization.decodeFromString
+import kotlinx.serialization.json.Json
 
 @AndroidEntryPoint
 class MainActivity : ComponentActivity() {
+    @OptIn(ExperimentalSerializationApi::class)
     @ExperimentalMaterialApi
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -73,9 +77,12 @@ class MainActivity : ComponentActivity() {
                 }
 
                 composable(
-                    "info_screen/{title}/{red}/{green}/{blue}",
+                    "info_screen/{title}/{map}/{red}/{green}/{blue}",
                     arguments = listOf(
                         navArgument("title") {
+                            type = NavType.StringType
+                        },
+                        navArgument("map") {
                             type = NavType.StringType
                         },
                         navArgument("red") {
@@ -92,6 +99,10 @@ class MainActivity : ComponentActivity() {
 
                     val title = it.arguments?.getString("title") ?: ""
 
+                    val map = it.arguments?.getString("map")?.let { encodedMap ->
+                        Json.decodeFromString<LinkedHashMap<String, Float>>(encodedMap)
+                    }
+
                     val rgb = Triple(
                         it.arguments?.getFloat("red") ?: 0f,
                         it.arguments?.getFloat("green") ?: 0f,
@@ -101,6 +112,7 @@ class MainActivity : ComponentActivity() {
                     InfoScreen(
                         navController = navController,
                         title = title,
+                        map = map,
                         rgbColor = rgb
                     )
                 }

@@ -23,11 +23,9 @@ import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.res.colorResource
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.SpanStyle
-import androidx.compose.ui.text.TextStyle
 import androidx.compose.ui.text.buildAnnotatedString
 import androidx.compose.ui.text.input.KeyboardType
 import androidx.compose.ui.text.withStyle
-import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import androidx.navigation.NavController
@@ -39,6 +37,9 @@ import com.example.sledipari.ui.home
 import com.example.sledipari.utility.*
 import com.example.sledipari.utility.extensions.*
 import kotlinx.coroutines.launch
+import kotlinx.serialization.ExperimentalSerializationApi
+import kotlinx.serialization.encodeToString
+import kotlinx.serialization.json.Json
 
 @ExperimentalMaterialApi
 @Composable
@@ -505,6 +506,7 @@ fun MonthContent(
                 navController = navController,
                 list = currentList,
                 totalSum = totalSum,
+                allMonths = allMonths,
                 modifier = Modifier.padding(
                     bottom = 20.dp
                 )
@@ -581,6 +583,7 @@ fun MonthItem(
     }
 }
 
+@OptIn(ExperimentalSerializationApi::class)
 @Composable
 fun SpendingItem(
     navController: NavController,
@@ -588,6 +591,7 @@ fun SpendingItem(
     name: String,
     sum: Float,
     total: Float,
+    allMonths: List<Month>,
     highlighted: Boolean,
     modifier: Modifier = Modifier,
     onClick: () -> Unit
@@ -627,7 +631,7 @@ fun SpendingItem(
                             fontSize = 16.sp
                         )
                     ) {
-                        append("$name ${if (highlighted) "*" else ""} - ${sum.formatPrice()} ${stringResource(id = R.string.leva)}")
+                        append("${name.toLocalizable(LocalContext.current)} ${if (highlighted) "*" else ""} - ${sum.formatPrice()} ${stringResource(id = R.string.leva)}")
                     }
 
                     withStyle(
@@ -651,7 +655,18 @@ fun SpendingItem(
                     .size(24.dp)
                     .weight(1f)
                     .clickable {
-                        navController.navigate("info_screen/$name/${color.red}/${color.green}/${color.blue}")
+
+                        val statisticMonths = linkedMapOf<String, Float>()
+
+                        allMonths.reversed().forEach { month ->
+                            getMonthValueAndColor2(month, name)?.first?.first?.let { value ->
+                                statisticMonths[month.id] = value
+                            }
+                        }
+
+                        val encodedMap = Json.encodeToString(statisticMonths)
+
+                        navController.navigate("info_screen/$name/$encodedMap/${color.red}/${color.green}/${color.blue}")
                     }
             )
         }
@@ -739,6 +754,7 @@ fun PieChart(
     navController: NavController,
     list: List<Pair<Pair<Float, String>, Color>>,
     totalSum: Float,
+    allMonths: List<Month>,
     modifier: Modifier = Modifier,
     onClick: (String) -> Unit
 ) {
@@ -777,9 +793,10 @@ fun PieChart(
             SpendingItem(
                 navController = navController,
                 color = it.second,
-                name = it.first.second.toLocalizable(LocalContext.current),
+                name = it.first.second,
                 sum = it.first.first,
                 total = totalSum,
+                allMonths = allMonths,
                 highlighted = it.first.second == "food"
                         || it.first.second == "smetki"
                         || it.first.second == "transport"

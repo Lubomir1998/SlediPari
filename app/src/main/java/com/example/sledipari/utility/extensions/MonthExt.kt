@@ -85,6 +85,48 @@ fun getMonthValueAndColor(month: Month, name: String): Pair<Pair<Float, String>,
     }
 }
 
+fun getMonthValueAndColor2(month: Month, name: String): Pair<Pair<Float, String>, Color>? {
+
+    return when (name) {
+        "clothes" -> Pair(Pair(month.clothes, name), clothes)
+        "workout" -> Pair(Pair(month.workout, name), workout)
+        "remont" -> Pair(Pair(month.remont, name), remont)
+        "posuda" -> Pair(Pair(month.posuda, name), posuda)
+        "travel" -> Pair(Pair(month.travel, name), travel)
+        "gifts" -> Pair(Pair(month.gifts, name), gifts)
+        "snacks" -> Pair(Pair(month.snacks, name), snacks)
+        "medicine" -> Pair(Pair(month.medicine, name), medicine)
+        "domPotrebi" -> Pair(Pair(month.domPotrebi, name), domPotrebi)
+        "machove" -> Pair(Pair(month.machove, name), machove)
+        "furniture" -> Pair(Pair(month.furniture, name), furniture)
+        "tehnika" -> Pair(Pair(month.tehnika, name), tehnika)
+        "education" -> Pair(Pair(month.education, name), education)
+        "entertainment" -> Pair(Pair(month.entertainment, name), entertainment)
+        "subscriptions" -> Pair(Pair(month.subscriptions, name), subscriptions)
+        "tattoo" -> Pair(Pair(month.tattoo, name), tattoo)
+        "toys" -> Pair(Pair(month.toys, name), toys)
+        "home" -> Pair(Pair(month.home, name), food)
+        "restaurant" -> Pair(Pair(month.restaurant, name), food)
+        "tok" -> Pair(Pair(month.tok, name), smetki)
+        "voda" -> Pair(Pair(month.voda, name), smetki)
+        "toplo" -> Pair(Pair(month.toplo, name), smetki)
+        "internet" -> Pair(Pair(month.internet, name), smetki)
+        "vhod" -> Pair(Pair(month.vhod, name), smetki)
+        "telefon" -> Pair(Pair(month.telefon, name), smetki)
+        "publicT" -> Pair(Pair(month.publicT, name), transport)
+        "taxi" -> Pair(Pair(month.taxi, name), transport)
+        "car" -> Pair(Pair(month.car, name), transport)
+        "higien" -> Pair(Pair(month.higien, name), cosmetics)
+        "other" -> Pair(Pair(month.other, name), cosmetics)
+        "wash" -> Pair(Pair(month.wash, name), preparati)
+        "clean" -> Pair(Pair(month.clean, name), preparati)
+        "friziorSub" -> Pair(Pair(month.friziorSub, name), frizior)
+        "cosmetic" -> Pair(Pair(month.cosmetic, name), frizior)
+        "manikior" -> Pair(Pair(month.manikior, name), frizior)
+        else -> null
+    }
+}
+
 fun Month.isCurrent(): Boolean {
 
     return this.id == System.currentTimeMillis().formatDate("yyyy-MM")
