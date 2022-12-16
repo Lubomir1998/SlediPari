@@ -113,7 +113,7 @@ fun getMonthValueAndColor2(month: Month, name: String): Pair<Pair<Float, String>
         "internet" -> Pair(Pair(month.internet, name), smetki)
         "vhod" -> Pair(Pair(month.vhod, name), smetki)
         "telefon" -> Pair(Pair(month.telefon, name), smetki)
-        "publicT" -> Pair(Pair(month.publicT, name), transport)
+        "public" -> Pair(Pair(month.publicT, name), transport)
         "taxi" -> Pair(Pair(month.taxi, name), transport)
         "car" -> Pair(Pair(month.car, name), transport)
         "higien" -> Pair(Pair(month.higien, name), cosmetics)
