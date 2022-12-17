@@ -3,6 +3,7 @@ package com.example.sledipari.ui.info
 import androidx.compose.animation.core.animateFloatAsState
 import androidx.compose.animation.core.tween
 import androidx.compose.foundation.background
+import androidx.compose.foundation.border
 import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.itemsIndexed
@@ -107,12 +108,27 @@ fun MainContent(
 
             when (item.second) {
                 0f -> {
-                    Text(
-                        text = "${item.first.toReadableDate()} - ${stringResource(id = R.string.nothing)}",
-                        color = colorResource(id = R.color.label),
-                        fontSize = 16.sp,
-                        modifier = Modifier.padding(16.dp)
-                    )
+                    Row(
+                        horizontalArrangement = Arrangement.SpaceBetween,
+                        modifier = Modifier
+                            .fillMaxWidth()
+                            .padding(
+                                vertical = 12.dp,
+                                horizontal = 8.dp
+                            )
+                    ) {
+                        Text(
+                            text = item.first.toReadableDate(),
+                            color = colorResource(id = R.color.label),
+                            fontSize = 16.sp
+                        )
+
+                        Text(
+                            text = "0",
+                            color = colorResource(id = R.color.label),
+                            fontSize = 16.sp
+                        )
+                    }
                 }
                 else -> {
                     SingleMonth(
@@ -122,10 +138,22 @@ fun MainContent(
                         color = Color(rgbColor.first, rgbColor.second, rgbColor.third),
                         title = title,
                         animDelay = index * 100,
-                        modifier = Modifier.padding(16.dp)
+                        modifier = Modifier
+                            .padding(
+                                horizontal = 8.dp,
+                                vertical = 12.dp
+                            )
                     )
                 }
             }
+            
+            Box(
+                modifier = Modifier
+                    .fillMaxWidth()
+                    .height(1.dp)
+                    .background(colorResource(id = R.color.secondarylabel))
+            )
+            
         }
     }
 }
@@ -179,54 +207,50 @@ fun SingleMonth(
         animationPlayed = true
     }
 
-    Box(
+    Column(
+        horizontalAlignment = Alignment.Start,
         modifier = modifier
-            .fillMaxWidth(percent.value)
-            .clip(CircleShape)
-            .background(color)
+            .fillMaxWidth()
     ) {
+
+        Text(
+            text = month.toReadableDate(),
+            fontSize = 16.sp,
+            maxLines = 1,
+            color = colorResource(id = R.color.label),
+            modifier = Modifier.padding(bottom = 4.dp)
+        )
+
         Row(
             horizontalArrangement = Arrangement.SpaceBetween,
             verticalAlignment = Alignment.CenterVertically,
             modifier = Modifier
-                .fillMaxHeight()
                 .fillMaxWidth()
-                .clip(CircleShape)
-                .padding(8.dp)
         ) {
-            Text(
-                text = month.toReadableDate(),
-                fontSize = 14.sp,
-                maxLines = 1,
-                color = if (
-                    title == "machove" ||
-                    title == "furniture" ||
-                    title == "friziorSub" ||
-                    title == "cosmetic" ||
-                    title == "manikior"
-                ) {
-                    Color.White
-                } else {
-                    Color.Black
-                }
-            )
+
+            Box(
+                contentAlignment = Alignment.CenterStart,
+                modifier = Modifier
+                    .weight(1f)
+                    .height(28.dp)
+                    .padding(end = 12.dp)
+            ) {
+                Box(
+                    modifier = Modifier
+                        .fillMaxWidth(percent.value)
+                        .fillMaxHeight()
+                        .clip(CircleShape)
+                        .background(color)
+                )
+            }
 
             Text(
                 text = value.formatPrice(),
-                fontSize = 14.sp,
+                fontSize = 16.sp,
                 maxLines = 1,
-                color = if (
-                    title == "machove" ||
-                    title == "furniture" ||
-                    title == "friziorSub" ||
-                    title == "cosmetic" ||
-                    title == "manikior"
-                ) {
-                    Color.White
-                } else {
-                    Color.Black
-                }
+                color = colorResource(id = R.color.label)
             )
         }
     }
+
 }
