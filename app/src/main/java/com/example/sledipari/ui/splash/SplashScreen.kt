@@ -28,8 +28,6 @@ fun SplashScreen(
     val isLoading by viewModel.loading.collectAsState()
     val completed by viewModel.completed.collectAsState()
 
-    val context = LocalContext.current
-
     Box (
         contentAlignment = Alignment.Center,
         modifier = Modifier
@@ -42,7 +40,7 @@ fun SplashScreen(
         }
 
         LaunchedEffect(key1 = completed) {
-            if (viewModel.completed.value) {
+            if (completed) {
                 Intent(activity, MainActivity::class.java).also {
                     activity.apply {
                         startActivity(it)
