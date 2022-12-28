@@ -658,11 +658,13 @@ fun SpendingItem(
 
                         val statisticMonths = linkedMapOf<String, Float>()
 
-                        allMonths.reversed().forEach { month ->
-                            getMonthValueAndColor2(month, name)?.first?.first?.let { value ->
-                                statisticMonths[month.id] = value
+                        allMonths
+                            .reversed()
+                            .forEach { month ->
+                                getMonthValueAndColor2(month, name)?.first?.first?.let { value ->
+                                    statisticMonths[month.id] = value
+                                }
                             }
-                        }
 
                         val encodedMap = Json.encodeToString(statisticMonths)
 

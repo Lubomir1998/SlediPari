@@ -88,4 +88,8 @@
     <string name="undo">Undo</string>
     <string name="settings">Settings</string>
     <string name="history">History</string>
+    <string name="later">Later</string>
+    <string name="update">Update</string>
+    <string name="alert_update_title">A new update is available</string>
+    <string name="alert_update_message">Would you like to update now?</string>
 </resources>

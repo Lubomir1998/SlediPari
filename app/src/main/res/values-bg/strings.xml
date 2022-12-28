@@ -88,4 +88,8 @@
     <string name="undo">Върни</string>
     <string name="settings">Настройки</string>
     <string name="history">История</string>
+    <string name="later">По-късно</string>
+    <string name="update">Актуализация</string>
+    <string name="alert_update_title">Нова версия е налична</string>
+    <string name="alert_update_message">Желаете ли да актуализирате?</string>
 </resources>

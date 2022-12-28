@@ -1,5 +1,6 @@
 package com.example.sledipari.ui.splash
 
+import android.content.Intent
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.Box
@@ -11,19 +12,23 @@ import androidx.compose.runtime.*
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.unit.dp
 import androidx.navigation.NavController
 import com.example.sledipari.R
+import com.example.sledipari.ui.MainActivity
 
 @Composable
 fun SplashScreen(
-    navController: NavController,
+    activity: SplashActivity,
     viewModel: GetAllMonthsViewModel
 ) {
 
     val isLoading by viewModel.loading.collectAsState()
     val completed by viewModel.completed.collectAsState()
+
+    val context = LocalContext.current
 
     Box (
         contentAlignment = Alignment.Center,
@@ -38,9 +43,10 @@ fun SplashScreen(
 
         LaunchedEffect(key1 = completed) {
             if (viewModel.completed.value) {
-                navController.navigate("main_screen") {
-                    popUpTo("splash_screen") {
-                        inclusive = true
+                Intent(activity, MainActivity::class.java).also {
+                    activity.apply {
+                        startActivity(it)
+                        finish()
                     }
                 }
             }
