@@ -17,6 +17,8 @@ import androidx.compose.runtime.*
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
+import androidx.compose.ui.draw.drawBehind
+import androidx.compose.ui.geometry.Offset
 import androidx.compose.ui.geometry.Size
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.platform.LocalContext
@@ -34,8 +36,10 @@ import com.example.sledipari.data.models.Month
 import com.example.sledipari.ui.MainActivity
 import com.example.sledipari.ui.getRGB
 import com.example.sledipari.ui.home
+import com.example.sledipari.ui.wash
 import com.example.sledipari.utility.*
 import com.example.sledipari.utility.extensions.*
+import io.ktor.network.selector.SelectInterest.Companion.size
 import kotlinx.coroutines.launch
 import kotlinx.serialization.ExperimentalSerializationApi
 import kotlinx.serialization.encodeToString
@@ -734,10 +738,27 @@ fun AllMonthsRow(
         ),
         modifier = modifier
             .fillMaxWidth()
-            .border(
-                width = 1.dp,
-                color = colorResource(id = R.color.system_gray3)
-            )
+            .drawBehind {
+                val strokeWidth = 2f
+                val x = size.width - strokeWidth
+                val y = size.height - strokeWidth
+
+                //top line
+                drawLine(
+                    color = wash, // the color is appropriate for this case
+                    start = Offset(0f, 0f), //(0,0) at top-left point of the box
+                    end = Offset(x, 0f), //top-right point of the box
+                    strokeWidth = strokeWidth
+                )
+
+                //bottom line
+                drawLine(
+                    color = wash, // the color is appropriate for this case
+                    start = Offset(0f, y),// bottom-left point of the box
+                    end = Offset(x, y),// bottom-right point of the box
+                    strokeWidth = strokeWidth
+                )
+            }
     ) {
         itemsIndexed(allMonths) { index, month ->
             MonthItem(
