@@ -441,7 +441,6 @@ fun MonthContent(
         modifier = modifier
             .fillMaxSize()
             .background(color = colorResource(id = R.color.background))
-            .verticalScroll(rememberScrollState())
     ) {
         Row(
             horizontalArrangement = Arrangement.SpaceBetween,
@@ -488,69 +487,76 @@ fun MonthContent(
 
         Spacer(modifier = Modifier.size(10.dp))
 
-        currentMonth?.let { month ->
+        Column(
+            horizontalAlignment = Alignment.CenterHorizontally,
+            modifier = Modifier
+                .background(color = colorResource(id = R.color.background))
+                .verticalScroll(rememberScrollState())
+        ) {
+            currentMonth?.let { month ->
 
-            Text(
-                text = month.id.toReadableDate(),
-                fontSize = 20.sp,
-                color = colorResource(id = R.color.label)
-            )
-
-            Spacer(modifier = Modifier.size(10.dp))
-
-            CategoryTitle(title = currentCategory) {
-                viewModel.changeCategory(context.getString(R.string.all))
-                viewModel.changeList(month.toList())
-                viewModel.changeTotalSum(month.totalSum())
-            }
-
-            Spacer(modifier = Modifier.size(10.dp))
-
-            PieChart(
-                navController = navController,
-                list = currentList,
-                totalSum = totalSum,
-                allMonths = allMonths,
-                modifier = Modifier.padding(
-                    bottom = 20.dp
+                Text(
+                    text = month.id.toReadableDate(),
+                    fontSize = 20.sp,
+                    color = colorResource(id = R.color.label)
                 )
-            ) { categoryName ->
-                viewModel.changeCategory(categoryName.getTitle(context))
 
-                when(categoryName) {
-                    "food" -> {
-                        viewModel.changeTotalSum(month.restaurant + month.home)
-                        viewModel.changeList(foodToList(month))
-                    }
-                    "smetki" -> {
-                        viewModel.changeTotalSum(month.tok + month.voda + month.toplo + month.internet + month.telefon + month.vhod)
-                        viewModel.changeList(smetkiToList(month))
-                    }
-                    "transport" -> {
-                        viewModel.changeTotalSum(month.publicT + month.taxi + month.car)
-                        viewModel.changeList(transportToList(month))
-                    }
-                    "cosmetics" -> {
-                        viewModel.changeTotalSum(month.higien + month.other)
-                        viewModel.changeList(cosmeticsToList(month))
-                    }
-                    "preparati" -> {
-                        viewModel.changeTotalSum(month.clean + month.wash)
-                        viewModel.changeList(preparatiToList(month))
-                    }
-                    "frizior" -> {
-                        viewModel.changeTotalSum(month.friziorSub + month.cosmetic + month.manikior)
-                        viewModel.changeList(friziorToList(month))
-                    }
-                    else -> Unit
+                Spacer(modifier = Modifier.size(10.dp))
+
+                CategoryTitle(title = currentCategory) {
+                    viewModel.changeCategory(context.getString(R.string.all))
+                    viewModel.changeList(month.toList())
+                    viewModel.changeTotalSum(month.totalSum())
                 }
+
+                Spacer(modifier = Modifier.size(10.dp))
+
+                PieChart(
+                    navController = navController,
+                    list = currentList,
+                    totalSum = totalSum,
+                    allMonths = allMonths,
+                    modifier = Modifier.padding(
+                        bottom = 20.dp
+                    )
+                ) { categoryName ->
+                    viewModel.changeCategory(categoryName.getTitle(context))
+
+                    when (categoryName) {
+                        "food" -> {
+                            viewModel.changeTotalSum(month.restaurant + month.home)
+                            viewModel.changeList(foodToList(month))
+                        }
+                        "smetki" -> {
+                            viewModel.changeTotalSum(month.tok + month.voda + month.toplo + month.internet + month.telefon + month.vhod)
+                            viewModel.changeList(smetkiToList(month))
+                        }
+                        "transport" -> {
+                            viewModel.changeTotalSum(month.publicT + month.taxi + month.car)
+                            viewModel.changeList(transportToList(month))
+                        }
+                        "cosmetics" -> {
+                            viewModel.changeTotalSum(month.higien + month.other)
+                            viewModel.changeList(cosmeticsToList(month))
+                        }
+                        "preparati" -> {
+                            viewModel.changeTotalSum(month.clean + month.wash)
+                            viewModel.changeList(preparatiToList(month))
+                        }
+                        "frizior" -> {
+                            viewModel.changeTotalSum(month.friziorSub + month.cosmetic + month.manikior)
+                            viewModel.changeList(friziorToList(month))
+                        }
+                        else -> Unit
+                    }
+                }
+            } ?: run {
+                Text(
+                    text = stringResource(id = R.string.nothing_for_now),
+                    color = colorResource(id = R.color.label),
+                    fontSize = 22.sp
+                )
             }
-        } ?: run {
-            Text(
-                text = stringResource(id = R.string.nothing_for_now),
-                color = colorResource(id = R.color.label),
-                fontSize = 22.sp
-            )
         }
 
     }
