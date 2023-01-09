@@ -6,7 +6,9 @@ import com.example.sledipari.api.MonthApi
 import com.example.sledipari.api.models.PostSpendingRequest
 import com.example.sledipari.data.db.MonthDao
 import com.example.sledipari.data.models.Month
+import com.example.sledipari.data.models.Rates
 import com.example.sledipari.data.models.Transaction
+import com.example.sledipari.data.models.toRates
 import com.example.sledipari.utility.Constants.HISTORY_DURATION
 import com.example.sledipari.utility.Resource
 import com.example.sledipari.utility.extensions.isCurrent
@@ -111,4 +113,15 @@ class MonthRepository @Inject constructor(
         } catch (e: Exception) { }
     }
 
+    suspend fun saveCurrencyRates() {
+
+        val currencyRatesResponse = api.getCurrencyRates()
+        val rates = currencyRatesResponse.rates.toRates()
+        dao.insertRates(rates)
+    }
+
+    suspend fun getRates(): Rates {
+
+        return dao.getRates().first()
+    }
 }

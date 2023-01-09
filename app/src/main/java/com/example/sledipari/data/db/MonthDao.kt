@@ -2,6 +2,7 @@ package com.example.sledipari.data.db
 
 import androidx.room.*
 import com.example.sledipari.data.models.Month
+import com.example.sledipari.data.models.Rates
 import com.example.sledipari.data.models.Transaction
 
 @Dao
@@ -24,4 +25,10 @@ interface MonthDao {
 
     @Query("DELETE FROM `Transaction` WHERE timestamp = :date")
     suspend fun deleteTransaction(date: Long)
+
+    @Insert(onConflict = OnConflictStrategy.REPLACE)
+    suspend fun insertRates(rates: Rates)
+
+    @Query("SELECT * FROM Rates")
+    suspend fun getRates(): List<Rates>
 }

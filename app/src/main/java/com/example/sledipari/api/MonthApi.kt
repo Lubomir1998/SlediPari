@@ -1,7 +1,9 @@
 package com.example.sledipari.api
 
+import com.example.sledipari.api.models.CurrencyRatesResponse
 import com.example.sledipari.api.models.MonthDTO
 import com.example.sledipari.api.models.PostSpendingRequest
+import com.example.sledipari.utility.Constants.EXCHANGE_RATES_API_KEY
 import com.example.sledipari.utility.baseUrl
 import io.ktor.client.*
 import io.ktor.client.request.*
@@ -41,4 +43,11 @@ class MonthApi(private val httpClient: HttpClient) {
         return httpClient.get( baseUrl() + "getAllMonths")
     }
 
+    suspend fun getCurrencyRates(): CurrencyRatesResponse {
+
+        return httpClient.get("https://api.apilayer.com/exchangerates_data/latest") {
+            parameter("base", "BGN")
+            parameter("apikey", EXCHANGE_RATES_API_KEY)
+        }
+    }
 }

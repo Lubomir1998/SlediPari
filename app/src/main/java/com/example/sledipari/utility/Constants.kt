@@ -4,7 +4,7 @@ import com.example.sledipari.BuildConfig
 
 object Constants {
 
-    const val USE_LOCALHOST = false
+    const val USE_LOCALHOST = true
 
     const val BASE_URL = BuildConfig.BASE_URL
     const val BASE_URL_LOCALHOST = BuildConfig.BASE_URL_LOCALHOST
@@ -15,6 +15,7 @@ object Constants {
     const val SLEDI_PARI_TOPIC = "SLEDI_PARI_TOPIC"
     const val SERVER_KEY = BuildConfig.SERVER_KEY
     const val SENDER_ID = BuildConfig.SENDER_ID
+    const val EXCHANGE_RATES_API_KEY = BuildConfig.EXCHANGE_RATES_API_KEY
 
     const val CHANNEL_ID = "CHANNEL_ID"
 
@@ -31,4 +32,7 @@ object Constants {
     }
 
     const val HISTORY_TIMESTAMP = "history_timestamp"
+
+    const val GET_RATES_INTERVAL = 1000L * 60 * 60 * 6
+    const val RATES_TIMESTAMP = "rates_timestamp"
 }

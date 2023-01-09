@@ -20,6 +20,7 @@ android {
         buildConfigField("String", "SENDER_ID", SENDER_ID)
         buildConfigField("String", "BASE_URL", BASE_URL)
         buildConfigField("String", "BASE_URL_LOCALHOST", BASE_URL_LOCALHOST)
+        buildConfigField("String", "EXCHANGE_RATES_API_KEY", EXCHANGE_RATES_API_KEY)
 
         testInstrumentationRunner "androidx.test.runner.AndroidJUnitRunner"
         vectorDrawables {
