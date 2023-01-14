@@ -80,10 +80,13 @@
     <string name="nothing_for_now">Нищо за сега</string>
     <string name="nothing">Нищо</string>
 
+    <string name="currency">Валута</string>
     <string name="price">Цена</string>
     <string name="quantity">Количество</string>
     <string name="spending_type">Тип на разход</string>
     <string name="send_notification">Изпрати известие</string>
+
+    <string name="ok">Добре</string>
 
     <string name="undo">Върни</string>
     <string name="settings">Настройки</string>
@@ -92,4 +95,7 @@
     <string name="update">Актуализация</string>
     <string name="alert_update_title">Нова версия е налична</string>
     <string name="alert_update_message">Желаете ли да актуализирате?</string>
+    <string name="rates_error_dialog_title">Валутните курсове не са актуални</string>
+    <string name="rates_error_dialog_message">Последната актуализация е на %1$s</string>
+    <string name="months_error_alert_text">Имаше проблем при получаването на данни. Текущите данни може да не са актуални</string>
 </resources>

@@ -34,5 +34,6 @@ object Constants {
     const val HISTORY_TIMESTAMP = "history_timestamp"
 
     const val GET_RATES_INTERVAL = 1000L * 60 * 60 * 6
-    const val RATES_TIMESTAMP = "rates_timestamp"
+
+    const val LAST_GET_RATES_DATE = "last_get_rates_date"
 }

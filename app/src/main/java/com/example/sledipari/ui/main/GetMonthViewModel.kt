@@ -132,16 +132,6 @@ class GetMonthViewModel
         } catch (e: Exception) { }
     }
 
-    fun getAllMonthsFromServer() {
-
-        viewModelScope.launch {
-
-            if (repo.getAllMonths().data == true) {
-                getAllMonths()
-            }
-        }
-    }
-
     fun addSpending(title: Pair<String, String>, price: Float, rgbColor: Triple<Float, Float, Float>, sendNotification: Boolean = false, post: Boolean = true) {
         _isLoading.value = true
 

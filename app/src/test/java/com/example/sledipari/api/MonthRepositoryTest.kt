@@ -1,11 +1,11 @@
 package com.example.sledipari.api
 
 import androidx.room.Room
+import com.example.sledipari.api.models.CurrencyRatesResponse
 import com.example.sledipari.data.MonthRepository
 import com.example.sledipari.data.db.MonthDao
 import com.example.sledipari.data.db.MonthsDatabase
-import com.example.sledipari.data.models.Month
-import com.example.sledipari.data.models.Transaction
+import com.example.sledipari.data.models.*
 import com.example.sledipari.ui.getRGB
 import com.example.sledipari.ui.remont
 import kotlinx.coroutines.runBlocking
@@ -15,6 +15,9 @@ import org.junit.Before
 import org.junit.Test
 import org.junit.runner.RunWith
 import org.robolectric.RobolectricTestRunner
+import kotlinx.serialization.decodeFromString
+import kotlinx.serialization.encodeToString
+import kotlinx.serialization.json.Json
 
 @RunWith(RobolectricTestRunner::class)
 class MonthRepositoryTest {
@@ -131,6 +134,42 @@ class MonthRepositoryTest {
         Assert.assertEquals(remont.red, historyItems.first().red)
         Assert.assertEquals(remont.green, historyItems.first().green)
         Assert.assertEquals(remont.blue, historyItems.first().blue)
+    }
+
+    @Test
+    fun testGetCurrencyRates() = runBlocking {
+
+        // this is to mock the behaviour when the rates is prefilled
+        val oldTimestamp = 123L
+        val oldRates = hashMapOf<String, Double>()
+        oldRates["BGN"] = 2.0
+        oldRates["USD"] = 2.32
+        oldRates["EUR"] = 4.2342
+
+        val oldResponse = CurrencyRatesResponse(true, oldTimestamp, oldRates).mapToRates()
+
+        dao.insertRates(oldResponse)
+
+        val getOldTimestamp = repo.getRates()!!.timestamp
+        val getOldRates = repo.getRates()!!.rates.toMap()
+
+        Assert.assertEquals(123L, getOldTimestamp)
+        Assert.assertEquals(2.0, getOldRates["BGN"])
+        Assert.assertEquals(2.32, getOldRates["USD"])
+        Assert.assertEquals(4.2342, getOldRates["EUR"])
+        ///////////
+
+        // now to test the actual behaviour
+
+        repo.saveCurrencyRates()
+
+        val timestamp = repo.getRates()!!.timestamp
+        val rates = repo.getRates()!!.rates.toMap()
+
+        Assert.assertEquals(1672657262L, timestamp)
+        Assert.assertEquals(1.0, rates["BGN"])
+        Assert.assertEquals(0.547247, rates["USD"])
+        Assert.assertEquals(0.512277, rates["EUR"])
     }
 
 }

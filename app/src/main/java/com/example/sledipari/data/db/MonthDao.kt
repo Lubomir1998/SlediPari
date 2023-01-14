@@ -2,7 +2,7 @@ package com.example.sledipari.data.db
 
 import androidx.room.*
 import com.example.sledipari.data.models.Month
-import com.example.sledipari.data.models.Rates
+import com.example.sledipari.data.models.CurrencyResponseLocal
 import com.example.sledipari.data.models.Transaction
 
 @Dao
@@ -27,8 +27,11 @@ interface MonthDao {
     suspend fun deleteTransaction(date: Long)
 
     @Insert(onConflict = OnConflictStrategy.REPLACE)
-    suspend fun insertRates(rates: Rates)
+    suspend fun insertRates(currencyResponseLocal: CurrencyResponseLocal)
 
-    @Query("SELECT * FROM Rates")
-    suspend fun getRates(): List<Rates>
+    @Query("SELECT * FROM CurrencyResponseLocal")
+    suspend fun getRates(): List<CurrencyResponseLocal>
+
+    @Query("DELETE FROM CurrencyResponseLocal")
+    suspend fun deleteOldRates()
 }

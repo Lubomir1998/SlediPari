@@ -1,5 +1,6 @@
 package com.example.sledipari.ui.settings
 
+import android.annotation.SuppressLint
 import androidx.compose.foundation.background
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.*
@@ -19,6 +20,7 @@ import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.unit.dp
 import androidx.navigation.NavController
 
+@SuppressLint("UnusedMaterialScaffoldPaddingParameter")
 @Composable
 fun SettingsScreen(
     navController: NavController
@@ -65,29 +67,45 @@ fun SettingsScreen(
                         .background(colorResource(id = R.color.section))
                 ) {
 
-                    Row(
-                        verticalAlignment = Alignment.CenterVertically,
-                        horizontalArrangement = Arrangement.SpaceBetween,
-                        modifier = Modifier
-                            .fillMaxWidth()
-                            .padding(10.dp)
-                            .clickable {
-                                navController.navigate("history_screen")
-                            }
-                    ) {
+                    SettingsItem(titleId = R.string.history) {
+                        navController.navigate("history_screen")
+                    }
 
-                        Text(
-                            text = stringResource(id = R.string.history),
-                            color = colorResource(id = R.color.label)
-                        )
-
-                        Icon(
-                            imageVector = Icons.Default.KeyboardArrowRight,
-                            contentDescription = null,
-                            tint = colorResource(id = R.color.label)
-                        )
+                    SettingsItem(titleId = R.string.currency) {
+                        navController.navigate("currency_screen")
                     }
                 }
             }
         })
+}
+
+@Composable
+fun SettingsItem(
+    titleId: Int,
+    modifier: Modifier = Modifier,
+    onClickAction: (() -> Unit)
+) {
+
+    Row(
+        verticalAlignment = Alignment.CenterVertically,
+        horizontalArrangement = Arrangement.SpaceBetween,
+        modifier = modifier
+            .fillMaxWidth()
+            .padding(10.dp)
+            .clickable {
+                onClickAction()
+            }
+    ) {
+
+        Text(
+            text = stringResource(id = titleId),
+            color = colorResource(id = R.color.label)
+        )
+
+        Icon(
+            imageVector = Icons.Default.KeyboardArrowRight,
+            contentDescription = null,
+            tint = colorResource(id = R.color.label)
+        )
+    }
 }

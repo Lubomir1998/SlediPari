@@ -204,7 +204,6 @@ fun MonthScreen(
             currentSelectedOption = null
             currentSelectedQuantity = 1
             bottomSheetScaffoldState.bottomSheetState.collapse()
-            viewModel.getAllMonthsFromServer()
             viewModel.getMonth(viewModel.monthId.value)
         }
     }

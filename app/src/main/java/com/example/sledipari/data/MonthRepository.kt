@@ -6,9 +6,9 @@ import com.example.sledipari.api.MonthApi
 import com.example.sledipari.api.models.PostSpendingRequest
 import com.example.sledipari.data.db.MonthDao
 import com.example.sledipari.data.models.Month
-import com.example.sledipari.data.models.Rates
+import com.example.sledipari.data.models.CurrencyResponseLocal
 import com.example.sledipari.data.models.Transaction
-import com.example.sledipari.data.models.toRates
+import com.example.sledipari.data.models.mapToRates
 import com.example.sledipari.utility.Constants.HISTORY_DURATION
 import com.example.sledipari.utility.Resource
 import com.example.sledipari.utility.extensions.isCurrent
@@ -17,7 +17,7 @@ import javax.inject.Inject
 class MonthRepository @Inject constructor(
     private val api: MonthApi,
     private val dao: MonthDao,
-    private val context: Context
+    private val context: Context,
 ) {
 
     suspend fun getMonth(monthId: String): Resource<Month> {
@@ -66,18 +66,12 @@ class MonthRepository @Inject constructor(
         }
     }
 
-    suspend fun getAllMonths(): Resource<Boolean> {
+    suspend fun getAllMonths() {
 
-        return try {
-            val months = api.getAllMonths()
+        val months = api.getAllMonths()
 
-            for (month in months) {
-                dao.insertMonth(month.toMonth())
-            }
-
-            Resource.Success(true)
-        } catch (e: Exception) {
-            Resource.Error(e.localizedMessage ?: context.getString(R.string.something_went_wrong))
+        for (month in months) {
+            dao.insertMonth(month.toMonth())
         }
     }
 
@@ -116,12 +110,15 @@ class MonthRepository @Inject constructor(
     suspend fun saveCurrencyRates() {
 
         val currencyRatesResponse = api.getCurrencyRates()
-        val rates = currencyRatesResponse.rates.toRates()
+
+        val rates = currencyRatesResponse.mapToRates()
+
+        dao.deleteOldRates()
         dao.insertRates(rates)
     }
 
-    suspend fun getRates(): Rates {
+    suspend fun getRates(): CurrencyResponseLocal? {
 
-        return dao.getRates().first()
+        return dao.getRates().firstOrNull()
     }
 }

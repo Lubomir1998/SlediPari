@@ -5,5 +5,6 @@ import kotlinx.serialization.Serializable
 @Serializable
 data class CurrencyRatesResponse(
     val success: Boolean,
-    val rates: RatesDTO
+    val timestamp: Long,
+    val rates: Map<String, Double>
 )

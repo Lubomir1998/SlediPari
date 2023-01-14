@@ -23,8 +23,6 @@ import com.example.sledipari.ui.main.MonthScreen
 import com.example.sledipari.ui.settings.SettingsScreen
 import com.example.sledipari.ui.settings.history.HistoryScreen
 import com.example.sledipari.ui.settings.history.HistoryViewModel
-import com.example.sledipari.ui.splash.GetAllMonthsViewModel
-import com.example.sledipari.ui.splash.SplashScreen
 import com.example.sledipari.utility.Constants.SLEDI_PARI_TOPIC
 import com.google.firebase.ktx.Firebase
 import com.google.firebase.messaging.FirebaseMessaging
@@ -123,6 +121,8 @@ class MainActivity : ComponentActivity() {
                         rgbColor = rgb
                     )
                 }
+
+                // currency_screen
             }
 
 

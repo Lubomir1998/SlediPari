@@ -21,7 +21,7 @@ private val engine = MockEngine { request ->
     val filePath = when (request.url.parameters["month"]) {
         "2022-1-8" -> "/getMonth8"
         "2022-1-7" -> "/getMonth7"
-        else -> "/getAllMonths"
+        else -> request.url.encodedPath
     }
 
     respond(
