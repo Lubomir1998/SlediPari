@@ -22,7 +22,7 @@ object Constants {
     val HISTORY_DURATION = if (USE_LOCALHOST) {
         1000L * 60 * 5
     } else {
-        1000L * 60 * 60 * 24 * 7
+        1000L * 60 * 60 * 24 * 7 * 2
     }
 
     val DELETE_HISTORY_INTERVAL = if (USE_LOCALHOST) {
