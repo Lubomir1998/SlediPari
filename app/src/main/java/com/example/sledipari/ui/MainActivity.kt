@@ -2,12 +2,20 @@ package com.example.sledipari.ui
 
 import android.app.AlertDialog
 import android.content.Intent
+import android.content.SharedPreferences
 import android.net.Uri
 import android.os.Bundle
 import androidx.activity.ComponentActivity
 import androidx.activity.compose.setContent
-import androidx.compose.material.ExperimentalMaterialApi
+import androidx.compose.material.*
+import androidx.compose.material.icons.Icons
+import androidx.compose.material.icons.filled.ArrowBack
+import androidx.compose.runtime.Composable
+import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.res.colorResource
+import androidx.compose.ui.unit.dp
 import androidx.lifecycle.viewmodel.compose.viewModel
+import androidx.navigation.NavController
 import androidx.navigation.NavType
 import androidx.navigation.compose.NavHost
 import androidx.navigation.compose.composable
@@ -21,6 +29,8 @@ import com.example.sledipari.ui.info.InfoScreen
 import com.example.sledipari.ui.main.GetMonthViewModel
 import com.example.sledipari.ui.main.MonthScreen
 import com.example.sledipari.ui.settings.SettingsScreen
+import com.example.sledipari.ui.settings.currencies.CurrencyScreen
+import com.example.sledipari.ui.settings.currencies.CurrencyViewModel
 import com.example.sledipari.ui.settings.history.HistoryScreen
 import com.example.sledipari.ui.settings.history.HistoryViewModel
 import com.example.sledipari.utility.Constants.SLEDI_PARI_TOPIC
@@ -32,12 +42,15 @@ import dagger.hilt.android.AndroidEntryPoint
 import kotlinx.serialization.ExperimentalSerializationApi
 import kotlinx.serialization.decodeFromString
 import kotlinx.serialization.json.Json
+import javax.inject.Inject
 
 @AndroidEntryPoint
 class MainActivity : ComponentActivity() {
 
     private var updateDialog: AlertDialog? = null
     private val _remoteConfigObserver by lazy { Firebase.remoteConfig.updates.observe(this) { checkForUpdates() } }
+
+    @Inject lateinit var sharedPreferences: SharedPreferences
 
     @OptIn(ExperimentalSerializationApi::class)
     @ExperimentalMaterialApi
@@ -54,6 +67,7 @@ class MainActivity : ComponentActivity() {
             val navController = rememberNavController()
             val getMonthViewModel: GetMonthViewModel = viewModel()
             val historyViewModel: HistoryViewModel = viewModel()
+            val currencyViewModel: CurrencyViewModel = viewModel()
 
             NavHost(
                 navController = navController,
@@ -122,7 +136,13 @@ class MainActivity : ComponentActivity() {
                     )
                 }
 
-                // currency_screen
+                composable("currency_screen") {
+                    CurrencyScreen(
+                        navController = navController,
+                        viewModel = currencyViewModel,
+                        sharedPreferences = sharedPreferences
+                    )
+                }
             }
 
 
@@ -157,4 +177,35 @@ class MainActivity : ComponentActivity() {
             }
         }
     }
+}
+
+@Composable
+fun AppToolbar(
+    title: String,
+    navController: NavController
+) {
+
+    TopAppBar(
+        title = {
+            Text(
+                text = title,
+                color = colorResource(id = R.color.label)
+            )
+        },
+        navigationIcon = if (navController.previousBackStackEntry != null) {
+            {
+                IconButton(onClick = { navController.navigateUp() }) {
+                    Icon(
+                        imageVector = Icons.Filled.ArrowBack,
+                        contentDescription = "Back"
+                    )
+                }
+            }
+        } else {
+            null
+        },
+        backgroundColor = colorResource(id = R.color.system_gray5),
+        contentColor = Color.White,
+        elevation = 12.dp
+    )
 }

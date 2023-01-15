@@ -1,5 +1,6 @@
 package com.example.sledipari.ui.settings.history
 
+import android.annotation.SuppressLint
 import android.widget.Toast
 import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.*
@@ -27,10 +28,12 @@ import androidx.compose.ui.unit.sp
 import androidx.navigation.NavController
 import com.example.sledipari.R
 import com.example.sledipari.data.models.Transaction
+import com.example.sledipari.ui.AppToolbar
 import com.example.sledipari.utility.extensions.formatPrice
 import com.example.sledipari.utility.extensions.toLocalizable
 import com.example.sledipari.utility.formatDate
 
+@SuppressLint("UnusedMaterialScaffoldPaddingParameter")
 @Composable
 fun HistoryScreen(
     navController: NavController,
@@ -47,30 +50,12 @@ fun HistoryScreen(
 
     Scaffold(
         topBar = {
-            TopAppBar(
-                title = {
-                    Text(
-                        text = stringResource(id = R.string.history),
-                        color = colorResource(id = R.color.label)
-                    )
-                },
-                navigationIcon = if (navController.previousBackStackEntry != null) {
-                    {
-                        IconButton(onClick = { navController.navigateUp() }) {
-                            Icon(
-                                imageVector = Icons.Filled.ArrowBack,
-                                contentDescription = "Back"
-                            )
-                        }
-                    }
-                } else {
-                    null
-                },
-                backgroundColor = colorResource(id = R.color.system_gray5),
-                contentColor = Color.White,
-                elevation = 12.dp
+            AppToolbar(
+                title = LocalContext.current.getString(R.string.history),
+                navController = navController
             )
-        }) {
+        }
+    ) {
         LaunchedEffect(key1 = true) {
             viewModel.getHistory()
         }
@@ -87,8 +72,7 @@ fun HistoryScreen(
                     HistoryItem(transaction = item)
                 }
             }
-        }
-        else {
+        } else {
 
             EmptyState()
         }

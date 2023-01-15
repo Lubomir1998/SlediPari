@@ -36,4 +36,6 @@ object Constants {
     const val GET_RATES_INTERVAL = 1000L * 60 * 60 * 6
 
     const val LAST_GET_RATES_DATE = "last_get_rates_date"
+
+    const val BASE_CURRENCY_KEY = "base_currency_key"
 }
