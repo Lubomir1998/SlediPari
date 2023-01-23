@@ -49,3 +49,10 @@ fun String.toLocalizable(context: Context): String {
         else -> ""
     }
 }
+
+fun String.flagEmoji(): String {
+
+    val firstLetter = Character.codePointAt(this.toCharArray(), 0) - 0x41 + 0x1F1E6
+    val secondLetter = Character.codePointAt(this.toCharArray(), 1) - 0x41 + 0x1F1E6
+    return String(Character.toChars(firstLetter)) + String(Character.toChars(secondLetter))
+}
