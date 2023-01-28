@@ -54,6 +54,13 @@ fun SettingsScreen(
                         navController.navigate("history_screen")
                     }
 
+                    Divider(
+                        modifier = Modifier
+                            .height(1.dp)
+                            .padding(start = 10.dp)
+                            .background(colorResource(id = R.color.divider))
+                    )
+
                     SettingsItem(titleId = R.string.currency) {
                         navController.navigate("currency_screen")
                     }

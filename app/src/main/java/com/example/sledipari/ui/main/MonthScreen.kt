@@ -1,5 +1,6 @@
 package com.example.sledipari.ui.main
 
+import android.content.SharedPreferences
 import android.view.View
 import android.widget.Toast
 import androidx.compose.foundation.*
@@ -36,13 +37,12 @@ import com.example.sledipari.data.models.Month
 import com.example.sledipari.ui.MainActivity
 import com.example.sledipari.ui.getRGB
 import com.example.sledipari.ui.home
+import com.example.sledipari.ui.settings.currencies.CurrencyViewModel
 import com.example.sledipari.ui.wash
 import com.example.sledipari.utility.*
 import com.example.sledipari.utility.extensions.*
-import io.ktor.network.selector.SelectInterest.Companion.size
 import kotlinx.coroutines.launch
-import kotlinx.serialization.ExperimentalSerializationApi
-import kotlinx.serialization.encodeToString
+import kotlinx.serialization.*
 import kotlinx.serialization.json.Json
 
 @ExperimentalMaterialApi
@@ -50,7 +50,9 @@ import kotlinx.serialization.json.Json
 fun MonthScreen(
     navController: NavController,
     viewModel: GetMonthViewModel,
+    currencyViewModel: CurrencyViewModel,
     activity: MainActivity,
+    sharedPreferences: SharedPreferences,
     view: View
 ) {
 
@@ -65,12 +67,16 @@ fun MonthScreen(
     val totalSum by viewModel.totalSum.collectAsState()
     val currentList by viewModel.currentList.collectAsState()
 
+    val rates by currencyViewModel.rates.collectAsState()
+    val currencyLoading by currencyViewModel.currencyLoading.collectAsState()
+
     errorMessage?.let {
         Toast.makeText(context, it, Toast.LENGTH_LONG).show()
     }
 
     LaunchedEffect(key1 = true) {
         viewModel.getMonthLocal(currentMonthId)
+        currencyViewModel.getRates()
     }
 
     LaunchedEffect(key1 = currentMonthId) {
@@ -125,6 +131,8 @@ fun MonthScreen(
                 bottomSheetScaffoldState = bottomSheetScaffoldState,
                 viewModel = viewModel,
                 activity = activity,
+                rates = rates,
+                sharedPreferences = sharedPreferences,
                 view = view
             )
         },
@@ -136,6 +144,7 @@ fun MonthScreen(
             currentMonthId = currentMonthId,
             currentMonth = currentMonth,
             isLoading = isLoading,
+            currencyLoading = currencyLoading,
             currentCategory = currentCategory,
             currentList = currentList,
             totalSum = totalSum,
@@ -151,6 +160,8 @@ fun MonthScreen(
     bottomSheetScaffoldState: BottomSheetScaffoldState,
     viewModel: GetMonthViewModel,
     activity: MainActivity,
+    rates: Map<String, Double>,
+    sharedPreferences: SharedPreferences,
     view: View,
     modifier: Modifier = Modifier
 ) {
@@ -175,6 +186,10 @@ fun MonthScreen(
         mutableStateOf(false)
     }
 
+    var isCurrencyExpanded by remember {
+        mutableStateOf(false)
+    }
+
     var sendNotificationsChecked by remember {
         mutableStateOf(false)
     }
@@ -189,6 +204,20 @@ fun MonthScreen(
 
     var sumText by remember {
         mutableStateOf("")
+    }
+
+    var currentSelectedBaseCurrency by remember {
+        mutableStateOf(sharedPreferences.getString(Constants.BASE_CURRENCY_KEY, "BGN") ?: "BGN")
+    }
+
+    var currentSelectedBaseRate by remember {
+        mutableStateOf(
+            try {
+                rates.getValue(currentSelectedBaseCurrency)
+            } catch (e: NoSuchElementException) {
+                1
+            }
+        )
     }
 
     errorMessage?.let {
@@ -350,6 +379,32 @@ fun MonthScreen(
                 )
                 Switch(checked = sendNotificationsChecked, onCheckedChange = { sendNotificationsChecked = it })
             }
+
+            // currency
+            Row(
+                verticalAlignment = Alignment.CenterVertically,
+                horizontalArrangement = Arrangement.SpaceBetween,
+                modifier = modifier
+                    .fillMaxWidth()
+                    .padding(horizontal = 10.dp)
+            ) {
+                Text(
+                    text = context.getString(R.string.currency),
+                    color = colorResource(id = R.color.label)
+                )
+                DropDownSelectCurrency(
+                    isCurrencyExpanded = isCurrencyExpanded,
+                    currentSelectedOption = currentSelectedBaseCurrency,
+                    options = rates,
+                    onCurrencyArrowClick = { isCurrencyExpanded = it },
+                    onSelectCurrency = {
+                        currentSelectedBaseCurrency = it.first
+                        currentSelectedBaseRate = it.second
+                        isCurrencyExpanded = false
+                    },
+                    onDismiss = { isCurrencyExpanded = false }
+                )
+            }
         }
 
         Spacer(modifier = Modifier.size(50.dp))
@@ -370,7 +425,7 @@ fun MonthScreen(
                     return@Button
                 }
 
-                viewModel.addSpending(currentSelectedOption!!, sumText.toFloat() * currentSelectedQuantity, currentSelectedOption!!.second.getRGB(), sendNotificationsChecked)
+                viewModel.addSpending(currentSelectedOption!!, (sumText.toFloat() / currentSelectedBaseRate.toFloat()) * currentSelectedQuantity, currentSelectedOption!!.second.getRGB(), sendNotificationsChecked)
             }
         ) {
             Text(
@@ -398,7 +453,7 @@ fun MonthScreen(
                     return@Button
                 }
 
-                viewModel.addSpending(currentSelectedOption!!, sumText.toFloat() * currentSelectedQuantity, currentSelectedOption!!.second.getRGB(), sendNotificationsChecked, false)
+                viewModel.addSpending(currentSelectedOption!!, (sumText.toFloat() / currentSelectedBaseRate.toFloat()) * currentSelectedQuantity, currentSelectedOption!!.second.getRGB(), sendNotificationsChecked, false)
             }
         ) {
             Text(
@@ -424,6 +479,7 @@ fun MonthContent(
     currentMonthId: String,
     currentMonth: Month?,
     isLoading: Boolean,
+    currencyLoading: Boolean,
     currentCategory: String,
     currentList: List<Pair<Pair<Float, String>, Color>>,
     totalSum: Float,
@@ -466,6 +522,7 @@ fun MonthContent(
                     .size(36.dp)
                     .clickable {
                         coroutineScope.launch {
+                            if (currencyLoading) return@launch
                             if (bottomSheetScaffoldState.bottomSheetState.isCollapsed) {
                                 bottomSheetScaffoldState.bottomSheetState.expand()
                             }
@@ -958,6 +1015,60 @@ fun DropDownMenuQuantity(
                         )
                         .clickable {
                             onSelectQuantity(it)
+                        }
+                )
+            }
+        }
+    }
+}
+
+@Composable
+fun DropDownSelectCurrency(
+    isCurrencyExpanded: Boolean,
+    currentSelectedOption: String,
+    options:  Map<String, Double>,
+    onCurrencyArrowClick: ((Boolean) -> Unit),
+    onSelectCurrency: ((Pair<String, Double>) -> Unit),
+    onDismiss: (() -> Unit)
+) {
+    Row(
+        verticalAlignment = Alignment.CenterVertically,
+        modifier = Modifier.clickable {
+            onCurrencyArrowClick(!isCurrencyExpanded)
+        }
+    ) {
+        Text(
+            text = "$currentSelectedOption  ${currentSelectedOption.flagEmoji()}",
+            fontSize = 16.sp,
+            color = colorResource(id = R.color.label)
+        )
+        Spacer(modifier = Modifier.size(5.dp))
+        Icon(
+            imageVector = Icons.Default.ArrowDropDown,
+            contentDescription = null,
+            tint = colorResource(id = R.color.label),
+            modifier = Modifier
+                .padding(6.dp)
+                .size(36.dp)
+        )
+        DropdownMenu(
+            expanded = isCurrencyExpanded,
+            modifier = Modifier.background(colorResource(id = R.color.background)),
+            onDismissRequest = onDismiss
+        ) {
+            options.forEach {
+                Text(
+                    text = "${it.key}  ${it.key.flagEmoji()}",
+                    fontSize = 16.sp,
+                    color = colorResource(id = R.color.label),
+                    modifier = Modifier
+                        .fillMaxWidth()
+                        .padding(
+                            vertical = 8.dp,
+                            horizontal = 16.dp
+                        )
+                        .clickable {
+                            onSelectCurrency(Pair(it.key, it.value))
                         }
                 )
             }

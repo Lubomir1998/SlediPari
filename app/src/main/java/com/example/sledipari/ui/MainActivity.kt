@@ -78,7 +78,9 @@ class MainActivity : ComponentActivity() {
                     MonthScreen(
                         navController = navController,
                         viewModel = getMonthViewModel,
+                        currencyViewModel = currencyViewModel,
                         activity = this@MainActivity,
+                        sharedPreferences = sharedPreferences,
                         view = window.decorView.rootView
                     )
                 }
@@ -206,7 +208,7 @@ fun AppToolbar(
             null
         },
         backgroundColor = colorResource(id = R.color.system_gray5),
-        contentColor = Color.White,
+        contentColor = colorResource(id = R.color.label),
         elevation = 12.dp
     )
 }

@@ -23,9 +23,9 @@ import androidx.compose.ui.unit.sp
 import androidx.navigation.NavController
 import com.example.sledipari.R
 import com.example.sledipari.ui.AppToolbar
-import com.example.sledipari.ui.MainActivity
 import com.example.sledipari.utility.Constants
 import com.example.sledipari.utility.extensions.flagEmoji
+import java.util.*
 
 @SuppressLint("UnusedMaterialScaffoldPaddingParameter")
 @Composable
@@ -45,7 +45,7 @@ fun CurrencyScreen(
     ) {
 
         val rates by viewModel.rates.collectAsState()
-        val loading by viewModel.loading.collectAsState()
+        val loading by viewModel.currencyLoading.collectAsState()
         var base by remember {
             mutableStateOf(sharedPreferences.getString(Constants.BASE_CURRENCY_KEY, "BGN") ?: "BGN")
         }
@@ -59,7 +59,7 @@ fun CurrencyScreen(
                 .fillMaxSize()
                 .background(colorResource(id = R.color.system_gray5))
         ) {
-            items(rates) {
+            items(rates.keys.toList()) {
 
                 CurrencyRateItem(
                     rate = it,
@@ -100,21 +100,32 @@ fun CurrencyRateItem(
             }
     ) {
 
-        Row(
-            modifier = Modifier
-        ) {
+        Column {
+
+            Row(
+                modifier = Modifier
+            ) {
+                Text(
+                    text = rate,
+                    color = colorResource(id = R.color.label),
+                    fontSize = 18.sp,
+                    modifier = Modifier
+                        .padding(end = 8.dp)
+                )
+
+                // flag
+                Text(
+                    text = rate.flagEmoji(),
+                    fontSize = 18.sp
+                )
+            }
+
             Text(
-                text = rate,
+                text = Currency.getInstance(rate).displayName,
                 color = colorResource(id = R.color.label),
                 fontSize = 18.sp,
                 modifier = Modifier
                     .padding(end = 8.dp)
-            )
-
-            // flag
-            Text(
-                text = rate.flagEmoji(),
-                fontSize = 18.sp
             )
         }
 

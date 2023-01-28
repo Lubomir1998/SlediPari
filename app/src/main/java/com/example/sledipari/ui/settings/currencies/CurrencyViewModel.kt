@@ -14,18 +14,18 @@ import javax.inject.Inject
 class CurrencyViewModel
 @Inject constructor(private val repo: MonthRepository): ViewModel() {
 
-    private val _rates = MutableStateFlow(listOf<String>())
+    private val _rates = MutableStateFlow(mapOf<String, Double>())
     val rates = _rates.asStateFlow()
 
     private val _isLoading = MutableStateFlow(false)
-    val loading = _isLoading.asStateFlow()
+    val currencyLoading = _isLoading.asStateFlow()
 
     fun getRates() {
 
         _isLoading.value = true
 
         viewModelScope.launch {
-            repo.getRates()?.rates?.toMap()?.keys?.toList()?.let {
+            repo.getRates()?.rates?.toMap()?.let {
                 _rates.value = it
             }
 
