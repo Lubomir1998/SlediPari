@@ -153,7 +153,7 @@ class MonthRepositoryTest {
         val getOldTimestamp = repo.getRates()!!.timestamp
         val getOldRates = repo.getRates()!!.rates.toMap()
 
-        Assert.assertEquals(123L, getOldTimestamp)
+        Assert.assertEquals(123000L, getOldTimestamp)
         Assert.assertEquals(2.0, getOldRates["BGN"])
         Assert.assertEquals(2.32, getOldRates["USD"])
         Assert.assertEquals(4.2342, getOldRates["EUR"])
@@ -166,7 +166,7 @@ class MonthRepositoryTest {
         val timestamp = repo.getRates()!!.timestamp
         val rates = repo.getRates()!!.rates.toMap()
 
-        Assert.assertEquals(1672657262L, timestamp)
+        Assert.assertEquals(1672657262000L, timestamp)
         Assert.assertEquals(1.0, rates["BGN"])
         Assert.assertEquals(0.547247, rates["USD"])
         Assert.assertEquals(0.512277, rates["EUR"])
