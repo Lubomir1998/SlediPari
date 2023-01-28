@@ -15,7 +15,7 @@ data class CurrencyResponseLocal(
 )
 
 fun CurrencyRatesResponse.mapToRates(): CurrencyResponseLocal {
-    return CurrencyResponseLocal(this.timestamp, Json.encodeToString(this.rates))
+    return CurrencyResponseLocal(this.timestamp * 1000, Json.encodeToString(this.rates))
 }
 
 fun String.toMap(): Map<String, Double> {
