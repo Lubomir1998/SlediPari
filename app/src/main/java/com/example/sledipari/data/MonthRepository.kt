@@ -70,6 +70,7 @@ class MonthRepository @Inject constructor(
 
         val months = api.getAllMonths()
 
+        dao.deleteAllMonths()
         for (month in months) {
             dao.insertMonth(month.toMonth())
         }

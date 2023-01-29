@@ -17,6 +17,9 @@ interface MonthDao {
     @Query("SELECT * FROM Month ORDER BY id ASC")
     suspend fun getAllMonths(): List<Month>
 
+    @Query("DELETE FROM `Month`")
+    suspend fun deleteAllMonths()
+
     @Insert(onConflict = OnConflictStrategy.REPLACE)
     suspend fun insertTransaction(transaction: Transaction)
 
