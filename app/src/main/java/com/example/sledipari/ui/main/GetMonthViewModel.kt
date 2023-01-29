@@ -66,8 +66,11 @@ class GetMonthViewModel
 
     fun getMonthLocal(monthId: String) {
 
+        _isLoading.value = true
+
         viewModelScope.launch {
             _month.value = repo.getMonthLocal(monthId)
+            _isLoading.value = false
         }
     }
 
