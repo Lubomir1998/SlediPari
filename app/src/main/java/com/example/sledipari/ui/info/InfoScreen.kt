@@ -1,9 +1,9 @@
 package com.example.sledipari.ui.info
 
+import android.annotation.SuppressLint
 import androidx.compose.animation.core.animateFloatAsState
 import androidx.compose.animation.core.tween
 import androidx.compose.foundation.background
-import androidx.compose.foundation.border
 import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.itemsIndexed
@@ -18,13 +18,10 @@ import androidx.compose.ui.draw.clip
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.res.colorResource
-import androidx.compose.ui.res.stringResource
-import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import androidx.navigation.NavController
 import com.example.sledipari.R
-import com.example.sledipari.ui.getRGB
 import com.example.sledipari.utility.extensions.formatPrice
 import com.example.sledipari.utility.extensions.toLocalizable
 import com.example.sledipari.utility.toReadableDate
@@ -51,7 +48,6 @@ fun InfoScreen(
         }
     }
 
-
     Scaffold(
         topBar = {
             TopAppBar(
@@ -63,7 +59,10 @@ fun InfoScreen(
                 },
                 navigationIcon = if (navController.previousBackStackEntry != null) {
                     {
-                        IconButton(onClick = { navController.navigateUp() }) {
+                        IconButton(onClick = {
+                            animItems = mutableListOf()
+                            navController.navigateUp()
+                        }) {
                             Icon(
                                 imageVector = Icons.Filled.ArrowBack,
                                 contentDescription = "Back"
@@ -84,7 +83,6 @@ fun InfoScreen(
                 rgbColor = rgbColor,
                 statistics = statistics,
                 maxValue = maxValue,
-                title = title
             )
         }
     }
@@ -95,16 +93,20 @@ fun MainContent(
     rgbColor: Triple<Float, Float, Float>,
     statistics: List<Pair<String, Float>>,
     maxValue: Float,
-    title: String,
     modifier: Modifier = Modifier
 ) {
+
+    val stats = remember(statistics) {
+        statistics
+    }
+
     LazyColumn(
         modifier = modifier
             .fillMaxSize()
             .background(colorResource(id = R.color.system_gray5))
             .padding(16.dp)
     ) {
-        itemsIndexed(statistics) { index, item ->
+        itemsIndexed(stats) { index, item ->
 
             when (item.second) {
                 0f -> {
@@ -136,7 +138,6 @@ fun MainContent(
                         value = item.second,
                         maxValue = maxValue,
                         color = Color(rgbColor.first, rgbColor.second, rgbColor.third),
-                        title = title,
                         animDelay = index * 100,
                         modifier = Modifier
                             .padding(
@@ -158,22 +159,7 @@ fun MainContent(
     }
 }
 
-@Preview
-@Composable
-fun MainContentPreview() {
-    MainContent(
-        rgbColor = "home".getRGB(),
-        statistics = listOf(
-            Pair("2022-08", 13f),
-            Pair("2022-07", 20f),
-            Pair("2022-06", 17f),
-            Pair("2022-05", 0.0f),
-            Pair("2022-04", 15f),
-        ),
-        maxValue = 20f,
-        title = "home"
-    )
-}
+var animItems = mutableListOf<String>()
 
 @Composable
 fun SingleMonth(
@@ -181,14 +167,13 @@ fun SingleMonth(
     value: Float,
     maxValue: Float,
     color: Color,
-    title: String,
     animDelay: Int,
     animDuration: Int = 1000,
     modifier: Modifier = Modifier
 ) {
 
     var animationPlayed by remember {
-        mutableStateOf(false)
+        mutableStateOf(animItems.contains(month))
     }
 
     val percent = animateFloatAsState(
@@ -205,6 +190,7 @@ fun SingleMonth(
 
     LaunchedEffect(key1 = true) {
         animationPlayed = true
+        animItems.add(month)
     }
 
     Column(
