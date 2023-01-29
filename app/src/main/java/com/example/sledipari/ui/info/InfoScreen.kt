@@ -1,6 +1,5 @@
 package com.example.sledipari.ui.info
 
-import android.annotation.SuppressLint
 import androidx.compose.animation.core.animateFloatAsState
 import androidx.compose.animation.core.tween
 import androidx.compose.foundation.background
