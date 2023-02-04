@@ -41,7 +41,7 @@ class GetAllMonthsViewModel
         viewModelScope.launch {
 
             var deletingHistory: Deferred<Unit>? = null
-            var gettingMonths: Deferred<Unit>? = null
+            val gettingMonths: Deferred<Unit>?
             var getRates: Deferred<Unit>? = null
 
             if (System.currentTimeMillis() >= sharedPrefs.getLong(HISTORY_TIMESTAMP, 0L)) {
