@@ -96,7 +96,7 @@ fun SplashScreen(
 @Composable
 fun ErrorAlertView(
     activity: SplashActivity,
-    exception: Exception,
+    exception: Throwable,
     ratesTimestamp: Long = 0L,
     alertTitle: String
 ) {
@@ -118,7 +118,7 @@ fun ErrorAlertView(
         },
         title = { Text(text = alertTitle) },
         text = { Text(text = message) },
-        buttons = {
+        confirmButton = {
             Button(onClick = {
                 Intent(activity, MainActivity::class.java).also {
                     activity.apply {

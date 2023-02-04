@@ -7,6 +7,7 @@ import com.example.sledipari.data.MonthRepository
 import com.example.sledipari.utility.Constants.DELETE_HISTORY_INTERVAL
 import com.example.sledipari.utility.Constants.GET_RATES_INTERVAL
 import com.example.sledipari.utility.Constants.HISTORY_TIMESTAMP
+import com.example.sledipari.utility.Constants.USE_LOCALHOST
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.Deferred
 import kotlinx.coroutines.async
@@ -28,10 +29,10 @@ class GetAllMonthsViewModel
     private val _completed = MutableStateFlow(false)
     val completed = _completed.asStateFlow()
 
-    private val _getRatesException = MutableStateFlow<Exception?>(null)
+    private val _getRatesException = MutableStateFlow<Throwable?>(null)
     val getRatesException = _getRatesException.asStateFlow()
 
-    private val _getMonthsException = MutableStateFlow<Exception?>(null)
+    private val _getMonthsException = MutableStateFlow<Throwable?>(null)
     val getMonthsException = _getMonthsException.asStateFlow()
 
     fun restoreAllMonths() {
@@ -53,23 +54,27 @@ class GetAllMonthsViewModel
                 }
             }
 
-            try {
-                gettingMonths = async { repo.getAllMonths() }
-            }  catch (e: Exception) {
-                _getMonthsException.value = e
-            }
-
-            if (System.currentTimeMillis() >= (repo.getRates()?.timestamp ?: 0L) + GET_RATES_INTERVAL) {
+            gettingMonths = async {
                 try {
-                    getRates = async {
-                        repo.saveCurrencyRates()
-                    }
-                } catch (e: Exception) {
-                    _getRatesException.value = e
+                    repo.getAllMonths()
+                } catch (t: Throwable) {
+                    _getMonthsException.value = t
                 }
             }
 
-            gettingMonths?.await()
+            if (System.currentTimeMillis() >= (repo.getRates()?.timestamp ?: 0L) + GET_RATES_INTERVAL) {
+                if (!USE_LOCALHOST) {
+                    getRates = async {
+                        try {
+                            repo.saveCurrencyRates()
+                        } catch (t: Throwable) {
+                            _getRatesException.value = t
+                        }
+                    }
+                }
+            }
+
+            gettingMonths.await()
             deletingHistory?.await()
             getRates?.await()
 

@@ -47,6 +47,7 @@ object AppModule {
     @Provides
     fun provideFcmApi() =
         FirebasePushNotificationsApi(HttpClient(CIO) {
+            expectSuccess = false
             install(JsonFeature) {
                 serializer = KotlinxSerializer(jsonInstance)
             }
