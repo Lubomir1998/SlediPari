@@ -6,9 +6,6 @@ import androidx.room.Room
 import androidx.security.crypto.EncryptedSharedPreferences
 import androidx.security.crypto.MasterKey
 import com.example.sledipari.api.FirebasePushNotificationsApi
-import com.example.sledipari.utility.Constants.BASE_URL
-import com.example.sledipari.utility.Constants.BASE_URL_LOCALHOST
-import com.example.sledipari.utility.Constants.USE_LOCALHOST
 import com.example.sledipari.api.MonthApi
 import com.example.sledipari.data.db.MonthsDatabase
 import com.example.sledipari.jsonInstance
@@ -23,7 +20,6 @@ import io.ktor.client.engine.cio.*
 import io.ktor.client.features.*
 import io.ktor.client.features.json.*
 import io.ktor.client.features.json.serializer.*
-import io.ktor.client.request.*
 import javax.inject.Singleton
 
 @Module
