@@ -14,7 +14,7 @@
         android:supportsRtl="true"
         android:theme="@style/Theme.SlediPari">
         <activity
-            android:name=".ui.splash.SplashActivity"
+            android:name=".ui.MainActivity"
             android:exported="true"
             android:label="@string/app_name"
             android:screenOrientation="portrait"
@@ -24,14 +24,6 @@
 
                 <category android:name="android.intent.category.LAUNCHER" />
             </intent-filter>
-        </activity>
-
-        <activity
-            android:name=".ui.MainActivity"
-            android:exported="true"
-            android:label="@string/app_name"
-            android:screenOrientation="portrait"
-            android:theme="@style/Theme.SlediPari.NoActionBar">
         </activity>
 
         <service

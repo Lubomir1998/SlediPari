@@ -7,11 +7,12 @@ import android.net.Uri
 import android.os.Bundle
 import androidx.activity.ComponentActivity
 import androidx.activity.compose.setContent
+import androidx.compose.foundation.clickable
 import androidx.compose.material.*
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.ArrowBack
 import androidx.compose.runtime.Composable
-import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.Modifier
 import androidx.compose.ui.res.colorResource
 import androidx.compose.ui.unit.dp
 import androidx.lifecycle.viewmodel.compose.viewModel
@@ -33,6 +34,8 @@ import com.example.sledipari.ui.settings.currencies.CurrencyScreen
 import com.example.sledipari.ui.settings.currencies.CurrencyViewModel
 import com.example.sledipari.ui.settings.history.HistoryScreen
 import com.example.sledipari.ui.settings.history.HistoryViewModel
+import com.example.sledipari.ui.splash.GetAllMonthsViewModel
+import com.example.sledipari.ui.splash.SplashScreen
 import com.example.sledipari.utility.Constants
 import com.example.sledipari.utility.Constants.SLEDI_PARI_TOPIC
 import com.google.firebase.ktx.Firebase
@@ -69,11 +72,20 @@ class MainActivity : ComponentActivity() {
             val getMonthViewModel: GetMonthViewModel = viewModel()
             val historyViewModel: HistoryViewModel = viewModel()
             val currencyViewModel: CurrencyViewModel = viewModel()
+            val getAllMonthsViewModel: GetAllMonthsViewModel = viewModel()
 
             NavHost(
                 navController = navController,
-                startDestination = "main_screen"
+                startDestination = "splash_screen"
             ) {
+                composable("splash_screen") {
+                    SplashScreen(
+                        navController = navController,
+                        activity = this@MainActivity,
+                        viewModel = getAllMonthsViewModel
+                    )
+                }
+
                 composable("main_screen") {
                     MonthScreen(
                         navController = navController,
@@ -200,7 +212,8 @@ fun AppToolbar(
                 IconButton(onClick = { navController.navigateUp() }) {
                     Icon(
                         imageVector = Icons.Filled.ArrowBack,
-                        contentDescription = "Back"
+                        contentDescription = "Back",
+                        tint = colorResource(id = R.color.label)
                     )
                 }
             }

@@ -29,6 +29,9 @@ class GetAllMonthsViewModel
     private val _completed = MutableStateFlow(false)
     val completed = _completed.asStateFlow()
 
+    private val _ratesTimestamp = MutableStateFlow(0L)
+    val ratesTimestamp = _ratesTimestamp.asStateFlow()
+
     private val _getRatesException = MutableStateFlow<Throwable?>(null)
     val getRatesException = _getRatesException.asStateFlow()
 
@@ -39,6 +42,8 @@ class GetAllMonthsViewModel
         _loading.value = true
 
         viewModelScope.launch {
+
+            _ratesTimestamp.value = repo.getRates()?.timestamp ?: 0L
 
             var deletingHistory: Deferred<Unit>? = null
             val gettingMonths: Deferred<Unit>?

@@ -96,6 +96,6 @@
     <string name="alert_update_title">A new update is available</string>
     <string name="alert_update_message">Would you like to update now?</string>
     <string name="rates_error_dialog_title">Rates not up to date</string>
-    <string name="rates_error_dialog_message">Last update was %1$s</string>
+    <string name="rates_error_dialog_message">Last update was</string>
     <string name="months_error_alert_text">There was a problem fetching data. Current data might not be up to date</string>
 </resources>

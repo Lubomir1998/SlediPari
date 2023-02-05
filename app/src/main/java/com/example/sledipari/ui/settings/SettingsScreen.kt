@@ -8,7 +8,6 @@ import androidx.compose.foundation.shape.RoundedCornerShape
 import com.example.sledipari.R
 import androidx.compose.material.*
 import androidx.compose.material.icons.Icons
-import androidx.compose.material.icons.filled.ArrowBack
 import androidx.compose.material.icons.filled.KeyboardArrowRight
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
