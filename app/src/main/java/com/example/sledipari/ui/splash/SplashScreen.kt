@@ -101,7 +101,7 @@ fun SplashScreen(
 fun ErrorAlertView(
     navController: NavController,
     activity: MainActivity,
-    exception: Throwable,
+    exception: Exception,
     ratesTimestamp: Long = 0L,
     alertTitle: String
 ) {

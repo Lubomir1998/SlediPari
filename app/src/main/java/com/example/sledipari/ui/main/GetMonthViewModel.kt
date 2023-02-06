@@ -14,7 +14,6 @@ import com.example.sledipari.data.MonthRepository
 import com.example.sledipari.data.models.Month
 import com.example.sledipari.data.models.Transaction
 import com.example.sledipari.utility.Constants.SLEDI_PARI_TOPIC
-import com.example.sledipari.utility.Resource
 import com.example.sledipari.utility.extensions.formatPrice
 import com.example.sledipari.utility.extensions.toList
 import com.example.sledipari.utility.extensions.totalSum
@@ -79,23 +78,17 @@ class GetMonthViewModel
 
         viewModelScope.launch {
 
-            when (val monthResult = repo.getMonth(timestamp)) {
-                is Resource.Success -> {
+            try {
 
-                    // we force unwrap which is not a good practice
-                    // but here since we are in success state
-                    // it is guaranteed the data is not null
-                    _month.value = monthResult.data
-                    _monthId.value = _month.value!!.id
-                }
+                _month.value = repo.getMonth(timestamp)
+                _monthId.value = _month.value!!.id
+            } catch (e: Exception) {
 
-                is Resource.Error -> {
+                _errorMessage.value = e.localizedMessage
+            } finally {
 
-                    _errorMessage.value = monthResult.message
-                }
+                _isLoading.value = false
             }
-
-            _isLoading.value = false
         }
     }
 
@@ -103,19 +96,12 @@ class GetMonthViewModel
 
         viewModelScope.launch {
 
-            when (val allMonthsResult = repo.getAllMonthsLocal()) {
-                is Resource.Success -> {
+            try {
 
-                    // we force unwrap which is not a good practice
-                    // but here since we are in success state
-                    // it is guaranteed the data is not null
-                    _allMonths.value = allMonthsResult.data!!
-                }
+                _allMonths.value = repo.getAllMonthsLocal()
+            } catch (e: Exception) {
 
-                is Resource.Error -> {
-
-                    _errorMessage.value = allMonthsResult.message
-                }
+                _errorMessage.value = e.localizedMessage
             }
         }
     }
@@ -140,43 +126,41 @@ class GetMonthViewModel
 
         viewModelScope.launch {
 
-            val request = PostSpendingRequest(
-                monthId = System.currentTimeMillis().formatDate("yyyy-MM"),
-                title = title.second,
-                price = price
-            )
+            try {
 
-            when (val addSpendingResult = repo.postSpending(request, post)) {
-                is Resource.Success -> {
+                val request = PostSpendingRequest(
+                    monthId = System.currentTimeMillis().formatDate("yyyy-MM"),
+                    title = title.second,
+                    price = price
+                )
 
-                    _isSpendingSuccessful.value = addSpendingResult.data ?: false
+                val addSpendingResult = repo.postSpending(request, post)
+                _isSpendingSuccessful.value = addSpendingResult
 
-                    if (addSpendingResult.data!!) {
-                        repo.addTransactionInHistory(
-                            Transaction(
-                                price = price,
-                                title = title.second,
-                                red = rgbColor.first,
-                                green = rgbColor.second,
-                                blue = rgbColor.third,
-                                undo = !post,
-                                timestamp = System.currentTimeMillis()
-                            )
+                if (addSpendingResult) {
+                    repo.addTransactionInHistory(
+                        Transaction(
+                            price = price,
+                            title = title.second,
+                            red = rgbColor.first,
+                            green = rgbColor.second,
+                            blue = rgbColor.third,
+                            undo = !post,
+                            timestamp = System.currentTimeMillis()
                         )
-                        if (sendNotification) {
-                            sendPushNotification(title.first, price)
-                        }
+                    )
+                    if (sendNotification) {
+                        sendPushNotification(title.first, price)
                     }
                 }
+            } catch (e: Exception) {
 
-                is Resource.Error -> {
+                _errorMessage.value = e.localizedMessage
+            } finally {
 
-                    _errorMessage.value = addSpendingResult.message
-                }
+                _isLoading.value = false
+                _hasCompleted.value = true
             }
-
-            _isLoading.value = false
-            _hasCompleted.value = true
         }
     }
 

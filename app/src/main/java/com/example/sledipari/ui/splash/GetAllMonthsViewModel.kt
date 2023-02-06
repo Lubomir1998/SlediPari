@@ -32,10 +32,10 @@ class GetAllMonthsViewModel
     private val _ratesTimestamp = MutableStateFlow(0L)
     val ratesTimestamp = _ratesTimestamp.asStateFlow()
 
-    private val _getRatesException = MutableStateFlow<Throwable?>(null)
+    private val _getRatesException = MutableStateFlow<Exception?>(null)
     val getRatesException = _getRatesException.asStateFlow()
 
-    private val _getMonthsException = MutableStateFlow<Throwable?>(null)
+    private val _getMonthsException = MutableStateFlow<Exception?>(null)
     val getMonthsException = _getMonthsException.asStateFlow()
 
     fun restoreAllMonths() {
@@ -62,8 +62,8 @@ class GetAllMonthsViewModel
             gettingMonths = async {
                 try {
                     repo.getAllMonths()
-                } catch (t: Throwable) {
-                    _getMonthsException.value = t
+                } catch (e: Exception) {
+                    _getMonthsException.value = e
                 }
             }
 
@@ -72,8 +72,8 @@ class GetAllMonthsViewModel
                     getRates = async {
                         try {
                             repo.saveCurrencyRates()
-                        } catch (t: Throwable) {
-                            _getRatesException.value = t
+                        } catch (e: Exception) {
+                            _getRatesException.value = e
                         }
                     }
                 }

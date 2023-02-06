@@ -1,5 +1,6 @@
 package com.example.sledipari.api
 
+import com.example.sledipari.api.models.ApiResponse
 import com.example.sledipari.api.models.CurrencyRatesResponse
 import com.example.sledipari.api.models.MonthDTO
 import com.example.sledipari.api.models.PostSpendingRequest
@@ -13,34 +14,54 @@ class MonthApi(private val httpClient: HttpClient) {
 
     suspend fun getMonth(month: String): MonthDTO {
 
-        return httpClient.get(baseUrl() + "getExpense") {
-            parameter("month", month)
+        val response = try {
+            httpClient.get<ApiResponse<MonthDTO>>(baseUrl() + "getExpense_v2") {
+                parameter("month", month)
+            }
+        } catch (e: Exception) {
+            throw Exception()
         }
+
+        return response.parse()
     }
 
     suspend fun postSpending(postRequest: PostSpendingRequest): Boolean {
 
-        val response = httpClient.post<Boolean>(baseUrl() + "addExpense") {
-            contentType(ContentType.Application.Json)
-            body = postRequest
+        val response = try {
+            httpClient.post<ApiResponse<Boolean>>(baseUrl() + "addExpense_v2") {
+                contentType(ContentType.Application.Json)
+                body = postRequest
+            }
+        } catch (e: Exception) {
+            throw Exception()
         }
 
-        return response
+        return response.parse()
     }
 
     suspend fun undoSpending(postRequest: PostSpendingRequest): Boolean {
 
-        val response = httpClient.post<Boolean>(baseUrl() + "removeExpense") {
-            contentType(ContentType.Application.Json)
-            body = postRequest
+        val response = try {
+            httpClient.post<ApiResponse<Boolean>>(baseUrl() + "removeExpense_v2") {
+                contentType(ContentType.Application.Json)
+                body = postRequest
+            }
+        } catch (e: Exception) {
+            throw Exception()
         }
 
-        return response
+        return response.parse()
     }
 
     suspend fun getAllMonths(): List<MonthDTO> {
 
-        return httpClient.get( baseUrl() + "getAllMonths")
+        val response = try {
+            httpClient.get<ApiResponse<List<MonthDTO>>>( baseUrl() + "getAllMonths_v2")
+        } catch (e: Exception) {
+            throw Exception()
+        }
+
+        return response.parse()
     }
 
     suspend fun getCurrencyRates(): CurrencyRatesResponse {

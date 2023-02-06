@@ -1,0 +1,22 @@
+{
+  "result": [
+    {
+      "workout": 1.2,
+      "food": {
+        "home": 3.0
+      },
+      "gifts": 20.0,
+      "id": "2022-1-8"
+    },
+    {
+      "clothes": 20.4,
+      "workout": 1.2,
+      "food": {
+        "home": 3.0,
+        "restaurant": 40.0
+      },
+      "id": "2022-1-7"
+    }
+  ],
+  "isSuccess": true
+}

@@ -1,7 +1,6 @@
 package com.example.sledipari.data
 
 import android.content.Context
-import com.example.sledipari.R
 import com.example.sledipari.api.MonthApi
 import com.example.sledipari.api.models.PostSpendingRequest
 import com.example.sledipari.data.db.MonthDao
@@ -10,7 +9,6 @@ import com.example.sledipari.data.models.CurrencyResponseLocal
 import com.example.sledipari.data.models.Transaction
 import com.example.sledipari.data.models.mapToRates
 import com.example.sledipari.utility.Constants.HISTORY_DURATION
-import com.example.sledipari.utility.Resource
 import com.example.sledipari.utility.extensions.isCurrent
 import javax.inject.Inject
 
@@ -20,17 +18,13 @@ class MonthRepository @Inject constructor(
     private val context: Context,
 ) {
 
-    suspend fun getMonth(monthId: String): Resource<Month> {
+    suspend fun getMonth(monthId: String): Month {
 
-        return try {
-            val month = api.getMonth(monthId).toMonth()
-            if (month.isCurrent()) {
-                dao.insertMonth(month)
-            }
-            Resource.Success(dao.getMonth(monthId))
-        } catch (e: Exception) {
-            Resource.Error(e.localizedMessage ?: context.getString(R.string.something_went_wrong))
+        val month = api.getMonth(monthId).toMonth()
+        if (month.isCurrent()) {
+            dao.insertMonth(month)
         }
+        return dao.getMonth(monthId)
     }
 
     suspend fun getMonthLocal(monthId: String): Month? {
@@ -42,28 +36,19 @@ class MonthRepository @Inject constructor(
         }
     }
 
-    suspend fun postSpending(request: PostSpendingRequest, post: Boolean = true): Resource<Boolean> {
+    suspend fun postSpending(request: PostSpendingRequest, post: Boolean = true): Boolean {
 
-        return try {
-            if (post) {
-                Resource.Success(api.postSpending(request))
-            }
-            else {
-                Resource.Success(api.undoSpending(request))
-            }
-        } catch (e: Exception) {
-            Resource.Error(e.localizedMessage ?: context.getString(R.string.something_went_wrong))
+        return if (post) {
+            api.postSpending(request)
+        }
+        else {
+            api.undoSpending(request)
         }
     }
 
-    suspend fun getAllMonthsLocal(): Resource<List<Month>> {
+    suspend fun getAllMonthsLocal(): List<Month> {
 
-        return try {
-            val months = dao.getAllMonths()
-            Resource.Success(months)
-        } catch (e: Exception) {
-            Resource.Error(e.localizedMessage ?: context.getString(R.string.something_went_wrong))
-        }
+        return dao.getAllMonths()
     }
 
     suspend fun getAllMonths() {
