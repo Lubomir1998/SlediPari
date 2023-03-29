@@ -62,7 +62,7 @@ fun MonthScreen(
     val currentMonth by viewModel.month.collectAsState()
     val allMonths by viewModel.allMonths.collectAsState()
     val isLoading by viewModel.isLoading.collectAsState()
-    val errorMessage by viewModel.errorMessageMonthScreen.collectAsState()
+    val errorMessage by viewModel.errorMessageMonthScreen.collectAsState(null)
     val currentCategory by viewModel.currentCategory.collectAsState()
     val totalSum by viewModel.totalSum.collectAsState()
     val currentList by viewModel.currentList.collectAsState()
@@ -200,7 +200,7 @@ fun MonthScreen(
 
     val isSpendingSuccessful by viewModel.isSpendingSuccessful.collectAsState()
 
-    val errorMessage by viewModel.errorMessageBottomSheet.collectAsState()
+    val errorMessage by viewModel.errorMessageBottomSheet.collectAsState(null)
 
     var sumText by remember {
         mutableStateOf("")

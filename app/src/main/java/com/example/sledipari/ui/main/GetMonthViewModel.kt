@@ -19,9 +19,7 @@ import com.example.sledipari.utility.extensions.toList
 import com.example.sledipari.utility.extensions.totalSum
 import com.example.sledipari.utility.formatDate
 import dagger.hilt.android.lifecycle.HiltViewModel
-import kotlinx.coroutines.flow.MutableStateFlow
-import kotlinx.coroutines.flow.StateFlow
-import kotlinx.coroutines.flow.asStateFlow
+import kotlinx.coroutines.flow.*
 import kotlinx.coroutines.launch
 import javax.inject.Inject
 
@@ -36,11 +34,11 @@ class GetMonthViewModel
     private val _isLoading = MutableStateFlow(false)
     val isLoading = _isLoading.asStateFlow()
 
-    private val _errorMessageMonthScreen = MutableStateFlow<String?>(null)
-    val errorMessageMonthScreen = _errorMessageMonthScreen.asStateFlow()
+    private val _errorMessageMonthScreen = MutableSharedFlow<String?>()
+    val errorMessageMonthScreen = _errorMessageMonthScreen.asSharedFlow()
 
-    private val _errorMessageBottomSheet = MutableStateFlow<String?>(null)
-    val errorMessageBottomSheet = _errorMessageBottomSheet.asStateFlow()
+    private val _errorMessageBottomSheet = MutableSharedFlow<String?>()
+    val errorMessageBottomSheet = _errorMessageBottomSheet.asSharedFlow()
 
     private val _month = MutableStateFlow<Month?>(null)
     val month = _month.asStateFlow()
@@ -87,7 +85,7 @@ class GetMonthViewModel
                 _monthId.value = _month.value!!.id
             } catch (e: Exception) {
 
-                _errorMessageMonthScreen.value = e.localizedMessage
+                _errorMessageMonthScreen.emit(e.localizedMessage)
             } finally {
 
                 _isLoading.value = false
@@ -104,7 +102,7 @@ class GetMonthViewModel
                 _allMonths.value = repo.getAllMonthsLocal()
             } catch (e: Exception) {
 
-                _errorMessageMonthScreen.value = e.localizedMessage
+                _errorMessageMonthScreen.emit(e.localizedMessage)
             }
         }
     }
@@ -158,7 +156,7 @@ class GetMonthViewModel
                 }
             } catch (e: Exception) {
 
-                _errorMessageBottomSheet.value = e.localizedMessage
+                _errorMessageMonthScreen.emit(e.localizedMessage)
             } finally {
 
                 _isLoading.value = false
