@@ -32,12 +32,12 @@ object AppModule {
 
     @Singleton
     @Provides
-    fun provideMonthApi() =
+    fun provideMonthApi(@ApplicationContext context: Context) =
         MonthApi(HttpClient(CIO) {
             install(JsonFeature) {
                 serializer = KotlinxSerializer(jsonInstance)
             }
-        })
+        }, context)
 
     @Singleton
     @Provides

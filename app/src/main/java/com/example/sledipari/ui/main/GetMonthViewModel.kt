@@ -36,8 +36,11 @@ class GetMonthViewModel
     private val _isLoading = MutableStateFlow(false)
     val isLoading = _isLoading.asStateFlow()
 
-    private val _errorMessage = MutableStateFlow<String?>(null)
-    val errorMessage = _errorMessage.asStateFlow()
+    private val _errorMessageMonthScreen = MutableStateFlow<String?>(null)
+    val errorMessageMonthScreen = _errorMessageMonthScreen.asStateFlow()
+
+    private val _errorMessageBottomSheet = MutableStateFlow<String?>(null)
+    val errorMessageBottomSheet = _errorMessageBottomSheet.asStateFlow()
 
     private val _month = MutableStateFlow<Month?>(null)
     val month = _month.asStateFlow()
@@ -84,7 +87,7 @@ class GetMonthViewModel
                 _monthId.value = _month.value!!.id
             } catch (e: Exception) {
 
-                _errorMessage.value = e.localizedMessage
+                _errorMessageMonthScreen.value = e.localizedMessage
             } finally {
 
                 _isLoading.value = false
@@ -101,7 +104,7 @@ class GetMonthViewModel
                 _allMonths.value = repo.getAllMonthsLocal()
             } catch (e: Exception) {
 
-                _errorMessage.value = e.localizedMessage
+                _errorMessageMonthScreen.value = e.localizedMessage
             }
         }
     }
@@ -155,7 +158,7 @@ class GetMonthViewModel
                 }
             } catch (e: Exception) {
 
-                _errorMessage.value = e.localizedMessage
+                _errorMessageBottomSheet.value = e.localizedMessage
             } finally {
 
                 _isLoading.value = false

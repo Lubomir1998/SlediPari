@@ -11,6 +11,6 @@ data class ApiResponse<Result>(
 
     fun parse(): Result {
 
-        return result ?: throw Throwable(errors)
+        return result ?: throw Exception(errors)
     }
 }

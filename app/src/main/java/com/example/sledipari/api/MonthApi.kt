@@ -1,5 +1,7 @@
 package com.example.sledipari.api
 
+import android.content.Context
+import com.example.sledipari.R
 import com.example.sledipari.api.models.ApiResponse
 import com.example.sledipari.api.models.CurrencyRatesResponse
 import com.example.sledipari.api.models.MonthDTO
@@ -10,7 +12,7 @@ import io.ktor.client.*
 import io.ktor.client.request.*
 import io.ktor.http.*
 
-class MonthApi(private val httpClient: HttpClient) {
+class MonthApi(private val httpClient: HttpClient, private val context: Context) {
 
     suspend fun getMonth(month: String): MonthDTO {
 
@@ -19,7 +21,7 @@ class MonthApi(private val httpClient: HttpClient) {
                 parameter("month", month)
             }
         } catch (e: Exception) {
-            throw Exception()
+            throw Exception(context.getString(R.string.something_went_wrong))
         }
 
         return response.parse()
@@ -33,7 +35,7 @@ class MonthApi(private val httpClient: HttpClient) {
                 body = postRequest
             }
         } catch (e: Exception) {
-            throw Exception()
+            throw Exception(context.getString(R.string.something_went_wrong))
         }
 
         return response.isSuccess
@@ -47,10 +49,14 @@ class MonthApi(private val httpClient: HttpClient) {
                 body = postRequest
             }
         } catch (e: Exception) {
-            throw Exception()
+            throw Exception(context.getString(R.string.something_went_wrong))
         }
 
-        return response.isSuccess
+        return if (response.isSuccess) {
+            true
+        } else {
+            throw Exception(response.errors)
+        }
     }
 
     suspend fun getAllMonths(): List<MonthDTO> {
@@ -58,7 +64,7 @@ class MonthApi(private val httpClient: HttpClient) {
         val response = try {
             httpClient.get<ApiResponse<List<MonthDTO>>>( baseUrl() + "getAllMonths_v2")
         } catch (e: Exception) {
-            throw Exception()
+            throw Exception(context.getString(R.string.something_went_wrong))
         }
 
         return response.parse()

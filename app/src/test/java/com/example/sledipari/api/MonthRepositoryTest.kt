@@ -31,7 +31,7 @@ class MonthRepositoryTest {
     fun setUp() {
         db = Room.inMemoryDatabaseBuilder(context, MonthsDatabase::class.java).build()
         dao = db.getDao()
-        repo = MonthRepository(MonthApi(mockHttpClient), dao, context)
+        repo = MonthRepository(MonthApi(mockHttpClient, context), dao, context)
     }
 
     @After
