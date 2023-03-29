@@ -64,7 +64,8 @@ fun InfoScreen(
                         }) {
                             Icon(
                                 imageVector = Icons.Filled.ArrowBack,
-                                contentDescription = "Back"
+                                contentDescription = "Back",
+                                tint = colorResource(id = R.color.label)
                             )
                         }
                     }
