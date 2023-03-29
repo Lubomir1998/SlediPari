@@ -2,6 +2,7 @@ package com.example.sledipari.api
 
 import androidx.room.Room
 import com.example.sledipari.api.models.CurrencyRatesResponse
+import com.example.sledipari.api.models.PostSpendingRequest
 import com.example.sledipari.data.MonthRepository
 import com.example.sledipari.data.db.MonthDao
 import com.example.sledipari.data.db.MonthsDatabase
@@ -97,6 +98,13 @@ class MonthRepositoryTest {
         Assert.assertEquals(1.2f, dao.getMonth("2022-1-8").workout)
         Assert.assertEquals(0.0f, dao.getMonth("2022-1-8").tok)
         Assert.assertEquals(20.0f, dao.getMonth("2022-1-8").gifts)
+    }
+
+    @Test
+    fun testPostSpending() = runBlocking {
+
+        val addSpendingRequest = PostSpendingRequest("abc", "remont", 16f)
+        Assert.assertTrue(repo.postSpending(addSpendingRequest))
     }
 
     @Test

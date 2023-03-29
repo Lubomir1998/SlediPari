@@ -36,7 +36,7 @@ class MonthApi(private val httpClient: HttpClient) {
             throw Exception()
         }
 
-        return response.parse()
+        return response.isSuccess
     }
 
     suspend fun undoSpending(postRequest: PostSpendingRequest): Boolean {
@@ -50,7 +50,7 @@ class MonthApi(private val httpClient: HttpClient) {
             throw Exception()
         }
 
-        return response.parse()
+        return response.isSuccess
     }
 
     suspend fun getAllMonths(): List<MonthDTO> {
