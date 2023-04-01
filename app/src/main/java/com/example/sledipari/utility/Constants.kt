@@ -4,7 +4,7 @@ import com.example.sledipari.BuildConfig
 
 object Constants {
 
-    const val USE_LOCALHOST = true
+    const val USE_LOCALHOST = false
 
     const val BASE_URL = BuildConfig.BASE_URL
     const val BASE_URL_LOCALHOST = BuildConfig.BASE_URL_LOCALHOST
