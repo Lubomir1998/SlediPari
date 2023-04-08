@@ -62,7 +62,7 @@ fun MonthScreen(
     val currentMonth by viewModel.month.collectAsState()
     val allMonths by viewModel.allMonths.collectAsState()
     val isLoading by viewModel.isLoading.collectAsState()
-    val errorMessage by viewModel.errorMessageMonthScreen.collectAsState(null)
+    val errorMessage by viewModel.errorMessageMonthScreen.collectAsState()
     val currentCategory by viewModel.currentCategory.collectAsState()
     val totalSum by viewModel.totalSum.collectAsState()
     val currentList by viewModel.currentList.collectAsState()
@@ -72,22 +72,23 @@ fun MonthScreen(
 
     errorMessage?.let {
         Toast.makeText(context, it, Toast.LENGTH_LONG).show()
+        viewModel.resetErrorState()
     }
 
     LaunchedEffect(key1 = true) {
         viewModel.getMonthLocal(currentMonthId)
+        viewModel.getAllMonths()
         currencyViewModel.getRates()
     }
 
     LaunchedEffect(key1 = currentMonthId) {
         viewModel.getMonthLocal(currentMonthId)
-        viewModel.getAllMonths()
     }
 
     LaunchedEffect(key1 = currentMonth) {
         currentMonth?.let { month ->
 
-            when(currentCategory) {
+            when (currentCategory) {
                 context.getString(R.string.food) -> {
                     viewModel.changeTotalSum(month.restaurant + month.home)
                     viewModel.changeList(foodToList(month))
@@ -156,7 +157,8 @@ fun MonthScreen(
 }
 
 @ExperimentalMaterialApi
-@Composable fun BottomSheetContent(
+@Composable
+fun BottomSheetContent(
     bottomSheetScaffoldState: BottomSheetScaffoldState,
     viewModel: GetMonthViewModel,
     activity: MainActivity,
@@ -309,7 +311,7 @@ fun MonthScreen(
                 TextField(
                     value = sumText,
                     onValueChange = {
-                        sumText = if (it.isEmpty()){
+                        sumText = if (it.isEmpty()) {
                             it
                         } else {
                             when (it.toDoubleOrNull()) {
@@ -377,7 +379,9 @@ fun MonthScreen(
                     text = context.getString(R.string.send_notification),
                     color = colorResource(id = R.color.label)
                 )
-                Switch(checked = sendNotificationsChecked, onCheckedChange = { sendNotificationsChecked = it })
+                Switch(
+                    checked = sendNotificationsChecked,
+                    onCheckedChange = { sendNotificationsChecked = it })
             }
 
             // currency
@@ -416,16 +420,29 @@ fun MonthScreen(
                 activity.hideKeyboard(view)
 
                 if (currentSelectedOption == null) {
-                    Toast.makeText(context, context.getString(R.string.nothing_selected), Toast.LENGTH_SHORT).show()
+                    Toast.makeText(
+                        context,
+                        context.getString(R.string.nothing_selected),
+                        Toast.LENGTH_SHORT
+                    ).show()
                     return@Button
                 }
 
                 if (sumText.trim().isEmpty()) {
-                    Toast.makeText(context, context.getString(R.string.enter_price), Toast.LENGTH_SHORT).show()
+                    Toast.makeText(
+                        context,
+                        context.getString(R.string.enter_price),
+                        Toast.LENGTH_SHORT
+                    ).show()
                     return@Button
                 }
 
-                viewModel.addSpending(currentSelectedOption!!, (sumText.toFloat() / currentSelectedBaseRate.toFloat()) * currentSelectedQuantity, currentSelectedOption!!.second.getRGB(), sendNotificationsChecked)
+                viewModel.addSpending(
+                    currentSelectedOption!!,
+                    (sumText.toFloat() / currentSelectedBaseRate.toFloat()) * currentSelectedQuantity,
+                    currentSelectedOption!!.second.getRGB(),
+                    sendNotificationsChecked
+                )
             }
         ) {
             Text(
@@ -444,16 +461,30 @@ fun MonthScreen(
                 activity.hideKeyboard(view)
 
                 if (currentSelectedOption == null) {
-                    Toast.makeText(context, context.getString(R.string.nothing_selected), Toast.LENGTH_SHORT).show()
+                    Toast.makeText(
+                        context,
+                        context.getString(R.string.nothing_selected),
+                        Toast.LENGTH_SHORT
+                    ).show()
                     return@Button
                 }
 
                 if (sumText.trim().isEmpty()) {
-                    Toast.makeText(context, context.getString(R.string.enter_price), Toast.LENGTH_SHORT).show()
+                    Toast.makeText(
+                        context,
+                        context.getString(R.string.enter_price),
+                        Toast.LENGTH_SHORT
+                    ).show()
                     return@Button
                 }
 
-                viewModel.addSpending(currentSelectedOption!!, (sumText.toFloat() / currentSelectedBaseRate.toFloat()) * currentSelectedQuantity, currentSelectedOption!!.second.getRGB(), sendNotificationsChecked, false)
+                viewModel.addSpending(
+                    currentSelectedOption!!,
+                    (sumText.toFloat() / currentSelectedBaseRate.toFloat()) * currentSelectedQuantity,
+                    currentSelectedOption!!.second.getRGB(),
+                    sendNotificationsChecked,
+                    false
+                )
             }
         ) {
             Text(
@@ -536,7 +567,11 @@ fun MonthContent(
             currentMonthId = currentMonthId
         ) { month ->
             viewModel.updateMonthId(month.id)
-            if (currentCategory != context.getString(R.string.all) && month.getCurrentCategoryValue(context, currentCategory) == 0f) {
+            if (currentCategory != context.getString(R.string.all) && month.getCurrentCategoryValue(
+                    context,
+                    currentCategory
+                ) == 0f
+            ) {
                 viewModel.changeCategory(context.getString(R.string.all))
             }
         }
@@ -559,52 +594,61 @@ fun MonthContent(
 
                 Spacer(modifier = Modifier.size(10.dp))
 
-                CategoryTitle(title = currentCategory) {
-                    viewModel.changeCategory(context.getString(R.string.all))
-                    viewModel.changeList(month.toList())
-                    viewModel.changeTotalSum(month.totalSum())
-                }
+                if (month.totalSum() > 0.0f) {
 
-                Spacer(modifier = Modifier.size(10.dp))
-
-                PieChart(
-                    navController = navController,
-                    list = currentList,
-                    totalSum = totalSum,
-                    allMonths = allMonths,
-                    modifier = Modifier.padding(
-                        bottom = 20.dp
-                    )
-                ) { categoryName ->
-                    viewModel.changeCategory(categoryName.getTitle(context))
-
-                    when (categoryName) {
-                        "food" -> {
-                            viewModel.changeTotalSum(month.restaurant + month.home)
-                            viewModel.changeList(foodToList(month))
-                        }
-                        "smetki" -> {
-                            viewModel.changeTotalSum(month.tok + month.voda + month.toplo + month.internet + month.telefon + month.vhod)
-                            viewModel.changeList(smetkiToList(month))
-                        }
-                        "transport" -> {
-                            viewModel.changeTotalSum(month.publicT + month.taxi + month.car)
-                            viewModel.changeList(transportToList(month))
-                        }
-                        "cosmetics" -> {
-                            viewModel.changeTotalSum(month.higien + month.other)
-                            viewModel.changeList(cosmeticsToList(month))
-                        }
-                        "preparati" -> {
-                            viewModel.changeTotalSum(month.clean + month.wash)
-                            viewModel.changeList(preparatiToList(month))
-                        }
-                        "frizior" -> {
-                            viewModel.changeTotalSum(month.friziorSub + month.cosmetic + month.manikior)
-                            viewModel.changeList(friziorToList(month))
-                        }
-                        else -> Unit
+                    CategoryTitle(title = currentCategory) {
+                        viewModel.changeCategory(context.getString(R.string.all))
+                        viewModel.changeList(month.toList())
+                        viewModel.changeTotalSum(month.totalSum())
                     }
+
+                    Spacer(modifier = Modifier.size(10.dp))
+
+                    PieChart(
+                        navController = navController,
+                        list = currentList,
+                        totalSum = totalSum,
+                        allMonths = allMonths,
+                        modifier = Modifier.padding(
+                            bottom = 20.dp
+                        )
+                    ) { categoryName ->
+                        viewModel.changeCategory(categoryName.getTitle(context))
+
+                        when (categoryName) {
+                            "food" -> {
+                                viewModel.changeTotalSum(month.restaurant + month.home)
+                                viewModel.changeList(foodToList(month))
+                            }
+                            "smetki" -> {
+                                viewModel.changeTotalSum(month.tok + month.voda + month.toplo + month.internet + month.telefon + month.vhod)
+                                viewModel.changeList(smetkiToList(month))
+                            }
+                            "transport" -> {
+                                viewModel.changeTotalSum(month.publicT + month.taxi + month.car)
+                                viewModel.changeList(transportToList(month))
+                            }
+                            "cosmetics" -> {
+                                viewModel.changeTotalSum(month.higien + month.other)
+                                viewModel.changeList(cosmeticsToList(month))
+                            }
+                            "preparati" -> {
+                                viewModel.changeTotalSum(month.clean + month.wash)
+                                viewModel.changeList(preparatiToList(month))
+                            }
+                            "frizior" -> {
+                                viewModel.changeTotalSum(month.friziorSub + month.cosmetic + month.manikior)
+                                viewModel.changeList(friziorToList(month))
+                            }
+                            else -> Unit
+                        }
+                    }
+                } else {
+                    Text(
+                        text = stringResource(id = R.string.nothing_for_now),
+                        color = colorResource(id = R.color.label),
+                        fontSize = 22.sp
+                    )
                 }
             } ?: run {
                 if (isLoading) {
@@ -692,7 +736,7 @@ fun SpendingItem(
             )
 
             Spacer(modifier = Modifier.width(10.dp))
-            
+
             Text(
                 text = buildAnnotatedString {
                     withStyle(
@@ -701,7 +745,13 @@ fun SpendingItem(
                             fontSize = 16.sp
                         )
                     ) {
-                        append("${name.toLocalizable(LocalContext.current)} ${if (highlighted) "*" else ""} - ${sum.formatPrice()} ${stringResource(id = R.string.leva)}")
+                        append(
+                            "${name.toLocalizable(LocalContext.current)} ${if (highlighted) "*" else ""} - ${sum.formatPrice()} ${
+                                stringResource(
+                                    id = R.string.leva
+                                )
+                            }"
+                        )
                     }
 
                     withStyle(
@@ -756,9 +806,8 @@ fun CategoryTitle(
         modifier = modifier.fillMaxWidth(0.8f)
     ) {
         if (title == stringResource(id = R.string.all)) {
-            Row{}
-        }
-        else {
+            Row {}
+        } else {
             Icon(
                 imageVector = Icons.Default.ArrowBack,
                 contentDescription = null,
@@ -777,7 +826,7 @@ fun CategoryTitle(
             color = colorResource(id = R.color.label)
         )
 
-        Row{}
+        Row {}
     }
 }
 
@@ -911,7 +960,9 @@ fun TotalSumRow(
         modifier = modifier.fillMaxWidth(0.6f)
     ) {
         Text(
-            text = stringResource(id = R.string.total) + " ${totalSum.formatPrice()} " + stringResource(id = R.string.leva),
+            text = stringResource(id = R.string.total) + " ${totalSum.formatPrice()} " + stringResource(
+                id = R.string.leva
+            ),
             fontSize = 18.sp,
             color = colorResource(id = R.color.label)
         )
@@ -922,7 +973,7 @@ fun TotalSumRow(
 fun DropDownMenuCategories(
     isCategoriesExpanded: Boolean,
     currentSelectedOption: Pair<String, String>?,
-    options:  HashMap<String, String>,
+    options: HashMap<String, String>,
     onCategoryArrowClick: ((Boolean) -> Unit),
     onSelectCategory: ((Pair<String, String>?) -> Unit),
     onDismiss: (() -> Unit)
@@ -976,7 +1027,7 @@ fun DropDownMenuCategories(
 fun DropDownMenuQuantity(
     isQuantityExpanded: Boolean,
     currentSelectedOption: Int,
-    options:  List<Int>,
+    options: List<Int>,
     onQuantityArrowClick: ((Boolean) -> Unit),
     onSelectQuantity: ((Int) -> Unit),
     onDismiss: (() -> Unit)
@@ -1030,7 +1081,7 @@ fun DropDownMenuQuantity(
 fun DropDownSelectCurrency(
     isCurrencyExpanded: Boolean,
     currentSelectedOption: String,
-    options:  Map<String, Double>,
+    options: Map<String, Double>,
     onCurrencyArrowClick: ((Boolean) -> Unit),
     onSelectCurrency: ((Pair<String, Double>) -> Unit),
     onDismiss: (() -> Unit)
