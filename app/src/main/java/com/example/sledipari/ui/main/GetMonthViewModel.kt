@@ -34,11 +34,11 @@ class GetMonthViewModel
     private val _isLoading = MutableStateFlow(false)
     val isLoading = _isLoading.asStateFlow()
 
-    private val _errorMessageMonthScreen = MutableSharedFlow<String?>()
-    val errorMessageMonthScreen = _errorMessageMonthScreen.asSharedFlow()
+    private val _errorMessageMonthScreen = MutableStateFlow<String?>(null)
+    val errorMessageMonthScreen = _errorMessageMonthScreen.asStateFlow()
 
-    private val _errorMessageBottomSheet = MutableSharedFlow<String?>()
-    val errorMessageBottomSheet = _errorMessageBottomSheet.asSharedFlow()
+    private val _errorMessageBottomSheet = MutableStateFlow<String?>(null)
+    val errorMessageBottomSheet = _errorMessageBottomSheet.asStateFlow()
 
     private val _month = MutableStateFlow<Month?>(null)
     val month = _month.asStateFlow()
@@ -85,7 +85,7 @@ class GetMonthViewModel
                 _monthId.value = _month.value!!.id
             } catch (e: Exception) {
 
-                _errorMessageMonthScreen.emit(e.localizedMessage)
+                _errorMessageMonthScreen.value = e.localizedMessage
             } finally {
 
                 _isLoading.value = false
@@ -100,9 +100,16 @@ class GetMonthViewModel
             try {
 
                 _allMonths.value = repo.getAllMonthsLocal()
+
+                if (!(_allMonths.value.contains(_month.value))) {
+
+                    val newMonthId = System.currentTimeMillis().formatDate("yyyy-MM")
+                    _allMonths.value += Month(id = newMonthId)
+                    _monthId.value = newMonthId
+                }
             } catch (e: Exception) {
 
-                _errorMessageMonthScreen.emit(e.localizedMessage)
+                _errorMessageMonthScreen.value = e.localizedMessage
             }
         }
     }
@@ -156,7 +163,7 @@ class GetMonthViewModel
                 }
             } catch (e: Exception) {
 
-                _errorMessageMonthScreen.emit(e.localizedMessage)
+                _errorMessageMonthScreen.value = e.localizedMessage
             } finally {
 
                 _isLoading.value = false
@@ -181,10 +188,17 @@ class GetMonthViewModel
     }
 
     fun updateMonthId(monthId: String) {
+
         _monthId.value = monthId
     }
 
     fun resetHasCompleted() {
+
         _hasCompleted.value = false
+    }
+
+    fun resetErrorState() {
+
+        _errorMessageMonthScreen.value = null
     }
 }
