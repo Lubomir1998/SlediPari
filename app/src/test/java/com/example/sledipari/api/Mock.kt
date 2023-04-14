@@ -1,17 +1,15 @@
 package com.example.sledipari.api
 
 import android.content.Context
-import androidx.room.Room
 import androidx.test.core.app.ApplicationProvider
-import com.example.sledipari.data.MonthRepository
-import com.example.sledipari.data.db.MonthsDatabase
 import com.example.sledipari.jsonInstance
 import io.ktor.client.*
 import io.ktor.client.engine.mock.*
-import io.ktor.client.features.json.*
-import io.ktor.client.features.json.serializer.*
+import io.ktor.client.plugins.contentnegotiation.*
 import io.ktor.http.*
+import io.ktor.serialization.kotlinx.json.*
 import io.ktor.utils.io.*
+import kotlinx.serialization.json.Json
 import java.io.BufferedReader
 import java.io.FileInputStream
 import java.io.InputStreamReader
@@ -47,8 +45,8 @@ private fun getJsonResult(filePath: String): String {
 }
 
 val mockHttpClient = HttpClient(engine) {
-    install(JsonFeature) {
-        serializer = KotlinxSerializer(jsonInstance)
+    install(ContentNegotiation) {
+        json(jsonInstance)
     }
 }
 

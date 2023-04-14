@@ -4,7 +4,7 @@ import com.example.sledipari.BuildConfig
 
 object Constants {
 
-    const val USE_LOCALHOST = false
+    const val USE_LOCALHOST = true
 
     const val BASE_URL = BuildConfig.BASE_URL
     const val BASE_URL_LOCALHOST = BuildConfig.BASE_URL_LOCALHOST
@@ -35,4 +35,6 @@ object Constants {
 
     const val GET_RATES_INTERVAL = 1000L * 60 * 60 * 6
     const val BASE_CURRENCY_KEY = "base_currency_key"
+
+    const val LAST_MODIFIED_DATE = "last_modified_date"
 }

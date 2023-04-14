@@ -12,11 +12,11 @@ class FirebasePushNotificationsApi(private val client: HttpClient) {
 
     suspend fun sendPushNotification(pushNotification: PushNotification) {
 
-        client.post<HttpResponse> {
+        client.post {
             url("https://fcm.googleapis.com/fcm/send")
             contentType(ContentType.Application.Json)
             header("Authorization", "key=$SERVER_KEY")
-            body = pushNotification
+            setBody(pushNotification)
         }
     }
 }

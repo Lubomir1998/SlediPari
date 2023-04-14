@@ -1,6 +1,7 @@
 package com.example.sledipari.ui.splash
 
 import android.content.SharedPreferences
+import android.util.Log
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.example.sledipari.data.MonthRepository
@@ -61,7 +62,7 @@ class GetAllMonthsViewModel
 
             gettingMonths = async {
                 try {
-                    repo.getAllMonths()
+                    repo.getMonthsOnStart()
                 } catch (e: Exception) {
                     _getMonthsException.value = e
                 }
@@ -80,8 +81,8 @@ class GetAllMonthsViewModel
             }
 
             gettingMonths.await()
-            deletingHistory?.await()
-            getRates?.await()
+//            deletingHistory?.await()
+//            getRates?.await()
 
             _loading.value = false
             _completed.value = true

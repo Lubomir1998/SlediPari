@@ -17,9 +17,8 @@ import dagger.hilt.android.qualifiers.ApplicationContext
 import dagger.hilt.components.SingletonComponent
 import io.ktor.client.*
 import io.ktor.client.engine.cio.*
-import io.ktor.client.features.*
-import io.ktor.client.features.json.*
-import io.ktor.client.features.json.serializer.*
+import io.ktor.client.plugins.contentnegotiation.*
+import io.ktor.serialization.kotlinx.json.*
 import javax.inject.Singleton
 
 @Module
@@ -34,8 +33,8 @@ object AppModule {
     @Provides
     fun provideMonthApi(@ApplicationContext context: Context) =
         MonthApi(HttpClient(CIO) {
-            install(JsonFeature) {
-                serializer = KotlinxSerializer(jsonInstance)
+            install(ContentNegotiation) {
+                json(jsonInstance)
             }
         }, context)
 
@@ -44,9 +43,6 @@ object AppModule {
     fun provideFcmApi() =
         FirebasePushNotificationsApi(HttpClient(CIO) {
             expectSuccess = false
-            install(JsonFeature) {
-                serializer = KotlinxSerializer(jsonInstance)
-            }
         })
 
     @Singleton

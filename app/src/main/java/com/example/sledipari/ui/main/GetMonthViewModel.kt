@@ -2,6 +2,7 @@ package com.example.sledipari.ui.main
 
 import android.annotation.SuppressLint
 import android.content.Context
+import android.content.SharedPreferences
 import androidx.compose.ui.graphics.Color
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
@@ -13,6 +14,7 @@ import com.example.sledipari.api.models.pushnotifications.PushNotification
 import com.example.sledipari.data.MonthRepository
 import com.example.sledipari.data.models.Month
 import com.example.sledipari.data.models.Transaction
+import com.example.sledipari.utility.Constants.LAST_MODIFIED_DATE
 import com.example.sledipari.utility.Constants.SLEDI_PARI_TOPIC
 import com.example.sledipari.utility.extensions.formatPrice
 import com.example.sledipari.utility.extensions.toList
@@ -28,6 +30,7 @@ class GetMonthViewModel
 @Inject constructor(
     private val repo: MonthRepository,
     private val firebaseApi: FirebasePushNotificationsApi,
+    private val sharedPreferences: SharedPreferences,
     @SuppressLint("StaticFieldLeak") private val context: Context
 ): ViewModel() {
 
