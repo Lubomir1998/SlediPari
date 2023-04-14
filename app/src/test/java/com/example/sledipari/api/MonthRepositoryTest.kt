@@ -1,5 +1,7 @@
 package com.example.sledipari.api
 
+import android.content.Context
+import android.content.SharedPreferences
 import androidx.room.Room
 import com.example.sledipari.api.models.CurrencyRatesResponse
 import com.example.sledipari.api.models.PostSpendingRequest
@@ -31,7 +33,7 @@ class MonthRepositoryTest {
     fun setUp() {
         db = Room.inMemoryDatabaseBuilder(context, MonthsDatabase::class.java).build()
         dao = db.getDao()
-        repo = MonthRepository(MonthApi(mockHttpClient, context), dao, context)
+        repo = MonthRepository(MonthApi(mockHttpClient, context), dao, context.getSharedPreferences("test", Context.MODE_PRIVATE))
     }
 
     @After

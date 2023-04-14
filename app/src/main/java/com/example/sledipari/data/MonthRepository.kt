@@ -23,10 +23,9 @@ import javax.inject.Inject
 
 class MonthRepository @Inject constructor(
     private val api: MonthApi,
-    private val dao: MonthDao
+    private val dao: MonthDao,
+    private val sharedPreferences: SharedPreferences
 ) {
-
-    @Inject lateinit var sharedPreferences: SharedPreferences
 
     suspend fun getMonthsOnStart() {
 
