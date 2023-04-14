@@ -26,7 +26,7 @@ class MonthRepository @Inject constructor(
     suspend fun getMonthsOnStart() {
 
         val response = api.checkLastModifiedDate()
-        val lastModified = response.headers[HttpHeaders.LastModified]?.toLong() ?: 0L
+        val lastModified = response.headers[HttpHeaders.LastModified]?.toLong() ?: 1L
 
         if (sharedPreferences.getLong(LAST_MODIFIED_DATE, 0L) < lastModified) {
             getAllMonths()
@@ -60,14 +60,11 @@ class MonthRepository @Inject constructor(
                 throw Exception(it)
             }
 
-            val success = response.body<ApiResponse<Boolean>>().isSuccess
-            val lastModified = response.headers[HttpHeaders.LastModified]?.toLong() ?: 0L
-
-            if (success) {
+            response.headers[HttpHeaders.LastModified]?.toLong()?.let { lastModified ->
                 sharedPreferences.edit().putLong(LAST_MODIFIED_DATE, lastModified).apply()
             }
 
-            success
+            response.body<ApiResponse<Boolean>>().isSuccess
         }
         else {
 
@@ -76,14 +73,11 @@ class MonthRepository @Inject constructor(
                 throw Exception(it)
             }
 
-            val success = response.body<ApiResponse<Boolean>>().isSuccess
-            val lastModified = response.headers[HttpHeaders.LastModified]?.toLong() ?: 0L
-
-            if (success) {
+            response.headers[HttpHeaders.LastModified]?.toLong()?.let { lastModified ->
                 sharedPreferences.edit().putLong(LAST_MODIFIED_DATE, lastModified).apply()
             }
 
-            success
+            response.body<ApiResponse<Boolean>>().isSuccess
         }
     }
 
@@ -96,9 +90,12 @@ class MonthRepository @Inject constructor(
 
         val response = api.getAllMonths()
         val months = response.body<ApiResponse<List<MonthDTO>>>().parse()
-        val lastModified = response.headers[HttpHeaders.LastModified]?.toLong() ?: 0L
 
-        sharedPreferences.edit().putLong(LAST_MODIFIED_DATE, lastModified).apply()
+        response.headers[HttpHeaders.LastModified]?.toLong()?.let { lastModified ->
+
+            sharedPreferences.edit().putLong(LAST_MODIFIED_DATE, lastModified).apply()
+        }
+
         dao.deleteAllMonths()
         for (month in months) {
             dao.insertMonth(month.toMonth())
