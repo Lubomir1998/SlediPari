@@ -81,8 +81,8 @@ class GetAllMonthsViewModel
             }
 
             gettingMonths.await()
-//            deletingHistory?.await()
-//            getRates?.await()
+            deletingHistory?.await()
+            getRates?.await()
 
             _loading.value = false
             _completed.value = true
