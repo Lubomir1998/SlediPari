@@ -41,6 +41,9 @@ import com.example.sledipari.ui.settings.currencies.CurrencyViewModel
 import com.example.sledipari.ui.wash
 import com.example.sledipari.utility.*
 import com.example.sledipari.utility.extensions.*
+import com.google.accompanist.swiperefresh.SwipeRefresh
+import com.google.accompanist.swiperefresh.SwipeRefreshIndicator
+import com.google.accompanist.swiperefresh.rememberSwipeRefreshState
 import kotlinx.coroutines.launch
 import kotlinx.serialization.*
 import kotlinx.serialization.json.Json
@@ -139,19 +142,40 @@ fun MonthScreen(
         },
         sheetPeekHeight = 0.dp
     ) {
-        MonthContent(
-            navController = navController,
-            allMonths = allMonths,
-            currentMonthId = currentMonthId,
-            currentMonth = currentMonth,
-            isLoading = isLoading,
-            currencyLoading = currencyLoading,
-            currentCategory = currentCategory,
-            currentList = currentList,
-            totalSum = totalSum,
-            viewModel = viewModel,
-            bottomSheetScaffoldState = bottomSheetScaffoldState
-        )
+
+        val swipeRefreshState = rememberSwipeRefreshState(isRefreshing = isLoading)
+
+        SwipeRefresh(
+            state = swipeRefreshState,
+            onRefresh = {
+                viewModel.getAllMonthsFromApi()
+            },
+            indicator = { state, refreshTrigger ->
+                SwipeRefreshIndicator(
+                    state = state,
+                    refreshTriggerDistance = refreshTrigger,
+                    backgroundColor = colorResource(
+                        id = R.color.background
+                    ),
+                    contentColor = wash
+                )
+            }
+        ) {
+
+            MonthContent(
+                navController = navController,
+                allMonths = allMonths,
+                currentMonthId = currentMonthId,
+                currentMonth = currentMonth,
+                isLoading = isLoading,
+                currencyLoading = currencyLoading,
+                currentCategory = currentCategory,
+                currentList = currentList,
+                totalSum = totalSum,
+                viewModel = viewModel,
+                bottomSheetScaffoldState = bottomSheetScaffoldState
+            )
+        }
     }
 
 }
@@ -235,7 +259,7 @@ fun BottomSheetContent(
             currentSelectedOption = null
             currentSelectedQuantity = 1
             bottomSheetScaffoldState.bottomSheetState.collapse()
-            viewModel.getMonth(viewModel.monthId.value)
+            viewModel.getMonth(System.currentTimeMillis().formatDate("yyyy-MM"))
         }
     }
 

@@ -26,9 +26,9 @@ class MonthRepository @Inject constructor(
     suspend fun getMonthsOnStart() {
 
         val response = api.checkLastModifiedDate()
-        val lastModified = response.headers[HttpHeaders.LastModified]?.toLong() ?: 1L
+        val lastModified = response.headers[HttpHeaders.LastModified]?.toLong() ?: 0L
 
-        if (sharedPreferences.getLong(LAST_MODIFIED_DATE, 0L) < lastModified) {
+        if (sharedPreferences.getLong(LAST_MODIFIED_DATE, -1L) < lastModified) {
             getAllMonths()
         }
     }
@@ -86,7 +86,7 @@ class MonthRepository @Inject constructor(
         return dao.getAllMonths()
     }
 
-    suspend fun getAllMonths() {
+    suspend fun getAllMonths(): List<Month> {
 
         val response = api.getAllMonths()
         val months = response.body<ApiResponse<List<MonthDTO>>>().parse()
@@ -100,6 +100,8 @@ class MonthRepository @Inject constructor(
         for (month in months) {
             dao.insertMonth(month.toMonth())
         }
+
+        return getAllMonthsLocal()
     }
 
     suspend fun addTransactionInHistory(transaction: Transaction) {

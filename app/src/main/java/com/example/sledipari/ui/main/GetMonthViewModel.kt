@@ -77,6 +77,29 @@ class GetMonthViewModel
         }
     }
 
+    fun getAllMonthsFromApi() {
+
+        viewModelScope.launch {
+
+            _isLoading.value = true
+
+            try {
+
+                _allMonths.value = repo.getAllMonths()
+
+                if (_monthId.value == System.currentTimeMillis().formatDate("yyyy-MM") && _allMonths.value.last().id == System.currentTimeMillis().formatDate("yyyy-MM")) {
+                    _month.value = _allMonths.value.last()
+                }
+            } catch (e: Exception) {
+
+                _errorMessageMonthScreen.value = e.localizedMessage
+            } finally {
+
+                _isLoading.value = false
+            }
+        }
+    }
+
     fun getMonth(timestamp: String) {
         _isLoading.value = true
 
