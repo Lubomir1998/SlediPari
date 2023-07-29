@@ -33,7 +33,7 @@ object Constants {
 
     const val HISTORY_TIMESTAMP = "history_timestamp"
 
-    const val GET_RATES_INTERVAL = 1000L * 60 * 60 * 6
+    const val GET_RATES_INTERVAL = 1000L * 60 * 60 * 24
     const val BASE_CURRENCY_KEY = "base_currency_key"
 
     const val LAST_MODIFIED_DATE = "last_modified_date"
