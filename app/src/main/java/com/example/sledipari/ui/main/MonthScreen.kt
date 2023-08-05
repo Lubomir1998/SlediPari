@@ -1,3 +1,5 @@
+@file:OptIn(ExperimentalFoundationApi::class)
+
 package com.example.sledipari.ui.main
 
 import android.content.SharedPreferences
@@ -26,8 +28,10 @@ import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.res.colorResource
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.SpanStyle
+import androidx.compose.ui.text.TextStyle
 import androidx.compose.ui.text.buildAnnotatedString
 import androidx.compose.ui.text.input.KeyboardType
+import androidx.compose.ui.text.style.TextDecoration
 import androidx.compose.ui.text.withStyle
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
@@ -47,6 +51,8 @@ import com.google.accompanist.swiperefresh.rememberSwipeRefreshState
 import kotlinx.coroutines.launch
 import kotlinx.serialization.*
 import kotlinx.serialization.json.Json
+
+typealias SpItem = Pair<Pair<Pair<Float, String>, Color>, Boolean>
 
 @ExperimentalMaterialApi
 @Composable
@@ -536,7 +542,7 @@ fun MonthContent(
     isLoading: Boolean,
     currencyLoading: Boolean,
     currentCategory: String,
-    currentList: List<Pair<Pair<Float, String>, Color>>,
+    currentList: List<SpItem>,
     totalSum: Float,
     viewModel: GetMonthViewModel,
     bottomSheetScaffoldState: BottomSheetScaffoldState,
@@ -635,38 +641,49 @@ fun MonthContent(
                         allMonths = allMonths,
                         modifier = Modifier.padding(
                             bottom = 20.dp
-                        )
-                    ) { categoryName ->
-                        viewModel.changeCategory(categoryName.getTitle(context))
+                        ),
+                        onClick = { categoryName ->
 
-                        when (categoryName) {
-                            "food" -> {
-                                viewModel.changeTotalSum(month.restaurant + month.home)
-                                viewModel.changeList(foodToList(month))
+                            viewModel.changeCategory(categoryName.getTitle(context))
+
+                            when (categoryName) {
+                                "food" -> {
+                                    viewModel.changeTotalSum(month.restaurant + month.home)
+                                    viewModel.changeList(foodToList(month))
+                                }
+                                "smetki" -> {
+                                    viewModel.changeTotalSum(month.tok + month.voda + month.toplo + month.internet + month.telefon + month.vhod)
+                                    viewModel.changeList(smetkiToList(month))
+                                }
+                                "transport" -> {
+                                    viewModel.changeTotalSum(month.publicT + month.taxi + month.car)
+                                    viewModel.changeList(transportToList(month))
+                                }
+                                "cosmetics" -> {
+                                    viewModel.changeTotalSum(month.higien + month.other)
+                                    viewModel.changeList(cosmeticsToList(month))
+                                }
+                                "preparati" -> {
+                                    viewModel.changeTotalSum(month.clean + month.wash)
+                                    viewModel.changeList(preparatiToList(month))
+                                }
+                                "frizior" -> {
+                                    viewModel.changeTotalSum(month.friziorSub + month.cosmetic + month.manikior)
+                                    viewModel.changeList(friziorToList(month))
+                                }
+                                else -> Unit
                             }
-                            "smetki" -> {
-                                viewModel.changeTotalSum(month.tok + month.voda + month.toplo + month.internet + month.telefon + month.vhod)
-                                viewModel.changeList(smetkiToList(month))
-                            }
-                            "transport" -> {
-                                viewModel.changeTotalSum(month.publicT + month.taxi + month.car)
-                                viewModel.changeList(transportToList(month))
-                            }
-                            "cosmetics" -> {
-                                viewModel.changeTotalSum(month.higien + month.other)
-                                viewModel.changeList(cosmeticsToList(month))
-                            }
-                            "preparati" -> {
-                                viewModel.changeTotalSum(month.clean + month.wash)
-                                viewModel.changeList(preparatiToList(month))
-                            }
-                            "frizior" -> {
-                                viewModel.changeTotalSum(month.friziorSub + month.cosmetic + month.manikior)
-                                viewModel.changeList(friziorToList(month))
-                            }
-                            else -> Unit
+                        },
+                        onLongClick = { item, index ->
+                            val list = currentList.toMutableList()
+                            list.remove(item)
+                            val changedItem = SpItem(item.first, !item.second)
+                            list.add(index, changedItem)
+                            viewModel.changeList(list)
+                            val changedTotalSum = if (changedItem.second) totalSum + item.first.first.first else totalSum - item.first.first.first
+                            viewModel.changeTotalSum(changedTotalSum)
                         }
-                    }
+                    )
                 } else {
                     Text(
                         text = stringResource(id = R.string.nothing_for_now),
@@ -728,11 +745,13 @@ fun SpendingItem(
     color: Color,
     name: String,
     sum: Float,
+    removed: Boolean,
     total: Float,
     allMonths: List<Month>,
     highlighted: Boolean,
     modifier: Modifier = Modifier,
-    onClick: () -> Unit
+    onClick: () -> Unit,
+    onLongClick: () -> Unit
 ) {
     Row(
         horizontalArrangement = Arrangement.SpaceBetween,
@@ -746,11 +765,16 @@ fun SpendingItem(
             verticalAlignment = Alignment.CenterVertically,
             modifier = Modifier
                 .weight(9f)
-                .clickable {
-                    if (highlighted) {
-                        onClick()
+                .combinedClickable(
+                    onClick = {
+                        if (highlighted) {
+                            onClick()
+                        }
+                    },
+                    onLongClick = {
+                        onLongClick()
                     }
-                }
+                )
         ) {
             Box(
                 modifier = Modifier
@@ -765,7 +789,7 @@ fun SpendingItem(
                 text = buildAnnotatedString {
                     withStyle(
                         style = SpanStyle(
-                            color = colorResource(id = R.color.label),
+                            color = if (removed) colorResource(id = R.color.secondarylabel) else colorResource(id = R.color.label),
                             fontSize = 16.sp
                         )
                     ) {
@@ -778,15 +802,18 @@ fun SpendingItem(
                         )
                     }
 
-                    withStyle(
-                        style = SpanStyle(
-                            color = colorResource(id = R.color.secondarylabel),
-                            fontSize = 12.sp
-                        )
-                    ) {
-                        append(" (${String.format("%.2f", sum.toPercent(total))} %)")
+                    if (!removed) {
+                        withStyle(
+                            style = SpanStyle(
+                                color = colorResource(id = R.color.secondarylabel),
+                                fontSize = 12.sp
+                            )
+                        ) {
+                            append(" (${String.format("%.2f", sum.toPercent(total))} %)")
+                        }
                     }
-                }
+                },
+                style = if (removed) TextStyle(textDecoration = TextDecoration.LineThrough) else LocalTextStyle.current
             )
         }
 
@@ -914,11 +941,12 @@ fun AllMonthsRow(
 @Composable
 fun PieChart(
     navController: NavController,
-    list: List<Pair<Pair<Float, String>, Color>>,
+    list: List<SpItem>,
     totalSum: Float,
     allMonths: List<Month>,
     modifier: Modifier = Modifier,
-    onClick: (String) -> Unit
+    onClick: (String) -> Unit,
+    onLongClick: (SpItem, Int) -> Unit
 ) {
 
     Column(
@@ -933,17 +961,17 @@ fun PieChart(
 
             var anglesSum = 0f
 
-            list.reversed().forEach { result ->
-
+            for (result in list.reversed()) {
+                if (!result.second) { continue }
                 drawArc(
-                    color = result.second,
+                    color = result.first.second,
                     startAngle = 270f + anglesSum,
-                    sweepAngle = result.first.first.toPercent(totalSum) * 3.6f,
+                    sweepAngle = result.first.first.first.toPercent(totalSum) * 3.6f,
                     useCenter = true,
                     size = Size(size.width, size.height)
                 )
 
-                anglesSum += result.first.first.toPercent(totalSum) * 3.6f
+                anglesSum += result.first.first.first.toPercent(totalSum) * 3.6f
 
             }
 
@@ -951,23 +979,29 @@ fun PieChart(
 
         Spacer(modifier = Modifier.size(10.dp))
 
-        list.forEach {
+        list.forEachIndexed { index, item ->
+
             SpendingItem(
                 navController = navController,
-                color = it.second,
-                name = it.first.second,
-                sum = it.first.first,
+                color = item.first.second,
+                name = item.first.first.second,
+                sum = item.first.first.first,
+                removed = !item.second,
                 total = totalSum,
                 allMonths = allMonths,
-                highlighted = it.first.second == "food"
-                        || it.first.second == "smetki"
-                        || it.first.second == "transport"
-                        || it.first.second == "cosmetics"
-                        || it.first.second == "preparati"
-                        || it.first.second == "frizior"
-            ) {
-                onClick(it.first.second)
-            }
+                highlighted = item.first.first.second == "food"
+                        || item.first.first.second == "smetki"
+                        || item.first.first.second == "transport"
+                        || item.first.first.second == "cosmetics"
+                        || item.first.first.second == "preparati"
+                        || item.first.first.second == "frizior",
+                onClick = {
+                    onClick(item.first.first.second)
+                },
+                onLongClick = {
+                    onLongClick(item, index)
+                }
+            )
         }
 
         TotalSumRow(totalSum = totalSum)

@@ -6,6 +6,7 @@ import com.example.sledipari.R
 import com.example.sledipari.api.models.categories.*
 import com.example.sledipari.data.models.Month
 import com.example.sledipari.ui.*
+import com.example.sledipari.ui.main.SpItem
 
 fun String.getTitle(context: Context): String {
 
@@ -20,126 +21,126 @@ fun String.getTitle(context: Context): String {
     }
 }
 
-fun foodToList(month: Month): List<Pair<Pair<Float, String>, Color>> {
+fun foodToList(month: Month): List<SpItem> {
 
-    val list: List<Pair<Pair<Float, String>, Color>>
-    val mutableList = mutableListOf<Pair<Pair<Float, String>, Color>>()
+    val list: List<SpItem>
+    val mutableList = mutableListOf<SpItem>()
 
     for (member in Food::class.members) {
 
         val value = getFoodValueAndColor(month, member.name) ?: continue
         if (value.first.first != 0f) {
-            mutableList.add(value)
+            mutableList.add(Pair(value, true))
         }
     }
 
     mutableList.sortWith(compareBy {
-        it.first.first
+        it.first.first.first
     })
 
     list = mutableList.reversed()
     return list
 }
 
-fun smetkiToList(month: Month): List<Pair<Pair<Float, String>, Color>> {
+fun smetkiToList(month: Month): List<SpItem> {
 
-    val list: List<Pair<Pair<Float, String>, Color>>
-    val mutableList = mutableListOf<Pair<Pair<Float, String>, Color>>()
+    val list: List<SpItem>
+    val mutableList = mutableListOf<SpItem>()
 
     for (member in Smetki::class.members) {
 
         val value = getSmetkiValueAndColor(month, member.name) ?: continue
         if (value.first.first != 0f) {
-            mutableList.add(value)
+            mutableList.add(Pair(value, true))
         }
     }
 
     mutableList.sortWith(compareBy {
-        it.first.first
+        it.first.first.first
     })
 
     list = mutableList.reversed()
     return list
 }
 
-fun friziorToList(month: Month): List<Pair<Pair<Float, String>, Color>> {
+fun friziorToList(month: Month): List<SpItem> {
 
-    val list: List<Pair<Pair<Float, String>, Color>>
-    val mutableList = mutableListOf<Pair<Pair<Float, String>, Color>>()
+    val list: List<SpItem>
+    val mutableList = mutableListOf<SpItem>()
 
     for (member in Frizior::class.members) {
 
         val value = getFriziorValueAndColor(month, member.name) ?: continue
         if (value.first.first != 0f) {
-            mutableList.add(value)
+            mutableList.add(Pair(value, true))
         }
     }
 
     mutableList.sortWith(compareBy {
-        it.first.first
+        it.first.first.first
     })
 
     list = mutableList.reversed()
     return list
 }
 
-fun transportToList(month: Month): List<Pair<Pair<Float, String>, Color>> {
+fun transportToList(month: Month): List<SpItem> {
 
-    val list: List<Pair<Pair<Float, String>, Color>>
-    val mutableList = mutableListOf<Pair<Pair<Float, String>, Color>>()
+    val list: List<SpItem>
+    val mutableList = mutableListOf<SpItem>()
 
     for (member in Transport::class.members) {
 
         val value = getTransportValueAndColor(month, member.name) ?: continue
         if (value.first.first != 0f) {
-            mutableList.add(value)
+            mutableList.add(Pair(value, true))
         }
     }
 
     mutableList.sortWith(compareBy {
-        it.first.first
+        it.first.first.first
     })
 
     list = mutableList.reversed()
     return list
 }
 
-fun preparatiToList(month: Month): List<Pair<Pair<Float, String>, Color>> {
+fun preparatiToList(month: Month): List<SpItem> {
 
-    val list: List<Pair<Pair<Float, String>, Color>>
-    val mutableList = mutableListOf<Pair<Pair<Float, String>, Color>>()
+    val list: List<SpItem>
+    val mutableList = mutableListOf<SpItem>()
 
     for (member in Preparati::class.members) {
 
         val value = getPreparatiValueAndColor(month, member.name) ?: continue
         if (value.first.first != 0f) {
-            mutableList.add(value)
+            mutableList.add(Pair(value, true))
         }
     }
 
     mutableList.sortWith(compareBy {
-        it.first.first
+        it.first.first.first
     })
 
     list = mutableList.reversed()
     return list
 }
 
-fun cosmeticsToList(month: Month): List<Pair<Pair<Float, String>, Color>> {
+fun cosmeticsToList(month: Month): List<SpItem> {
 
-    val list: List<Pair<Pair<Float, String>, Color>>
-    val mutableList = mutableListOf<Pair<Pair<Float, String>, Color>>()
+    val list: List<SpItem>
+    val mutableList = mutableListOf<SpItem>()
 
     for (member in Cosmetics::class.members) {
 
         val value = getCosmeticsValueAndColor(month, member.name) ?: continue
         if (value.first.first != 0f) {
-            mutableList.add(value)
+            mutableList.add(Pair(value, true))
         }
     }
 
     mutableList.sortWith(compareBy {
-        it.first.first
+        it.first.first.first
     })
 
     list = mutableList.reversed()

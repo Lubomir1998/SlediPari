@@ -208,7 +208,7 @@ class GetMonthViewModel
         _totalSum.value = sum
     }
 
-    fun changeList(list: List<Pair<Pair<Float, String>, Color>>) {
+    fun changeList(list: List<SpItem>) {
 
         _currentList.value = list
     }

@@ -5,23 +5,24 @@ import androidx.compose.ui.graphics.Color
 import com.example.sledipari.R
 import com.example.sledipari.data.models.Month
 import com.example.sledipari.ui.*
+import com.example.sledipari.ui.main.SpItem
 import com.example.sledipari.utility.formatDate
 
-fun Month.toList(): List<Pair<Pair<Float, String>, Color>> {
+fun Month.toList(): List<SpItem> {
 
-    val list: List<Pair<Pair<Float, String>, Color>>
-    val mutableList = mutableListOf<Pair<Pair<Float, String>, Color>>()
+    val list: List<SpItem>
+    val mutableList = mutableListOf<SpItem>()
 
     for (member in this::class.members) {
 
         val value = getMonthValueAndColor(this, member.name) ?: continue
         if (value.first.first != 0f) {
-            mutableList.add(value)
+            mutableList.add(Pair(value, true))
         }
     }
 
     mutableList.sortWith(compareBy {
-        it.first.first
+        it.first.first.first
     })
 
     list = mutableList.reversed()
