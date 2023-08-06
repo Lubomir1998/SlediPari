@@ -16,13 +16,13 @@ fun Month.toList(): List<SpItem> {
     for (member in this::class.members) {
 
         val value = getMonthValueAndColor(this, member.name) ?: continue
-        if (value.first.first != 0f) {
-            mutableList.add(Pair(value, true))
+        if (value.price != 0f) {
+            mutableList.add(value)
         }
     }
 
     mutableList.sortWith(compareBy {
-        it.first.first.first
+        it.price
     })
 
     list = mutableList.reversed()
@@ -56,74 +56,74 @@ fun Month.totalSum(): Float {
             this.toys
 }
 
-fun getMonthValueAndColor(month: Month, name: String): Pair<Pair<Float, String>, Color>? {
+fun getMonthValueAndColor(month: Month, name: String): SpItem? {
 
     return when (name) {
-        "clothes" -> Pair(Pair(month.clothes, name), clothes)
-        "workout" -> Pair(Pair(month.workout, name), workout)
-        "remont" -> Pair(Pair(month.remont, name), remont)
-        "posuda" -> Pair(Pair(month.posuda, name), posuda)
-        "travel" -> Pair(Pair(month.travel, name), travel)
-        "gifts" -> Pair(Pair(month.gifts, name), gifts)
-        "snacks" -> Pair(Pair(month.snacks, name), snacks)
-        "medicine" -> Pair(Pair(month.medicine, name), medicine)
-        "domPotrebi" -> Pair(Pair(month.domPotrebi, name), domPotrebi)
-        "machove" -> Pair(Pair(month.machove, name), machove)
-        "furniture" -> Pair(Pair(month.furniture, name), furniture)
-        "tehnika" -> Pair(Pair(month.tehnika, name), tehnika)
-        "education" -> Pair(Pair(month.education, name), education)
-        "entertainment" -> Pair(Pair(month.entertainment, name), entertainment)
-        "subscriptions" -> Pair(Pair(month.subscriptions, name), subscriptions)
-        "tattoo" -> Pair(Pair(month.tattoo, name), tattoo)
-        "toys" -> Pair(Pair(month.toys, name), toys)
-        "food" -> Pair(Pair(month.food, name), food)
-        "smetki" -> Pair(Pair(month.smetki, name), smetki)
-        "transport" -> Pair(Pair(month.transport, name), transport)
-        "cosmetics" -> Pair(Pair(month.cosmetics, name), cosmetics)
-        "preparati" -> Pair(Pair(month.preparati, name), preparati)
-        "frizior" -> Pair(Pair(month.frizior, name), frizior)
+        "clothes" -> SpItem(month.clothes, name, clothes)
+        "workout" -> SpItem(month.workout, name, workout)
+        "remont" -> SpItem(month.remont, name, remont)
+        "posuda" -> SpItem(month.posuda, name, posuda)
+        "travel" -> SpItem(month.travel, name, travel)
+        "gifts" -> SpItem(month.gifts, name, gifts)
+        "snacks" -> SpItem(month.snacks, name, snacks)
+        "medicine" -> SpItem(month.medicine, name, medicine)
+        "domPotrebi" -> SpItem(month.domPotrebi, name, domPotrebi)
+        "machove" -> SpItem(month.machove, name, machove)
+        "furniture" -> SpItem(month.furniture, name, furniture)
+        "tehnika" -> SpItem(month.tehnika, name, tehnika)
+        "education" -> SpItem(month.education, name, education)
+        "entertainment" -> SpItem(month.entertainment, name, entertainment)
+        "subscriptions" -> SpItem(month.subscriptions, name, subscriptions)
+        "tattoo" -> SpItem(month.tattoo, name, tattoo)
+        "toys" -> SpItem(month.toys, name, toys)
+        "food" -> SpItem(month.food, name, food)
+        "smetki" -> SpItem(month.smetki, name, smetki)
+        "transport" -> SpItem(month.transport, name, transport)
+        "cosmetics" -> SpItem(month.cosmetics, name, cosmetics)
+        "preparati" -> SpItem(month.preparati, name, preparati)
+        "frizior" -> SpItem(month.frizior, name, frizior)
         else -> null
     }
 }
 
-fun getMonthValueAndColor2(month: Month, name: String): Pair<Pair<Float, String>, Color>? {
+fun getMonthValueAndColor2(month: Month, name: String): SpItem? {
 
     return when (name) {
-        "clothes" -> Pair(Pair(month.clothes, name), clothes)
-        "workout" -> Pair(Pair(month.workout, name), workout)
-        "remont" -> Pair(Pair(month.remont, name), remont)
-        "posuda" -> Pair(Pair(month.posuda, name), posuda)
-        "travel" -> Pair(Pair(month.travel, name), travel)
-        "gifts" -> Pair(Pair(month.gifts, name), gifts)
-        "snacks" -> Pair(Pair(month.snacks, name), snacks)
-        "medicine" -> Pair(Pair(month.medicine, name), medicine)
-        "domPotrebi" -> Pair(Pair(month.domPotrebi, name), domPotrebi)
-        "machove" -> Pair(Pair(month.machove, name), machove)
-        "furniture" -> Pair(Pair(month.furniture, name), furniture)
-        "tehnika" -> Pair(Pair(month.tehnika, name), tehnika)
-        "education" -> Pair(Pair(month.education, name), education)
-        "entertainment" -> Pair(Pair(month.entertainment, name), entertainment)
-        "subscriptions" -> Pair(Pair(month.subscriptions, name), subscriptions)
-        "tattoo" -> Pair(Pair(month.tattoo, name), tattoo)
-        "toys" -> Pair(Pair(month.toys, name), toys)
-        "home" -> Pair(Pair(month.home, name), food)
-        "restaurant" -> Pair(Pair(month.restaurant, name), food)
-        "tok" -> Pair(Pair(month.tok, name), smetki)
-        "voda" -> Pair(Pair(month.voda, name), smetki)
-        "toplo" -> Pair(Pair(month.toplo, name), smetki)
-        "internet" -> Pair(Pair(month.internet, name), smetki)
-        "vhod" -> Pair(Pair(month.vhod, name), smetki)
-        "telefon" -> Pair(Pair(month.telefon, name), smetki)
-        "public" -> Pair(Pair(month.publicT, name), transport)
-        "taxi" -> Pair(Pair(month.taxi, name), transport)
-        "car" -> Pair(Pair(month.car, name), transport)
-        "higien" -> Pair(Pair(month.higien, name), cosmetics)
-        "other" -> Pair(Pair(month.other, name), cosmetics)
-        "wash" -> Pair(Pair(month.wash, name), preparati)
-        "clean" -> Pair(Pair(month.clean, name), preparati)
-        "friziorSub" -> Pair(Pair(month.friziorSub, name), frizior)
-        "cosmetic" -> Pair(Pair(month.cosmetic, name), frizior)
-        "manikior" -> Pair(Pair(month.manikior, name), frizior)
+        "clothes" -> SpItem(month.clothes, name, clothes)
+        "workout" -> SpItem(month.workout, name, workout)
+        "remont" -> SpItem(month.remont, name, remont)
+        "posuda" -> SpItem(month.posuda, name, posuda)
+        "travel" -> SpItem(month.travel, name, travel)
+        "gifts" -> SpItem(month.gifts, name, gifts)
+        "snacks" -> SpItem(month.snacks, name, snacks)
+        "medicine" -> SpItem(month.medicine, name, medicine)
+        "domPotrebi" -> SpItem(month.domPotrebi, name, domPotrebi)
+        "machove" -> SpItem(month.machove, name, machove)
+        "furniture" -> SpItem(month.furniture, name, furniture)
+        "tehnika" -> SpItem(month.tehnika, name, tehnika)
+        "education" -> SpItem(month.education, name, education)
+        "entertainment" -> SpItem(month.entertainment, name, entertainment)
+        "subscriptions" -> SpItem(month.subscriptions, name, subscriptions)
+        "tattoo" -> SpItem(month.tattoo, name, tattoo)
+        "toys" -> SpItem(month.toys, name, toys)
+        "home" -> SpItem(month.home, name, food)
+        "restaurant" -> SpItem(month.restaurant, name, food)
+        "tok" -> SpItem(month.tok, name, smetki)
+        "voda" -> SpItem(month.voda, name, smetki)
+        "toplo" -> SpItem(month.toplo, name, smetki)
+        "internet" -> SpItem(month.internet, name, smetki)
+        "vhod" -> SpItem(month.vhod, name, smetki)
+        "telefon" -> SpItem(month.telefon, name, smetki)
+        "public" -> SpItem(month.publicT, name, transport)
+        "taxi" -> SpItem(month.taxi, name, transport)
+        "car" -> SpItem(month.car, name, transport)
+        "higien" -> SpItem(month.higien, name, cosmetics)
+        "other" -> SpItem(month.other, name, cosmetics)
+        "wash" -> SpItem(month.wash, name, preparati)
+        "clean" -> SpItem(month.clean, name, preparati)
+        "friziorSub" -> SpItem(month.friziorSub, name, frizior)
+        "cosmetic" -> SpItem(month.cosmetic, name, frizior)
+        "manikior" -> SpItem(month.manikior, name, frizior)
         else -> null
     }
 }

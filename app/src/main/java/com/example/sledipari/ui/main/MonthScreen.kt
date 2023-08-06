@@ -52,7 +52,12 @@ import kotlinx.coroutines.launch
 import kotlinx.serialization.*
 import kotlinx.serialization.json.Json
 
-typealias SpItem = Pair<Pair<Pair<Float, String>, Color>, Boolean>
+data class SpItem(
+    val price: Float,
+    val name: String,
+    val color: Color,
+    var hidden: Boolean = false
+)
 
 @ExperimentalMaterialApi
 @Composable
@@ -677,10 +682,11 @@ fun MonthContent(
                         onLongClick = { item, index ->
                             val list = currentList.toMutableList()
                             list.remove(item)
-                            val changedItem = SpItem(item.first, !item.second)
+                            val changedItem = item
+                            changedItem.hidden = !item.hidden
                             list.add(index, changedItem)
                             viewModel.changeList(list)
-                            val changedTotalSum = if (changedItem.second) totalSum + item.first.first.first else totalSum - item.first.first.first
+                            val changedTotalSum = if (changedItem.hidden) totalSum - item.price else totalSum + item.price
                             viewModel.changeTotalSum(changedTotalSum)
                         }
                     )
@@ -832,7 +838,7 @@ fun SpendingItem(
                         allMonths
                             .reversed()
                             .forEach { month ->
-                                getMonthValueAndColor2(month, name)?.first?.first?.let { value ->
+                                getMonthValueAndColor2(month, name)?.price?.let { value ->
                                     statisticMonths[month.id] = value
                                 }
                             }
@@ -962,16 +968,16 @@ fun PieChart(
             var anglesSum = 0f
 
             for (result in list.reversed()) {
-                if (!result.second) { continue }
+                if (result.hidden) { continue }
                 drawArc(
-                    color = result.first.second,
+                    color = result.color,
                     startAngle = 270f + anglesSum,
-                    sweepAngle = result.first.first.first.toPercent(totalSum) * 3.6f,
+                    sweepAngle = result.price.toPercent(totalSum) * 3.6f,
                     useCenter = true,
                     size = Size(size.width, size.height)
                 )
 
-                anglesSum += result.first.first.first.toPercent(totalSum) * 3.6f
+                anglesSum += result.price.toPercent(totalSum) * 3.6f
 
             }
 
@@ -983,20 +989,20 @@ fun PieChart(
 
             SpendingItem(
                 navController = navController,
-                color = item.first.second,
-                name = item.first.first.second,
-                sum = item.first.first.first,
-                removed = !item.second,
+                color = item.color,
+                name = item.name,
+                sum = item.price,
+                removed = item.hidden,
                 total = totalSum,
                 allMonths = allMonths,
-                highlighted = item.first.first.second == "food"
-                        || item.first.first.second == "smetki"
-                        || item.first.first.second == "transport"
-                        || item.first.first.second == "cosmetics"
-                        || item.first.first.second == "preparati"
-                        || item.first.first.second == "frizior",
+                highlighted = item.name == "food"
+                        || item.name == "smetki"
+                        || item.name == "transport"
+                        || item.name == "cosmetics"
+                        || item.name == "preparati"
+                        || item.name == "frizior",
                 onClick = {
-                    onClick(item.first.first.second)
+                    onClick(item.name)
                 },
                 onLongClick = {
                     onLongClick(item, index)

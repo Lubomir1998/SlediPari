@@ -29,13 +29,13 @@ fun foodToList(month: Month): List<SpItem> {
     for (member in Food::class.members) {
 
         val value = getFoodValueAndColor(month, member.name) ?: continue
-        if (value.first.first != 0f) {
-            mutableList.add(Pair(value, true))
+        if (value.price != 0f) {
+            mutableList.add(value)
         }
     }
 
     mutableList.sortWith(compareBy {
-        it.first.first.first
+        it.price
     })
 
     list = mutableList.reversed()
@@ -50,13 +50,13 @@ fun smetkiToList(month: Month): List<SpItem> {
     for (member in Smetki::class.members) {
 
         val value = getSmetkiValueAndColor(month, member.name) ?: continue
-        if (value.first.first != 0f) {
-            mutableList.add(Pair(value, true))
+        if (value.price != 0f) {
+            mutableList.add(value)
         }
     }
 
     mutableList.sortWith(compareBy {
-        it.first.first.first
+        it.price
     })
 
     list = mutableList.reversed()
@@ -71,13 +71,13 @@ fun friziorToList(month: Month): List<SpItem> {
     for (member in Frizior::class.members) {
 
         val value = getFriziorValueAndColor(month, member.name) ?: continue
-        if (value.first.first != 0f) {
-            mutableList.add(Pair(value, true))
+        if (value.price != 0f) {
+            mutableList.add(value)
         }
     }
 
     mutableList.sortWith(compareBy {
-        it.first.first.first
+        it.price
     })
 
     list = mutableList.reversed()
@@ -92,13 +92,13 @@ fun transportToList(month: Month): List<SpItem> {
     for (member in Transport::class.members) {
 
         val value = getTransportValueAndColor(month, member.name) ?: continue
-        if (value.first.first != 0f) {
-            mutableList.add(Pair(value, true))
+        if (value.price != 0f) {
+            mutableList.add(value)
         }
     }
 
     mutableList.sortWith(compareBy {
-        it.first.first.first
+        it.price
     })
 
     list = mutableList.reversed()
@@ -113,13 +113,13 @@ fun preparatiToList(month: Month): List<SpItem> {
     for (member in Preparati::class.members) {
 
         val value = getPreparatiValueAndColor(month, member.name) ?: continue
-        if (value.first.first != 0f) {
-            mutableList.add(Pair(value, true))
+        if (value.price != 0f) {
+            mutableList.add(value)
         }
     }
 
     mutableList.sortWith(compareBy {
-        it.first.first.first
+        it.price
     })
 
     list = mutableList.reversed()
@@ -134,75 +134,75 @@ fun cosmeticsToList(month: Month): List<SpItem> {
     for (member in Cosmetics::class.members) {
 
         val value = getCosmeticsValueAndColor(month, member.name) ?: continue
-        if (value.first.first != 0f) {
-            mutableList.add(Pair(value, true))
+        if (value.price != 0f) {
+            mutableList.add(value)
         }
     }
 
     mutableList.sortWith(compareBy {
-        it.first.first.first
+        it.price
     })
 
     list = mutableList.reversed()
     return list
 }
 
-fun getFoodValueAndColor(month: Month, name: String): Pair<Pair<Float, String>, Color>? {
+fun getFoodValueAndColor(month: Month, name: String): SpItem? {
 
     return when (name) {
-        "home" -> Pair(Pair(month.home, name), home)
-        "restaurant" -> Pair(Pair(month.restaurant, name), restaurant)
+        "home" -> SpItem(month.home, name, home)
+        "restaurant" -> SpItem(month.restaurant, name, restaurant)
         else -> null
     }
 }
 
-fun getSmetkiValueAndColor(month: Month, name: String): Pair<Pair<Float, String>, Color>? {
+fun getSmetkiValueAndColor(month: Month, name: String): SpItem? {
 
     return when (name) {
-        "tok" -> Pair(Pair(month.tok, name), tok)
-        "voda" -> Pair(Pair(month.voda, name), voda)
-        "toplo" -> Pair(Pair(month.toplo, name), toplo)
-        "internet" -> Pair(Pair(month.internet, name), internet)
-        "vhod" -> Pair(Pair(month.vhod, name), vhod)
-        "telefon" -> Pair(Pair(month.telefon, name), telefon)
+        "tok" -> SpItem(month.tok, name, tok)
+        "voda" -> SpItem(month.voda, name, voda)
+        "toplo" -> SpItem(month.toplo, name, toplo)
+        "internet" -> SpItem(month.internet, name, internet)
+        "vhod" -> SpItem(month.vhod, name, vhod)
+        "telefon" -> SpItem(month.telefon, name, telefon)
         else -> null
     }
 }
 
-fun getFriziorValueAndColor(month: Month, name: String): Pair<Pair<Float, String>, Color>? {
+fun getFriziorValueAndColor(month: Month, name: String): SpItem? {
 
     return when (name) {
-        "friziorSub" -> Pair(Pair(month.friziorSub, name), friziorSub)
-        "cosmetic" -> Pair(Pair(month.cosmetic, name), cosmetic)
-        "manikior" -> Pair(Pair(month.manikior, name), manikior)
+        "friziorSub" -> SpItem(month.friziorSub, name, friziorSub)
+        "cosmetic" -> SpItem(month.cosmetic, name, cosmetic)
+        "manikior" -> SpItem(month.manikior, name, manikior)
         else -> null
     }
 }
 
-fun getTransportValueAndColor(month: Month, name: String): Pair<Pair<Float, String>, Color>? {
+fun getTransportValueAndColor(month: Month, name: String): SpItem? {
 
     return when (name) {
-        "public" -> Pair(Pair(month.publicT, name), publicT)
-        "taxi" -> Pair(Pair(month.taxi, name), taxi)
-        "car" -> Pair(Pair(month.car, name), car)
+        "public" -> SpItem(month.publicT, name, publicT)
+        "taxi" -> SpItem(month.taxi, name, taxi)
+        "car" -> SpItem(month.car, name, car)
         else -> null
     }
 }
 
-fun getCosmeticsValueAndColor(month: Month, name: String): Pair<Pair<Float, String>, Color>? {
+fun getCosmeticsValueAndColor(month: Month, name: String): SpItem? {
 
     return when (name) {
-        "higien" -> Pair(Pair(month.higien, name), higien)
-        "other" -> Pair(Pair(month.other, name), other)
+        "higien" -> SpItem(month.higien, name, higien)
+        "other" -> SpItem(month.other, name, other)
         else -> null
     }
 }
 
-fun getPreparatiValueAndColor(month: Month, name: String): Pair<Pair<Float, String>, Color>? {
+fun getPreparatiValueAndColor(month: Month, name: String): SpItem? {
 
     return when (name) {
-        "clean" -> Pair(Pair(month.clean, name), clean)
-        "wash" -> Pair(Pair(month.wash, name), wash)
+        "clean" -> SpItem(month.clean, name, clean)
+        "wash" -> SpItem(month.wash, name, wash)
         else -> null
     }
 }
