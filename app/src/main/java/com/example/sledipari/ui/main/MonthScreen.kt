@@ -682,11 +682,10 @@ fun MonthContent(
                         onLongClick = { item, index ->
                             val list = currentList.toMutableList()
                             list.remove(item)
-                            val changedItem = item
-                            changedItem.hidden = !item.hidden
-                            list.add(index, changedItem)
+                            item.hidden = !item.hidden
+                            list.add(index, item)
                             viewModel.changeList(list)
-                            val changedTotalSum = if (changedItem.hidden) totalSum - item.price else totalSum + item.price
+                            val changedTotalSum = if (item.hidden) totalSum - item.price else totalSum + item.price
                             viewModel.changeTotalSum(changedTotalSum)
                         }
                     )
