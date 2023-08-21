@@ -38,11 +38,8 @@ import androidx.compose.ui.unit.sp
 import androidx.navigation.NavController
 import com.example.sledipari.R
 import com.example.sledipari.data.models.Month
-import com.example.sledipari.ui.MainActivity
-import com.example.sledipari.ui.getRGB
-import com.example.sledipari.ui.home
+import com.example.sledipari.ui.*
 import com.example.sledipari.ui.settings.currencies.CurrencyViewModel
-import com.example.sledipari.ui.wash
 import com.example.sledipari.utility.*
 import com.example.sledipari.utility.extensions.*
 import com.google.accompanist.swiperefresh.SwipeRefresh
@@ -916,7 +913,7 @@ fun AllMonthsRow(
 
                 //top line
                 drawLine(
-                    color = wash, // the color is appropriate for this case
+                    color = divider, // the color is appropriate for this case
                     start = Offset(0f, 0f), //(0,0) at top-left point of the box
                     end = Offset(x, 0f), //top-right point of the box
                     strokeWidth = strokeWidth
@@ -924,7 +921,7 @@ fun AllMonthsRow(
 
                 //bottom line
                 drawLine(
-                    color = wash, // the color is appropriate for this case
+                    color = divider, // the color is appropriate for this case
                     start = Offset(0f, y),// bottom-left point of the box
                     end = Offset(x, y),// bottom-right point of the box
                     strokeWidth = strokeWidth

@@ -56,6 +56,9 @@ val friziorSub = Color(0xFF573DFF)
 val cosmetic = Color(0xFF4CF716)
 val manikior = Color(0xFFF71A3C)
 
+// Other
+val divider = Color(0xFFC6C6C8)
+
 fun String.getRGB(): Triple<Float, Float, Float> {
     return when (this) {
         "clothes" -> Triple(clothes.red, clothes.green, clothes.blue)
