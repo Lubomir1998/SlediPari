@@ -17,7 +17,11 @@ import dagger.hilt.android.qualifiers.ApplicationContext
 import dagger.hilt.components.SingletonComponent
 import io.ktor.client.*
 import io.ktor.client.engine.cio.*
+import io.ktor.client.plugins.auth.Auth
+import io.ktor.client.plugins.auth.providers.bearer
 import io.ktor.client.plugins.contentnegotiation.*
+import io.ktor.client.plugins.defaultRequest
+import io.ktor.client.request.headers
 import io.ktor.serialization.kotlinx.json.*
 import javax.inject.Singleton
 
@@ -29,14 +33,7 @@ object AppModule {
     @Provides
     fun provideContext(@ApplicationContext context: Context) = context
 
-    @Singleton
-    @Provides
-    fun provideMonthApi(@ApplicationContext context: Context) =
-        MonthApi(HttpClient(CIO) {
-            install(ContentNegotiation) {
-                json(jsonInstance)
-            }
-        }, context)
+
 
     @Singleton
     @Provides
@@ -75,4 +72,28 @@ object AppModule {
             EncryptedSharedPreferences.PrefValueEncryptionScheme.AES256_GCM
         )
     }
+
+    @Singleton
+    @Provides
+    fun provideMonthApi(@ApplicationContext context: Context, sharedPreferences: SharedPreferences) =
+        MonthApi(HttpClient(CIO) {
+            install(ContentNegotiation) {
+                json(jsonInstance)
+            }
+            install(Auth) {
+                bearer {
+                    sendWithoutRequest { request ->
+                        request.url.host == "https://api.apilayer.com/exchangerates_data/latest"
+                    }
+                }
+            }
+            defaultRequest {
+                val token = sharedPreferences.getString("token", null)
+                token?.let {
+                    headers {
+                        append("Authorization", "Bearer $it")
+                    }
+                }
+            }
+        }, context)
 }

@@ -19,7 +19,7 @@ class MonthApi(private val httpClient: HttpClient, private val context: Context)
     suspend fun getMonth(month: String): ApiResponse<MonthDTO> {
 
         val response = try {
-            httpClient.get(baseUrl() + "getExpense_v2") {
+            httpClient.get(baseUrl() + "getExpense_v3") {
                 parameter("month", month)
             }
         } catch (e: Exception) {
@@ -32,7 +32,7 @@ class MonthApi(private val httpClient: HttpClient, private val context: Context)
     suspend fun postSpending(postRequest: PostSpendingRequest): HttpResponse {
 
         val response = try {
-            httpClient.post(baseUrl() + "addExpense_v2") {
+            httpClient.post(baseUrl() + "addExpense_v3") {
                 contentType(ContentType.Application.Json)
                 setBody(postRequest)
             }
@@ -46,7 +46,7 @@ class MonthApi(private val httpClient: HttpClient, private val context: Context)
     suspend fun undoSpending(postRequest: PostSpendingRequest): HttpResponse {
 
         val response = try {
-            httpClient.post(baseUrl() + "removeExpense_v2") {
+            httpClient.post(baseUrl() + "removeExpense_v3") {
                 contentType(ContentType.Application.Json)
                 setBody(postRequest)
             }
@@ -60,7 +60,7 @@ class MonthApi(private val httpClient: HttpClient, private val context: Context)
     suspend fun getAllMonths(): HttpResponse {
 
         val response = try {
-            httpClient.get( baseUrl() + "getAllMonths_v2")
+            httpClient.get( baseUrl() + "getAllMonths_v3")
         } catch (e: Exception) {
             throw Exception(context.getString(R.string.something_went_wrong))
         }
@@ -71,7 +71,7 @@ class MonthApi(private val httpClient: HttpClient, private val context: Context)
     suspend fun checkLastModifiedDate(): HttpResponse {
 
         val response = try {
-            httpClient.get(baseUrl() + "getMonthsCheckDate")
+            httpClient.get(baseUrl() + "getMonthsCheckDate2")
         } catch (e: Exception) {
             throw Exception(context.getString(R.string.something_went_wrong))
         }
