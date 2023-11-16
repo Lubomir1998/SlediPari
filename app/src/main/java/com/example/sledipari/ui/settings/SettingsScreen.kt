@@ -20,10 +20,16 @@ import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.unit.dp
 import androidx.navigation.NavController
 import com.example.sledipari.ui.AppToolbar
+import com.example.sledipari.ui.destinations.CurrencyScreenDestination
+import com.example.sledipari.ui.destinations.HistoryScreenDestination
+import com.ramcosta.composedestinations.annotation.Destination
+import com.ramcosta.composedestinations.navigation.DestinationsNavigator
 
 @SuppressLint("UnusedMaterialScaffoldPaddingParameter")
 @Composable
+@Destination
 fun SettingsScreen(
+    navigator: DestinationsNavigator,
     navController: NavController
 ) {
 
@@ -31,6 +37,7 @@ fun SettingsScreen(
         topBar = {
             AppToolbar(
                 title = LocalContext.current.getString(R.string.settings),
+                navigator = navigator,
                 navController = navController
             )
         }, content = {
@@ -50,7 +57,7 @@ fun SettingsScreen(
                 ) {
 
                     SettingsItem(titleId = R.string.history) {
-                        navController.navigate("history_screen")
+                        navigator.navigate(HistoryScreenDestination)
                     }
 
                     Divider(
@@ -61,7 +68,7 @@ fun SettingsScreen(
                     )
 
                     SettingsItem(titleId = R.string.currency) {
-                        navController.navigate("currency_screen")
+                        navigator.navigate(CurrencyScreenDestination)
                     }
                 }
             }

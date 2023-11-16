@@ -1,5 +1,6 @@
 package com.example.sledipari.ui.info
 
+import android.annotation.SuppressLint
 import androidx.compose.animation.core.animateFloatAsState
 import androidx.compose.animation.core.tween
 import androidx.compose.foundation.background
@@ -24,16 +25,27 @@ import com.example.sledipari.R
 import com.example.sledipari.utility.extensions.formatPrice
 import com.example.sledipari.utility.extensions.toLocalizable
 import com.example.sledipari.utility.toReadableDate
+import com.ramcosta.composedestinations.annotation.Destination
+import com.ramcosta.composedestinations.navigation.DestinationsNavigator
+import kotlinx.serialization.decodeFromString
+import kotlinx.serialization.json.Json
 
+@SuppressLint("UnusedMaterialScaffoldPaddingParameter")
 @Composable
+@Destination
 fun InfoScreen(
+    navigator: DestinationsNavigator,
     navController: NavController,
     title: String,
-    map: LinkedHashMap<String, Float>?,
-    rgbColor: Triple<Float, Float, Float>
+    encodedMap: String,
+    red: Float,
+    green: Float,
+    blue: Float
 ) {
 
-    val maxValue = if (map?.isNotEmpty() == true) {
+    val map = Json.decodeFromString<LinkedHashMap<String, Float>>(encodedMap)
+
+    val maxValue = if (map.isNotEmpty()) {
         map.maxOf { entry ->
             entry.value
         }
@@ -41,7 +53,7 @@ fun InfoScreen(
 
     val statistics = mutableListOf<Pair<String, Float>>()
 
-    if (map?.isNotEmpty() == true) {
+    if (map.isNotEmpty()) {
         map.map { entry ->
             statistics.add(Pair(entry.key, entry.value))
         }
@@ -60,7 +72,7 @@ fun InfoScreen(
                     {
                         IconButton(onClick = {
                             animItems = mutableListOf()
-                            navController.navigateUp()
+                            navigator.navigateUp()
                         }) {
                             Icon(
                                 imageVector = Icons.Filled.ArrowBack,
@@ -78,13 +90,10 @@ fun InfoScreen(
             )
         }) {
 
-        map?.let {
-            MainContent(
-                rgbColor = rgbColor,
-                statistics = statistics,
-                maxValue = maxValue,
-            )
-        }
+        MainContent(
+            rgbColor = Triple(red, green, blue),
+            statistics = statistics,
+            maxValue = maxValue,)
     }
 }
 
@@ -185,7 +194,7 @@ fun SingleMonth(
         animationSpec = tween(
             animDuration,
             animDelay
-        )
+        ), label = ""
     )
 
     LaunchedEffect(key1 = true) {

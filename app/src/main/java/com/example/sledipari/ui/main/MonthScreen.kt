@@ -2,8 +2,6 @@
 
 package com.example.sledipari.ui.main
 
-import android.content.SharedPreferences
-import android.view.View
 import android.widget.Toast
 import androidx.compose.foundation.*
 import androidx.compose.foundation.layout.*
@@ -18,6 +16,7 @@ import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.*
 import androidx.compose.runtime.*
 import androidx.compose.ui.Alignment
+import androidx.compose.ui.ExperimentalComposeUiApi
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
 import androidx.compose.ui.draw.drawBehind
@@ -25,6 +24,7 @@ import androidx.compose.ui.geometry.Offset
 import androidx.compose.ui.geometry.Size
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.platform.LocalContext
+import androidx.compose.ui.platform.LocalSoftwareKeyboardController
 import androidx.compose.ui.res.colorResource
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.SpanStyle
@@ -35,16 +35,20 @@ import androidx.compose.ui.text.style.TextDecoration
 import androidx.compose.ui.text.withStyle
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
-import androidx.navigation.NavController
+import androidx.hilt.navigation.compose.hiltViewModel
 import com.example.sledipari.R
 import com.example.sledipari.data.models.Month
 import com.example.sledipari.ui.*
+import com.example.sledipari.ui.destinations.InfoScreenDestination
+import com.example.sledipari.ui.destinations.SettingsScreenDestination
 import com.example.sledipari.ui.settings.currencies.CurrencyViewModel
 import com.example.sledipari.utility.*
 import com.example.sledipari.utility.extensions.*
 import com.google.accompanist.swiperefresh.SwipeRefresh
 import com.google.accompanist.swiperefresh.SwipeRefreshIndicator
 import com.google.accompanist.swiperefresh.rememberSwipeRefreshState
+import com.ramcosta.composedestinations.annotation.Destination
+import com.ramcosta.composedestinations.navigation.DestinationsNavigator
 import kotlinx.coroutines.launch
 import kotlinx.serialization.*
 import kotlinx.serialization.json.Json
@@ -58,13 +62,11 @@ data class SpItem(
 
 @ExperimentalMaterialApi
 @Composable
+@Destination
 fun MonthScreen(
-    navController: NavController,
-    viewModel: GetMonthViewModel,
-    currencyViewModel: CurrencyViewModel,
-    activity: MainActivity,
-    sharedPreferences: SharedPreferences,
-    view: View
+    navigator: DestinationsNavigator,
+    viewModel: GetMonthViewModel = hiltViewModel(),
+    currencyViewModel: CurrencyViewModel = hiltViewModel()
 ) {
 
     val context = LocalContext.current
@@ -81,6 +83,8 @@ fun MonthScreen(
     val rates by currencyViewModel.rates.collectAsState()
     val currencyLoading by currencyViewModel.currencyLoading.collectAsState()
 
+    val currentRate by currencyViewModel.currentRate.collectAsState()
+
     errorMessage?.let {
         Toast.makeText(context, it, Toast.LENGTH_LONG).show()
         viewModel.resetErrorState()
@@ -90,6 +94,7 @@ fun MonthScreen(
         viewModel.getMonthLocal(currentMonthId)
         viewModel.getAllMonths()
         currencyViewModel.getRates()
+        currencyViewModel.getCurrentRate()
     }
 
     LaunchedEffect(key1 = currentMonthId) {
@@ -142,10 +147,8 @@ fun MonthScreen(
             BottomSheetContent(
                 bottomSheetScaffoldState = bottomSheetScaffoldState,
                 viewModel = viewModel,
-                activity = activity,
                 rates = rates,
-                sharedPreferences = sharedPreferences,
-                view = view
+                currentRate = currentRate
             )
         },
         sheetPeekHeight = 0.dp
@@ -171,7 +174,7 @@ fun MonthScreen(
         ) {
 
             MonthContent(
-                navController = navController,
+                navigator = navigator,
                 allMonths = allMonths,
                 currentMonthId = currentMonthId,
                 currentMonth = currentMonth,
@@ -188,15 +191,14 @@ fun MonthScreen(
 
 }
 
+@OptIn(ExperimentalComposeUiApi::class)
 @ExperimentalMaterialApi
 @Composable
 fun BottomSheetContent(
     bottomSheetScaffoldState: BottomSheetScaffoldState,
     viewModel: GetMonthViewModel,
-    activity: MainActivity,
     rates: Map<String, Double>,
-    sharedPreferences: SharedPreferences,
-    view: View,
+    currentRate: String,
     modifier: Modifier = Modifier
 ) {
 
@@ -204,12 +206,14 @@ fun BottomSheetContent(
     val options = addingOptions(context)
     val quantityOptions = (1..10).toList()
 
+    val keyboardController = LocalSoftwareKeyboardController.current
+
     var currentSelectedOption by remember {
         mutableStateOf<Pair<String, String>?>(null)
     }
 
     var currentSelectedQuantity by remember {
-        mutableStateOf(1)
+        mutableIntStateOf(1)
     }
 
     var isCategoriesExpanded by remember {
@@ -241,7 +245,7 @@ fun BottomSheetContent(
     }
 
     var currentSelectedBaseCurrency by remember {
-        mutableStateOf(sharedPreferences.getString(Constants.BASE_CURRENCY_KEY, "BGN") ?: "BGN")
+        mutableStateOf(currentRate)
     }
 
     var currentSelectedBaseRate by remember {
@@ -449,7 +453,9 @@ fun BottomSheetContent(
             colors = ButtonDefaults.buttonColors(backgroundColor = home),
             enabled = !isLoading,
             onClick = {
-                activity.hideKeyboard(view)
+//                activity.hideKeyboard(view)
+
+                keyboardController?.hide()
 
                 if (currentSelectedOption == null) {
                     Toast.makeText(
@@ -490,7 +496,9 @@ fun BottomSheetContent(
             colors = ButtonDefaults.buttonColors(backgroundColor = Color.Red),
             enabled = !isLoading,
             onClick = {
-                activity.hideKeyboard(view)
+//                activity.hideKeyboard(view)
+
+                keyboardController?.hide()
 
                 if (currentSelectedOption == null) {
                     Toast.makeText(
@@ -537,7 +545,7 @@ fun BottomSheetContent(
 @ExperimentalMaterialApi
 @Composable
 fun MonthContent(
-    navController: NavController,
+    navigator: DestinationsNavigator,
     allMonths: List<Month>,
     currentMonthId: String,
     currentMonth: Month?,
@@ -572,7 +580,7 @@ fun MonthContent(
                     .padding(16.dp)
                     .size(36.dp)
                     .clickable {
-                        navController.navigate("settings_screen")
+                        navigator.navigate(SettingsScreenDestination)
                     }
             )
 
@@ -637,7 +645,7 @@ fun MonthContent(
                     Spacer(modifier = Modifier.size(10.dp))
 
                     PieChart(
-                        navController = navController,
+                        navigator = navigator,
                         list = currentList,
                         totalSum = totalSum,
                         allMonths = allMonths,
@@ -740,10 +748,12 @@ fun MonthItem(
     }
 }
 
-@OptIn(ExperimentalSerializationApi::class)
+@OptIn(ExperimentalSerializationApi::class, ExperimentalFoundationApi::class,
+    ExperimentalFoundationApi::class
+)
 @Composable
 fun SpendingItem(
-    navController: NavController,
+    navigator: DestinationsNavigator,
     color: Color,
     name: String,
     sum: Float,
@@ -841,7 +851,15 @@ fun SpendingItem(
 
                         val encodedMap = Json.encodeToString(statisticMonths)
 
-                        navController.navigate("info_screen/$name/$encodedMap/${color.red}/${color.green}/${color.blue}")
+                        navigator.navigate(
+                            InfoScreenDestination(
+                                title = name,
+                                encodedMap = encodedMap,
+                                red = color.red,
+                                green = color.green,
+                                blue = color.blue
+                            )
+                        )
                     }
             )
         }
@@ -942,7 +960,7 @@ fun AllMonthsRow(
 
 @Composable
 fun PieChart(
-    navController: NavController,
+    navigator: DestinationsNavigator,
     list: List<SpItem>,
     totalSum: Float,
     allMonths: List<Month>,
@@ -984,7 +1002,7 @@ fun PieChart(
         list.forEachIndexed { index, item ->
 
             SpendingItem(
-                navController = navController,
+                navigator = navigator,
                 color = item.color,
                 name = item.name,
                 sum = item.price,

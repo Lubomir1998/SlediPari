@@ -1,6 +1,5 @@
 package com.example.sledipari.ui.splash
 
-import android.content.Intent
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.Box
@@ -10,32 +9,37 @@ import androidx.compose.foundation.layout.size
 import androidx.compose.material.AlertDialog
 import androidx.compose.material.Button
 import androidx.compose.material.CircularProgressIndicator
+import androidx.compose.material.ExperimentalMaterialApi
 import androidx.compose.material.Text
 import androidx.compose.runtime.*
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
-import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.unit.dp
-import androidx.navigation.NavController
+import androidx.hilt.navigation.compose.hiltViewModel
 import com.example.sledipari.R
-import com.example.sledipari.ui.MainActivity
+import com.example.sledipari.ui.destinations.LoginScreenDestination
+import com.example.sledipari.ui.destinations.MonthScreenDestination
+import com.example.sledipari.ui.destinations.SplashScreenDestination
 import com.example.sledipari.utility.formatDate
-import javax.inject.Inject
+import com.ramcosta.composedestinations.annotation.Destination
+import com.ramcosta.composedestinations.navigation.DestinationsNavigator
 
+@OptIn(ExperimentalMaterialApi::class)
 @Composable
+@Destination(start = true)
 fun SplashScreen(
-    navController: NavController,
-    activity: MainActivity,
-    viewModel: GetAllMonthsViewModel
+    navigator: DestinationsNavigator,
+    viewModel: GetAllMonthsViewModel = hiltViewModel()
 ) {
 
     val isLoading by viewModel.loading.collectAsState()
-    val completed by viewModel.completed.collectAsState()
     val getRatesException by viewModel.getRatesException.collectAsState()
     val getMonthsException by viewModel.getMonthsException.collectAsState()
+
+    val state by viewModel.state.collectAsState()
 
     Box (
         contentAlignment = Alignment.Center,
@@ -47,16 +51,33 @@ fun SplashScreen(
         val ratesTimestamp by viewModel.ratesTimestamp.collectAsState()
 
         LaunchedEffect(key1 = true) {
-            viewModel.restoreAllMonths()
+
+            viewModel.applicationStartOperation()
         }
 
-        LaunchedEffect(key1 = completed) {
-            if (completed && getRatesException == null && getMonthsException == null) {
-                navController.navigate("main_screen") {
-                    popUpTo("splash_screen") {
-                        inclusive = true
+        LaunchedEffect(key1 = state) {
+
+            when (state) {
+
+                GetAllMonthsViewModel.State.LOGIN -> {
+                    navigator.navigate(LoginScreenDestination) {
+                        popUpTo(SplashScreenDestination.route) {
+                            inclusive = true
+                        }
                     }
                 }
+
+                GetAllMonthsViewModel.State.MAIN -> {
+                    if (getRatesException == null && getMonthsException == null) {
+                        navigator.navigate(MonthScreenDestination) {
+                            popUpTo(SplashScreenDestination.route) {
+                                inclusive = true
+                            }
+                        }
+                    }
+                }
+
+                GetAllMonthsViewModel.State.SPLASH -> Unit
             }
         }
 
@@ -75,21 +96,19 @@ fun SplashScreen(
         getRatesException?.let {
 
             ErrorAlertView(
-                navController = navController,
-                activity = activity,
+                navigator = navigator,
                 exception = it,
                 ratesTimestamp = ratesTimestamp,
-                alertTitle = activity.getString(R.string.rates_error_dialog_title)
+                alertTitle = stringResource(id = R.string.rates_error_dialog_title)
             )
         }
 
         getMonthsException?.let {
 
             ErrorAlertView(
-                navController = navController,
-                activity = activity,
+                navigator = navigator,
                 exception = it,
-                alertTitle = activity.getString(R.string.months_error_alert_text)
+                alertTitle = stringResource(id = R.string.months_error_alert_text)
             )
         }
 
@@ -97,25 +116,25 @@ fun SplashScreen(
 
 }
 
+@OptIn(ExperimentalMaterialApi::class)
 @Composable
 fun ErrorAlertView(
-    navController: NavController,
-    activity: MainActivity,
+    navigator: DestinationsNavigator,
     exception: Exception,
     ratesTimestamp: Long = 0L,
     alertTitle: String
 ) {
 
     val message = if (ratesTimestamp > 0L) {
-        "${exception.localizedMessage}. ${activity.resources.getString(R.string.rates_error_dialog_message)} ${ratesTimestamp.formatDate("d MMM yyyy, HH:mm")}"
+        "${exception.localizedMessage}. ${stringResource(id = R.string.rates_error_dialog_message)} ${ratesTimestamp.formatDate("d MMM yyyy, HH:mm")}"
     } else {
         exception.localizedMessage
     }
 
     AlertDialog(
         onDismissRequest = {
-            navController.navigate("main_screen") {
-                popUpTo("splash_screen") {
+            navigator.navigate(MonthScreenDestination) {
+                popUpTo(SplashScreenDestination.route) {
                     inclusive = true
                 }
             }
@@ -124,8 +143,8 @@ fun ErrorAlertView(
         text = { Text(text = message) },
         confirmButton = {
             Button(onClick = {
-                navController.navigate("main_screen") {
-                    popUpTo("splash_screen") {
+                navigator.navigate(MonthScreenDestination) {
+                    popUpTo(SplashScreenDestination.route) {
                         inclusive = true
                     }
                 }

@@ -30,7 +30,6 @@ class GetMonthViewModel
 @Inject constructor(
     private val repo: MonthRepository,
     private val firebaseApi: FirebasePushNotificationsApi,
-    private val sharedPreferences: SharedPreferences,
     @SuppressLint("StaticFieldLeak") private val context: Context
 ): ViewModel() {
 

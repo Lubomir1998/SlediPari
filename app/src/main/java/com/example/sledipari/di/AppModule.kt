@@ -59,22 +59,6 @@ object AppModule {
 
     @Singleton
     @Provides
-    fun provideEncryptedSharedPreferences(@ApplicationContext context: Context): SharedPreferences {
-        val masterKey = MasterKey.Builder(context)
-            .setKeyScheme(MasterKey.KeyScheme.AES256_GCM)
-            .build()
-
-        return EncryptedSharedPreferences.create(
-            context,
-            ENCRYPTED_SHARED_PREFS_NAME,
-            masterKey,
-            EncryptedSharedPreferences.PrefKeyEncryptionScheme.AES256_SIV,
-            EncryptedSharedPreferences.PrefValueEncryptionScheme.AES256_GCM
-        )
-    }
-
-    @Singleton
-    @Provides
     fun provideMonthApi(@ApplicationContext context: Context, sharedPreferences: SharedPreferences) =
         MonthApi(HttpClient(CIO) {
             install(ContentNegotiation) {
@@ -96,4 +80,20 @@ object AppModule {
                 }
             }
         }, context)
+
+    @Singleton
+    @Provides
+    fun provideEncryptedSharedPreferences(@ApplicationContext context: Context): SharedPreferences {
+        val masterKey = MasterKey.Builder(context)
+            .setKeyScheme(MasterKey.KeyScheme.AES256_GCM)
+            .build()
+
+        return EncryptedSharedPreferences.create(
+            context,
+            ENCRYPTED_SHARED_PREFS_NAME,
+            masterKey,
+            EncryptedSharedPreferences.PrefKeyEncryptionScheme.AES256_SIV,
+            EncryptedSharedPreferences.PrefValueEncryptionScheme.AES256_GCM
+        )
+    }
 }

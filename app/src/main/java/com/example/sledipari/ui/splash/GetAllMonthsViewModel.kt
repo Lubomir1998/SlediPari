@@ -1,7 +1,6 @@
 package com.example.sledipari.ui.splash
 
 import android.content.SharedPreferences
-import android.util.Log
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.example.sledipari.data.MonthRepository
@@ -13,6 +12,7 @@ import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.Deferred
 import kotlinx.coroutines.async
 import kotlinx.coroutines.flow.MutableStateFlow
+import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.flow.asStateFlow
 import kotlinx.coroutines.launch
 import javax.inject.Inject
@@ -27,8 +27,8 @@ class GetAllMonthsViewModel
     private val _loading = MutableStateFlow(false)
     val loading = _loading.asStateFlow()
 
-    private val _completed = MutableStateFlow(false)
-    val completed = _completed.asStateFlow()
+    private val _state: MutableStateFlow<State> = MutableStateFlow(State.SPLASH)
+    val state: StateFlow<State> = _state
 
     private val _ratesTimestamp = MutableStateFlow(0L)
     val ratesTimestamp = _ratesTimestamp.asStateFlow()
@@ -39,10 +39,21 @@ class GetAllMonthsViewModel
     private val _getMonthsException = MutableStateFlow<Exception?>(null)
     val getMonthsException = _getMonthsException.asStateFlow()
 
-    fun restoreAllMonths() {
+    private fun getState(): String? {
+
+        return sharedPrefs.getString("token", null)
+    }
+
+    fun applicationStartOperation() {
         _loading.value = true
 
         viewModelScope.launch {
+
+            if (getState() == null) {
+                _state.value = State.LOGIN
+                _loading.value = false
+                return@launch
+            }
 
             _ratesTimestamp.value = repo.getRates()?.timestamp ?: 0L
 
@@ -85,7 +96,13 @@ class GetAllMonthsViewModel
             getRates?.await()
 
             _loading.value = false
-            _completed.value = true
+            _state.value = State.MAIN
         }
+    }
+
+    enum class State {
+        SPLASH,
+        LOGIN,
+        MAIN
     }
 }

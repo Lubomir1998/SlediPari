@@ -2,59 +2,46 @@ package com.example.sledipari.ui
 
 import android.app.AlertDialog
 import android.content.Intent
-import android.content.SharedPreferences
 import android.net.Uri
 import android.os.Bundle
+import android.util.Log
+import android.widget.Toast
 import androidx.activity.ComponentActivity
 import androidx.activity.compose.setContent
-import androidx.compose.foundation.clickable
 import androidx.compose.material.*
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.ArrowBack
 import androidx.compose.runtime.Composable
-import androidx.compose.ui.Modifier
 import androidx.compose.ui.res.colorResource
 import androidx.compose.ui.unit.dp
-import androidx.lifecycle.viewmodel.compose.viewModel
 import androidx.navigation.NavController
-import androidx.navigation.NavType
-import androidx.navigation.compose.NavHost
-import androidx.navigation.compose.composable
-import androidx.navigation.compose.rememberNavController
-import androidx.navigation.navArgument
+import com.auth0.android.Auth0
+import com.auth0.android.authentication.AuthenticationException
+import com.auth0.android.callback.Callback
+import com.auth0.android.provider.WebAuthProvider
+import com.auth0.android.result.Credentials
 import com.elders.EldersFirebaseRemoteConfig.recommendedUpdate
 import com.elders.EldersFirebaseRemoteConfig.update
 import com.elders.EldersFirebaseRemoteConfig.updates
 import com.example.sledipari.R
+import com.example.sledipari.ui.destinations.InfoScreenDestination
 import com.example.sledipari.ui.info.InfoScreen
-import com.example.sledipari.ui.main.GetMonthViewModel
-import com.example.sledipari.ui.main.MonthScreen
-import com.example.sledipari.ui.settings.SettingsScreen
-import com.example.sledipari.ui.settings.currencies.CurrencyScreen
-import com.example.sledipari.ui.settings.currencies.CurrencyViewModel
-import com.example.sledipari.ui.settings.history.HistoryScreen
-import com.example.sledipari.ui.settings.history.HistoryViewModel
-import com.example.sledipari.ui.splash.GetAllMonthsViewModel
-import com.example.sledipari.ui.splash.SplashScreen
-import com.example.sledipari.utility.Constants
 import com.example.sledipari.utility.Constants.SLEDI_PARI_TOPIC
 import com.google.firebase.ktx.Firebase
 import com.google.firebase.messaging.FirebaseMessaging
 import com.google.firebase.remoteconfig.ktx.remoteConfig
 import com.google.firebase.remoteconfig.ktx.remoteConfigSettings
+import com.ramcosta.composedestinations.DestinationsNavHost
+import com.ramcosta.composedestinations.manualcomposablecalls.composable
+import com.ramcosta.composedestinations.navigation.DestinationsNavigator
 import dagger.hilt.android.AndroidEntryPoint
 import kotlinx.serialization.ExperimentalSerializationApi
-import kotlinx.serialization.decodeFromString
-import kotlinx.serialization.json.Json
-import javax.inject.Inject
 
 @AndroidEntryPoint
 class MainActivity : ComponentActivity() {
 
     private var updateDialog: AlertDialog? = null
     private val _remoteConfigObserver by lazy { Firebase.remoteConfig.updates.observe(this) { checkForUpdates() } }
-
-    @Inject lateinit var sharedPreferences: SharedPreferences
 
     @OptIn(ExperimentalSerializationApi::class)
     @ExperimentalMaterialApi
@@ -67,100 +54,20 @@ class MainActivity : ComponentActivity() {
         })
 
         setContent {
-
-            val navController = rememberNavController()
-            val getMonthViewModel: GetMonthViewModel = viewModel()
-            val historyViewModel: HistoryViewModel = viewModel()
-            val currencyViewModel: CurrencyViewModel = viewModel()
-            val getAllMonthsViewModel: GetAllMonthsViewModel = viewModel()
-
-            NavHost(
-                navController = navController,
-                startDestination = "splash_screen"
-            ) {
-                composable("splash_screen") {
-                    SplashScreen(
-                        navController = navController,
-                        activity = this@MainActivity,
-                        viewModel = getAllMonthsViewModel
-                    )
-                }
-
-                composable("main_screen") {
-                    MonthScreen(
-                        navController = navController,
-                        viewModel = getMonthViewModel,
-                        currencyViewModel = currencyViewModel,
-                        activity = this@MainActivity,
-                        sharedPreferences = sharedPreferences,
-                        view = window.decorView.rootView
-                    )
-                }
-
-                composable("settings_screen") {
-                    SettingsScreen(
-                        navController = navController
-                    )
-                }
-
-                composable("history_screen") {
-                    HistoryScreen(
-                        navController = navController,
-                        viewModel = historyViewModel
-                    )
-                }
-
-                composable(
-                    "info_screen/{title}/{map}/{red}/{green}/{blue}",
-                    arguments = listOf(
-                        navArgument("title") {
-                            type = NavType.StringType
-                        },
-                        navArgument("map") {
-                            type = NavType.StringType
-                        },
-                        navArgument("red") {
-                            type = NavType.FloatType
-                        },
-                        navArgument("green") {
-                            type = NavType.FloatType
-                        },
-                        navArgument("blue") {
-                            type = NavType.FloatType
-                        }
-                    )
-                ) {
-
-                    val title = it.arguments?.getString("title") ?: ""
-
-                    val map = it.arguments?.getString("map")?.let { encodedMap ->
-                        Json.decodeFromString<LinkedHashMap<String, Float>>(encodedMap)
-                    }
-
-                    val rgb = Triple(
-                        it.arguments?.getFloat("red") ?: 0f,
-                        it.arguments?.getFloat("green") ?: 0f,
-                        it.arguments?.getFloat("blue") ?: 0f
-                    )
-
-                    InfoScreen(
-                        navController = navController,
-                        title = title,
-                        map = map,
-                        rgbColor = rgb
-                    )
-                }
-
-                composable("currency_screen") {
-                    CurrencyScreen(
-                        navController = navController,
-                        viewModel = currencyViewModel,
-                        sharedPreferences = sharedPreferences
-                    )
-                }
-            }
-
-
+            DestinationsNavHost(navGraph = NavGraphs.root)
+//            {
+//                composable(InfoScreenDestination) {
+//                    InfoScreen(
+//                        navigator = destinationsNavigator,
+//                        navController = navController,
+//                        title = navArgs.title,
+//                        encodedMap = navArgs.encodedMap,
+//                        red = navArgs.red,
+//                        green = navArgs.green,
+//                        blue = navArgs.blue
+//                    )
+//                }
+//            }
         }
     }
 
@@ -197,6 +104,7 @@ class MainActivity : ComponentActivity() {
 @Composable
 fun AppToolbar(
     title: String,
+    navigator: DestinationsNavigator,
     navController: NavController
 ) {
 
@@ -209,7 +117,7 @@ fun AppToolbar(
         },
         navigationIcon = if (navController.previousBackStackEntry != null) {
             {
-                IconButton(onClick = { navController.navigateUp() }) {
+                IconButton(onClick = { navigator.navigateUp() }) {
                     Icon(
                         imageVector = Icons.Filled.ArrowBack,
                         contentDescription = "Back",

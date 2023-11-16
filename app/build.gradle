@@ -86,6 +86,7 @@ dependencies {
     ksp "com.google.dagger:hilt-android-compiler:$hilt_version"
 //    implementation 'androidx.hilt:hilt-lifecycle-viewmodel:1.0.0-alpha03'
     ksp 'androidx.hilt:hilt-compiler:1.1.0'
+    implementation 'androidx.hilt:hilt-navigation-compose:1.1.0'
 
     implementation "io.ktor:ktor-client-core:$ktor_version"
     implementation "io.ktor:ktor-client-okhttp:$ktor_version"

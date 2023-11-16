@@ -1,7 +1,6 @@
 package com.example.sledipari.ui.settings.currencies
 
 import android.annotation.SuppressLint
-import android.content.SharedPreferences
 import androidx.compose.foundation.background
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.*
@@ -20,25 +19,30 @@ import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.res.colorResource
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
+import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.navigation.NavController
 import com.example.sledipari.R
 import com.example.sledipari.ui.AppToolbar
 import com.example.sledipari.utility.Constants
 import com.example.sledipari.utility.extensions.flagEmoji
+import com.ramcosta.composedestinations.annotation.Destination
+import com.ramcosta.composedestinations.navigation.DestinationsNavigator
 import java.util.*
 
 @SuppressLint("UnusedMaterialScaffoldPaddingParameter")
 @Composable
+@Destination
 fun CurrencyScreen(
+    navigator: DestinationsNavigator,
     navController: NavController,
-    viewModel: CurrencyViewModel,
-    sharedPreferences: SharedPreferences
+    viewModel: CurrencyViewModel = hiltViewModel()
 ) {
 
     Scaffold(
         topBar = {
             AppToolbar(
                 title = LocalContext.current.getString(R.string.currency),
+                navigator = navigator,
                 navController = navController
             )
         }
@@ -46,12 +50,11 @@ fun CurrencyScreen(
 
         val rates by viewModel.rates.collectAsState()
         val loading by viewModel.currencyLoading.collectAsState()
-        var base by remember {
-            mutableStateOf(sharedPreferences.getString(Constants.BASE_CURRENCY_KEY, "BGN") ?: "BGN")
-        }
+        val base by viewModel.currentRate.collectAsState()
 
         LaunchedEffect(key1 = true) {
             viewModel.getRates()
+            viewModel.getCurrentRate()
         }
 
         LazyColumn(
@@ -67,8 +70,7 @@ fun CurrencyScreen(
                     modifier = Modifier
                         .padding(16.dp)
                 ) {
-                    base = it
-                    sharedPreferences.edit().putString(Constants.BASE_CURRENCY_KEY, it).apply()
+                    viewModel.updateCurrentRate(it)
                 }
 
                 Divider(
