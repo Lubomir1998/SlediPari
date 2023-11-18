@@ -20,4 +20,6 @@
     <color name="section">#FFFFFF</color>
     <color name="divider">#AEAEB2</color>
     <color name="icon_tint">#007AFF</color>
+
+    <color name="login_background">#014BB6</color>
 </resources>

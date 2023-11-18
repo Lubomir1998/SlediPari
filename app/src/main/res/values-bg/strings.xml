@@ -98,4 +98,6 @@
     <string name="rates_error_dialog_title">Валутните курсове не са актуални</string>
     <string name="rates_error_dialog_message">Последната актуализация е на</string>
     <string name="months_error_alert_text">Имаше проблем при получаването на данни. Текущите данни може да не са актуални</string>
+
+    <string name="login_button_title">Вход</string>
 </resources>

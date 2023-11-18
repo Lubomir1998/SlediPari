@@ -3,9 +3,15 @@ package com.example.sledipari.ui.login
 import android.content.Context
 import android.content.SharedPreferences
 import android.widget.Toast
+import androidx.compose.foundation.Image
+import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.fillMaxSize
+import androidx.compose.foundation.layout.padding
+import androidx.compose.foundation.layout.size
 import androidx.compose.material.Button
+import androidx.compose.material.ButtonColors
+import androidx.compose.material.ButtonDefaults
 import androidx.compose.material.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.getValue
@@ -14,7 +20,13 @@ import androidx.compose.runtime.remember
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.platform.LocalContext
+import androidx.compose.ui.res.colorResource
+import androidx.compose.ui.res.painterResource
+import androidx.compose.ui.res.stringResource
+import androidx.compose.ui.tooling.preview.Preview
+import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.lifecycle.ViewModel
@@ -23,8 +35,11 @@ import com.auth0.android.authentication.AuthenticationException
 import com.auth0.android.callback.Callback
 import com.auth0.android.provider.WebAuthProvider
 import com.auth0.android.result.Credentials
+import com.example.sledipari.R
 import com.example.sledipari.ui.destinations.LoginScreenDestination
 import com.example.sledipari.ui.destinations.SplashScreenDestination
+import com.example.sledipari.ui.friziorSub
+import com.example.sledipari.ui.home
 import com.ramcosta.composedestinations.annotation.Destination
 import com.ramcosta.composedestinations.navigation.DestinationsNavigator
 import dagger.hilt.android.lifecycle.HiltViewModel
@@ -46,8 +61,13 @@ fun LoginScreen(
         contentAlignment = Alignment.Center,
         modifier = Modifier
             .fillMaxSize()
+            .background(
+                color = colorResource(id = R.color.login_background)
+            )
     ) {
-        Button(onClick = {
+        Button(
+            colors = ButtonDefaults.buttonColors(backgroundColor = home),
+            onClick = {
 
             val account = Auth0(
                 "wQHnVE7ocP1SOZux0oVRsQm5RGKkiFPX",
@@ -77,9 +97,26 @@ fun LoginScreen(
                         }
                     }
                 })
-        }) {
-            Text(text = "Login", fontSize = 24.sp)
+        },
+            modifier = Modifier
+                .padding(
+                    top = 50.dp
+                )) {
+            Text(
+                text = stringResource(id = R.string.login_button_title),
+                fontSize = 24.sp,
+                color = colorResource(id = R.color.white)
+            )
         }
+
+        Image(
+            painter = painterResource(id = R.drawable.splash_logo),
+            contentDescription = null,
+            modifier = Modifier
+                .padding(
+                    bottom = 250.dp
+                )
+        )
     }
 
 
