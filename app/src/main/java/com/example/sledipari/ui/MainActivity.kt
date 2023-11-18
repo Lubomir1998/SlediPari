@@ -55,19 +55,6 @@ class MainActivity : ComponentActivity() {
 
         setContent {
             DestinationsNavHost(navGraph = NavGraphs.root)
-//            {
-//                composable(InfoScreenDestination) {
-//                    InfoScreen(
-//                        navigator = destinationsNavigator,
-//                        navController = navController,
-//                        title = navArgs.title,
-//                        encodedMap = navArgs.encodedMap,
-//                        red = navArgs.red,
-//                        green = navArgs.green,
-//                        blue = navArgs.blue
-//                    )
-//                }
-//            }
         }
     }
 
