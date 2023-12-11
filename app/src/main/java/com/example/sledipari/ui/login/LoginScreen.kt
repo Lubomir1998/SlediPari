@@ -1,16 +1,14 @@
 package com.example.sledipari.ui.login
 
-import android.content.Context
 import android.content.SharedPreferences
+import android.util.Log
 import android.widget.Toast
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.padding
-import androidx.compose.foundation.layout.size
 import androidx.compose.material.Button
-import androidx.compose.material.ButtonColors
 import androidx.compose.material.ButtonDefaults
 import androidx.compose.material.Text
 import androidx.compose.runtime.Composable
@@ -20,12 +18,10 @@ import androidx.compose.runtime.remember
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
-import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.res.colorResource
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.res.stringResource
-import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import androidx.hilt.navigation.compose.hiltViewModel
@@ -38,7 +34,6 @@ import com.auth0.android.result.Credentials
 import com.example.sledipari.R
 import com.example.sledipari.ui.destinations.LoginScreenDestination
 import com.example.sledipari.ui.destinations.SplashScreenDestination
-import com.example.sledipari.ui.friziorSub
 import com.example.sledipari.ui.home
 import com.ramcosta.composedestinations.annotation.Destination
 import com.ramcosta.composedestinations.navigation.DestinationsNavigator
@@ -82,14 +77,20 @@ fun LoginScreen(
                     // Called when there is an authentication failure
                     override fun onFailure(error: AuthenticationException) {
                         _error = error.localizedMessage
+                        Log.d("TAG", "error token -> ${error.localizedMessage}")
                     }
 
                     // Called when authentication completed successfully
                     override fun onSuccess(result: Credentials) {
                         // Get the access token from the credentials object.
                         // This can be used to call APIs
-                        val accessToken = result.idToken
-                        viewModel.updateTokenInfo(accessToken)
+                        val refreshToken = result.refreshToken
+                        val accessToken = result.accessToken
+                        val idToken = result.idToken
+                        Log.d("TAG", "refresh token -> $refreshToken")
+                        Log.d("TAG", "access token -> $accessToken")
+                        Log.d("TAG", "id token -> $idToken")
+                        viewModel.updateTokenInfo(refreshToken)
                         destinationsNavigator.navigate(SplashScreenDestination) {
                             popUpTo(LoginScreenDestination.route) {
                                 inclusive = true
@@ -126,39 +127,11 @@ fun LoginScreen(
     }
 
 }
-
-private fun loginWithBrowser(context: Context) {
-    // Setup the WebAuthProvider, using the custom scheme and scope.
-
-    val account = Auth0(
-        "wQHnVE7ocP1SOZux0oVRsQm5RGKkiFPX",
-        "dev-j6hq26y1j8pv5deu.us.auth0.com"
-    )
-
-    WebAuthProvider
-        .login(account)
-        .withScheme("app")
-        // Launch the authentication passing the callback where the results will be received
-        .start(context, object : Callback<Credentials, AuthenticationException> {
-            // Called when there is an authentication failure
-            override fun onFailure(error: AuthenticationException) {
-
-            }
-
-            // Called when authentication completed successfully
-            override fun onSuccess(result: Credentials) {
-                // Get the access token from the credentials object.
-                // This can be used to call APIs
-                val accessToken = result.idToken
-
-            }
-        })
-}
 @HiltViewModel
 class ShitViewModel
 @Inject constructor(private val sharedPreferences: SharedPreferences): ViewModel() {
 
-    fun updateTokenInfo(token: String) {
+    fun updateTokenInfo(token: String?) {
         sharedPreferences.edit().putString("token", token).apply()
     }
 }

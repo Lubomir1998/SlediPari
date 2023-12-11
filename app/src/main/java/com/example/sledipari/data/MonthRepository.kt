@@ -2,7 +2,12 @@ package com.example.sledipari.data
 
 import android.content.SharedPreferences
 import com.example.sledipari.api.MonthApi
+import com.example.sledipari.api.models.AddHubRequest
+import com.example.sledipari.api.models.AddUserToHubRequest
 import com.example.sledipari.api.models.ApiResponse
+import com.example.sledipari.api.models.CreateHubResponse
+import com.example.sledipari.api.models.EditHubNameRequest
+import com.example.sledipari.api.models.HubDTO
 import com.example.sledipari.api.models.MonthDTO
 import com.example.sledipari.api.models.PostSpendingRequest
 import com.example.sledipari.data.db.MonthDao
@@ -102,6 +107,33 @@ class MonthRepository @Inject constructor(
         }
 
         return getAllMonthsLocal()
+    }
+
+    suspend fun createHub(request: AddHubRequest) {
+
+        val response = api.createHub(request)
+        val hubId = response.body<ApiResponse<CreateHubResponse>>().parse()
+
+
+    }
+
+    suspend fun getAllHUbsForUser(email: String): List<HubDTO> {
+
+        val response = api.getAllHubsForUser(email)
+        val hubs = response.body<ApiResponse<List<HubDTO>>>().parse()
+        return hubs
+    }
+
+    suspend fun editHubName(request: EditHubNameRequest): Boolean {
+
+        val response = api.editHubName(request)
+        return response.body<ApiResponse<Boolean>>().isSuccess
+    }
+
+    suspend fun addUserToHub(request: AddUserToHubRequest): Boolean {
+
+        val response = api.addUserToHub(request)
+        return response.body<ApiResponse<Boolean>>().isSuccess
     }
 
     suspend fun addTransactionInHistory(transaction: Transaction) {

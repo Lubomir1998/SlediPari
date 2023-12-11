@@ -2,8 +2,11 @@ package com.example.sledipari.api
 
 import android.content.Context
 import com.example.sledipari.R
+import com.example.sledipari.api.models.AddHubRequest
+import com.example.sledipari.api.models.AddUserToHubRequest
 import com.example.sledipari.api.models.ApiResponse
 import com.example.sledipari.api.models.CurrencyRatesResponse
+import com.example.sledipari.api.models.EditHubNameRequest
 import com.example.sledipari.api.models.MonthDTO
 import com.example.sledipari.api.models.PostSpendingRequest
 import com.example.sledipari.utility.Constants.EXCHANGE_RATES_API_KEY
@@ -61,6 +64,61 @@ class MonthApi(private val httpClient: HttpClient, private val context: Context)
 
         val response = try {
             httpClient.get( baseUrl() + "getAllMonths_v3")
+        } catch (e: Exception) {
+            throw Exception(context.getString(R.string.something_went_wrong))
+        }
+
+        return response
+    }
+
+    suspend fun getAllHubsForUser(email: String): HttpResponse {
+
+        val response = try {
+            httpClient.get(baseUrl() + "getHubsForEmail") {
+                parameter("email", email)
+            }
+        } catch (e: Exception) {
+            throw Exception(context.getString(R.string.something_went_wrong))
+        }
+
+        return response
+    }
+
+    suspend fun createHub(request: AddHubRequest): HttpResponse {
+
+        val response = try {
+            httpClient.post(baseUrl() + "createHub") {
+                contentType(ContentType.Application.Json)
+                setBody(request)
+            }
+        } catch (e: Exception) {
+            throw Exception(context.getString(R.string.something_went_wrong))
+        }
+
+        return response
+    }
+
+    suspend fun addUserToHub(request: AddUserToHubRequest): HttpResponse {
+
+        val response = try {
+            httpClient.post(baseUrl() + "addUserToHub") {
+                contentType(ContentType.Application.Json)
+                setBody(request)
+            }
+        } catch (e: Exception) {
+            throw Exception(context.getString(R.string.something_went_wrong))
+        }
+
+        return response
+    }
+
+    suspend fun editHubName(request: EditHubNameRequest): HttpResponse {
+
+        val response = try {
+            httpClient.post(baseUrl() + "editHubName") {
+                contentType(ContentType.Application.Json)
+                setBody(request)
+            }
         } catch (e: Exception) {
             throw Exception(context.getString(R.string.something_went_wrong))
         }
