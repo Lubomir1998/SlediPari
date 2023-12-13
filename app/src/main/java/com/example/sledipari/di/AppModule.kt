@@ -7,9 +7,8 @@ import androidx.security.crypto.EncryptedSharedPreferences
 import androidx.security.crypto.MasterKeys
 import com.example.sledipari.api.FirebasePushNotificationsApi
 import com.example.sledipari.api.MonthApi
-import com.example.sledipari.api.models.auth.TokenInfo
-import com.example.sledipari.basicClient
 import com.example.sledipari.data.db.MonthsDatabase
+import com.example.sledipari.getTokens
 import com.example.sledipari.jsonInstance
 import com.example.sledipari.utility.Constants.ENCRYPTED_SHARED_PREFS_NAME
 import dagger.Module
@@ -18,16 +17,11 @@ import dagger.hilt.InstallIn
 import dagger.hilt.android.qualifiers.ApplicationContext
 import dagger.hilt.components.SingletonComponent
 import io.ktor.client.*
-import io.ktor.client.call.body
 import io.ktor.client.engine.cio.*
+import io.ktor.client.engine.okhttp.OkHttp
 import io.ktor.client.plugins.auth.Auth
-import io.ktor.client.plugins.auth.providers.BearerTokens
 import io.ktor.client.plugins.auth.providers.bearer
 import io.ktor.client.plugins.contentnegotiation.*
-import io.ktor.client.plugins.defaultRequest
-import io.ktor.client.request.forms.submitForm
-import io.ktor.client.request.headers
-import io.ktor.http.Parameters
 import io.ktor.serialization.kotlinx.json.*
 import javax.inject.Singleton
 
@@ -66,54 +60,23 @@ object AppModule {
     @Singleton
     @Provides
     fun provideMonthApi(@ApplicationContext context: Context, sharedPreferences: SharedPreferences) =
-        MonthApi(HttpClient(CIO) {
+        MonthApi(HttpClient(OkHttp) {
             install(ContentNegotiation) {
                 json(jsonInstance)
             }
             install(Auth) {
                 bearer {
                     loadTokens {
-//                        val tokenInfo: TokenInfo = basicClient.submitForm(
-//                            url = "https://dev-j6hq26y1j8pv5deu.us.auth0.com/oauth/token",
-//                            formParameters = Parameters.build {
-//                                append("grant_type", "authorization_code")
-//                                append("client_id", "wQHnVE7ocP1SOZux0oVRsQm5RGKkiFPX")
-//                                append("client_secret", "n8JnRL6WyTTe-xreqPUMiZ4Kc62h7TRsjn6tPAcTGejzQl-XI5WPiJLAmT0Vnbm6")
-//                                append("redirect_uri", "app://dev-j6hq26y1j8pv5deu.us.auth0.com/android/com.example.sledipari/callback,")
-//                            }
-//                        ).body()
                         val token = sharedPreferences.getString("token", "") ?: ""
-                        val tokenInfo: TokenInfo = basicClient.submitForm(
-                            url = "https://dev-j6hq26y1j8pv5deu.us.auth0.com/oauth/token",
-                            formParameters = Parameters.build {
-                                append("grant_type", "refresh_token")
-                                append("refresh_token", token)
-                            }
-                        ).body()
-                        BearerTokens(tokenInfo.accessToken, tokenInfo.refreshToken ?: "")
+                        getTokens(token)
                     }
                     refreshTokens {
 
                         val token = oldTokens?.refreshToken ?: sharedPreferences.getString("token", "") ?: ""
-                        val tokenInfo: TokenInfo = basicClient.submitForm(
-                            url = "https://dev-j6hq26y1j8pv5deu.us.auth0.com/oauth/token",
-                            formParameters = Parameters.build {
-                                append("grant_type", "refresh_token")
-                                append("refresh_token", token)
-                            }
-                        ).body()
-                        BearerTokens(tokenInfo.accessToken, tokenInfo.refreshToken ?: "")
+                        getTokens(token)
                     }
                     sendWithoutRequest { request ->
                         request.url.host == "https://api.apilayer.com/exchangerates_data/latest"
-                    }
-                }
-            }
-            defaultRequest {
-                val token = sharedPreferences.getString("token", null)
-                token?.let {
-                    headers {
-                        append("Authorization", "Bearer $it")
                     }
                 }
             }

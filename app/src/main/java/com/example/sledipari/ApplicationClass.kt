@@ -2,6 +2,7 @@ package com.example.sledipari
 
 import android.app.Application
 import com.example.sledipari.api.models.auth.OAuth2Error
+import com.example.sledipari.api.models.auth.TokenInfo
 import dagger.hilt.android.HiltAndroidApp
 import io.ktor.client.HttpClient
 import io.ktor.client.call.body
@@ -9,7 +10,10 @@ import io.ktor.client.engine.okhttp.OkHttp
 import io.ktor.client.plugins.ClientRequestException
 import io.ktor.client.plugins.HttpResponseValidator
 import io.ktor.client.plugins.HttpTimeout
+import io.ktor.client.plugins.auth.providers.BearerTokens
 import io.ktor.client.plugins.contentnegotiation.ContentNegotiation
+import io.ktor.client.request.forms.submitForm
+import io.ktor.http.Parameters
 import io.ktor.serialization.kotlinx.json.json
 import kotlinx.serialization.json.Json
 
@@ -41,4 +45,17 @@ val basicClient = HttpClient(OkHttp) {
         socketTimeoutMillis = 60_000
         requestTimeoutMillis = 60_000
     }
+}
+
+suspend fun getTokens(token: String): BearerTokens {
+
+    val tokenInfo: TokenInfo = basicClient.submitForm(
+        url = "https://dev-j6hq26y1j8pv5deu.us.auth0.com/oauth/token",
+        formParameters = Parameters.build {
+            append("grant_type", "refresh_token")
+            append("refresh_token", token)
+        }
+    ).body()
+
+    return BearerTokens(tokenInfo.accessToken, tokenInfo.refreshToken ?: "")
 }
