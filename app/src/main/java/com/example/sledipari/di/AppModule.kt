@@ -68,6 +68,7 @@ object AppModule {
             install(Auth) {
                 bearer {
                     loadTokens {
+
                         val token = sharedPreferences.getString(KEY_REFRESH_TOKEN, "") ?: ""
                         getTokens(token)
                     }
@@ -77,7 +78,8 @@ object AppModule {
                         getTokens(token)
                     }
                     sendWithoutRequest { request ->
-                        request.url.host == "https://api.apilayer.com/exchangerates_data/latest"
+
+                        request.url.host == "api.apilayer.com"
                     }
                 }
             }
