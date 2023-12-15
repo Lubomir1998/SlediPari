@@ -3,6 +3,8 @@ package com.example.sledipari
 import android.app.Application
 import com.example.sledipari.api.models.auth.OAuth2Error
 import com.example.sledipari.api.models.auth.TokenInfo
+import com.example.sledipari.utility.Constants.CLIENT_ID
+import com.example.sledipari.utility.Constants.CLIENT_SECRET
 import com.example.sledipari.utility.Constants.DOMAIN
 import dagger.hilt.android.HiltAndroidApp
 import io.ktor.client.HttpClient
@@ -14,6 +16,8 @@ import io.ktor.client.plugins.HttpTimeout
 import io.ktor.client.plugins.auth.providers.BearerTokens
 import io.ktor.client.plugins.contentnegotiation.ContentNegotiation
 import io.ktor.client.request.forms.submitForm
+import io.ktor.client.request.header
+import io.ktor.http.HttpHeaders
 import io.ktor.http.Parameters
 import io.ktor.serialization.kotlinx.json.json
 import kotlinx.serialization.json.Json
@@ -55,8 +59,15 @@ suspend fun getTokens(token: String): BearerTokens {
         formParameters = Parameters.build {
             append("grant_type", "refresh_token")
             append("refresh_token", token)
+            append("client_id", CLIENT_ID)
+            append("client_secret", CLIENT_SECRET)
         }
-    ).body()
+    ){
+        header(
+            HttpHeaders.ContentType,
+            "application/x-www-form-urlencoded"
+        )
+    }.body()
 
     return BearerTokens(tokenInfo.accessToken, tokenInfo.refreshToken ?: "")
 }

@@ -2,6 +2,7 @@ package com.example.sledipari.di
 
 import android.content.Context
 import android.content.SharedPreferences
+import android.widget.Toast
 import androidx.room.Room
 import androidx.security.crypto.EncryptedSharedPreferences
 import androidx.security.crypto.MasterKeys
@@ -70,12 +71,22 @@ object AppModule {
                     loadTokens {
 
                         val token = sharedPreferences.getString(KEY_REFRESH_TOKEN, "") ?: ""
-                        getTokens(token)
+                        try {
+                            getTokens(token)
+                        } catch (t: Throwable) {
+                            Toast.makeText(context, t.localizedMessage, Toast.LENGTH_LONG).show()
+                            null
+                        }
                     }
                     refreshTokens {
 
                         val token = oldTokens?.refreshToken ?: sharedPreferences.getString(KEY_REFRESH_TOKEN, "") ?: ""
-                        getTokens(token)
+                        try {
+                            getTokens(token)
+                        } catch (t: Throwable) {
+                            Toast.makeText(context, t.localizedMessage, Toast.LENGTH_LONG).show()
+                            null
+                        }
                     }
                     sendWithoutRequest { request ->
 

@@ -4,12 +4,13 @@ import com.example.sledipari.BuildConfig
 
 object Constants {
 
-    const val USE_LOCALHOST = true
+    const val USE_LOCALHOST = false
 
     const val BASE_URL = BuildConfig.BASE_URL
     const val BASE_URL_LOCALHOST = BuildConfig.BASE_URL_LOCALHOST
 
     const val CLIENT_ID = BuildConfig.CLIENT_ID
+    const val CLIENT_SECRET = BuildConfig.CLIENT_SECRET
     const val DOMAIN = BuildConfig.DOMAIN
 
     const val ENCRYPTED_SHARED_PREFS_NAME = "ENCRYPTED_SHARED_PREFS_NAME"
