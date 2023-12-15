@@ -3,6 +3,7 @@ package com.example.sledipari
 import android.app.Application
 import com.example.sledipari.api.models.auth.OAuth2Error
 import com.example.sledipari.api.models.auth.TokenInfo
+import com.example.sledipari.utility.Constants.DOMAIN
 import dagger.hilt.android.HiltAndroidApp
 import io.ktor.client.HttpClient
 import io.ktor.client.call.body
@@ -50,7 +51,7 @@ val basicClient = HttpClient(OkHttp) {
 suspend fun getTokens(token: String): BearerTokens {
 
     val tokenInfo: TokenInfo = basicClient.submitForm(
-        url = "https://dev-j6hq26y1j8pv5deu.us.auth0.com/oauth/token",
+        url = "https://$DOMAIN/oauth/token",
         formParameters = Parameters.build {
             append("grant_type", "refresh_token")
             append("refresh_token", token)

@@ -9,8 +9,12 @@ object Constants {
     const val BASE_URL = BuildConfig.BASE_URL
     const val BASE_URL_LOCALHOST = BuildConfig.BASE_URL_LOCALHOST
 
+    const val CLIENT_ID = BuildConfig.CLIENT_ID
+    const val DOMAIN = BuildConfig.DOMAIN
+
     const val ENCRYPTED_SHARED_PREFS_NAME = "ENCRYPTED_SHARED_PREFS_NAME"
     const val KEY_FIREBASE_TOKEN = "KEY_FIREBASE_TOKEN"
+    const val KEY_REFRESH_TOKEN = "KEY_REFRESH_TOKEN"
 
     const val SLEDI_PARI_TOPIC = "SLEDI_PARI_TOPIC"
     const val SERVER_KEY = BuildConfig.SERVER_KEY

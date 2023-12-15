@@ -35,6 +35,9 @@ import com.example.sledipari.R
 import com.example.sledipari.ui.destinations.LoginScreenDestination
 import com.example.sledipari.ui.destinations.SplashScreenDestination
 import com.example.sledipari.ui.home
+import com.example.sledipari.utility.Constants.CLIENT_ID
+import com.example.sledipari.utility.Constants.DOMAIN
+import com.example.sledipari.utility.Constants.KEY_REFRESH_TOKEN
 import com.ramcosta.composedestinations.annotation.Destination
 import com.ramcosta.composedestinations.navigation.DestinationsNavigator
 import dagger.hilt.android.lifecycle.HiltViewModel
@@ -65,8 +68,8 @@ fun LoginScreen(
             onClick = {
 
             val account = Auth0(
-                "wQHnVE7ocP1SOZux0oVRsQm5RGKkiFPX",
-                "dev-j6hq26y1j8pv5deu.us.auth0.com"
+                CLIENT_ID,
+                DOMAIN
             )
 
             WebAuthProvider
@@ -78,7 +81,6 @@ fun LoginScreen(
                     // Called when there is an authentication failure
                     override fun onFailure(error: AuthenticationException) {
                         _error = error.localizedMessage
-                        Log.d("TAG", "error token -> ${error.localizedMessage}")
                     }
 
                     // Called when authentication completed successfully
@@ -86,11 +88,7 @@ fun LoginScreen(
                         // Get the access token from the credentials object.
                         // This can be used to call APIs
                         val refreshToken = result.refreshToken
-                        val accessToken = result.accessToken
-                        val idToken = result.idToken
-                        Log.d("TAG", "refresh token -> $refreshToken")
-                        Log.d("TAG", "access token -> $accessToken")
-                        Log.d("TAG", "id token -> $idToken")
+
                         viewModel.updateTokenInfo(refreshToken)
                         destinationsNavigator.navigate(SplashScreenDestination) {
                             popUpTo(LoginScreenDestination.route) {
@@ -133,6 +131,6 @@ class ShitViewModel
 @Inject constructor(private val sharedPreferences: SharedPreferences): ViewModel() {
 
     fun updateTokenInfo(token: String?) {
-        sharedPreferences.edit().putString("token", token).apply()
+        sharedPreferences.edit().putString(KEY_REFRESH_TOKEN, token).apply()
     }
 }

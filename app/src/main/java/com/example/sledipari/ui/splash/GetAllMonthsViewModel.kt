@@ -7,6 +7,7 @@ import com.example.sledipari.data.MonthRepository
 import com.example.sledipari.utility.Constants.DELETE_HISTORY_INTERVAL
 import com.example.sledipari.utility.Constants.GET_RATES_INTERVAL
 import com.example.sledipari.utility.Constants.HISTORY_TIMESTAMP
+import com.example.sledipari.utility.Constants.KEY_REFRESH_TOKEN
 import com.example.sledipari.utility.Constants.USE_LOCALHOST
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.Deferred
@@ -41,7 +42,7 @@ class GetAllMonthsViewModel
 
     private fun getState(): String? {
 
-        return sharedPrefs.getString("token", null)
+        return sharedPrefs.getString(KEY_REFRESH_TOKEN, null)
     }
 
     fun applicationStartOperation() {

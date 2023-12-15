@@ -11,6 +11,7 @@ import com.example.sledipari.data.db.MonthsDatabase
 import com.example.sledipari.getTokens
 import com.example.sledipari.jsonInstance
 import com.example.sledipari.utility.Constants.ENCRYPTED_SHARED_PREFS_NAME
+import com.example.sledipari.utility.Constants.KEY_REFRESH_TOKEN
 import dagger.Module
 import dagger.Provides
 import dagger.hilt.InstallIn
@@ -67,12 +68,12 @@ object AppModule {
             install(Auth) {
                 bearer {
                     loadTokens {
-                        val token = sharedPreferences.getString("token", "") ?: ""
+                        val token = sharedPreferences.getString(KEY_REFRESH_TOKEN, "") ?: ""
                         getTokens(token)
                     }
                     refreshTokens {
 
-                        val token = oldTokens?.refreshToken ?: sharedPreferences.getString("token", "") ?: ""
+                        val token = oldTokens?.refreshToken ?: sharedPreferences.getString(KEY_REFRESH_TOKEN, "") ?: ""
                         getTokens(token)
                     }
                     sendWithoutRequest { request ->
