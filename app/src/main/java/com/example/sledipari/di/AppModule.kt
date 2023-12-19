@@ -6,6 +6,7 @@ import android.widget.Toast
 import androidx.room.Room
 import androidx.security.crypto.EncryptedSharedPreferences
 import androidx.security.crypto.MasterKeys
+import com.example.sledipari.accessToken
 import com.example.sledipari.api.FirebasePushNotificationsApi
 import com.example.sledipari.api.MonthApi
 import com.example.sledipari.data.db.MonthsDatabase
@@ -22,6 +23,7 @@ import io.ktor.client.*
 import io.ktor.client.engine.cio.*
 import io.ktor.client.engine.okhttp.OkHttp
 import io.ktor.client.plugins.auth.Auth
+import io.ktor.client.plugins.auth.providers.BearerTokens
 import io.ktor.client.plugins.auth.providers.bearer
 import io.ktor.client.plugins.contentnegotiation.*
 import io.ktor.serialization.kotlinx.json.*
@@ -71,11 +73,17 @@ object AppModule {
                     loadTokens {
 
                         val token = sharedPreferences.getString(KEY_REFRESH_TOKEN, "") ?: ""
-                        try {
-                            getTokens(token)
-                        } catch (t: Throwable) {
-                            Toast.makeText(context, t.localizedMessage, Toast.LENGTH_LONG).show()
-                            null
+
+                        accessToken?.let { accessToken ->
+
+                            BearerTokens(accessToken, token)
+                        } ?: run {
+                            try {
+                                getTokens(token)
+                            } catch (t: Throwable) {
+                                Toast.makeText(context, t.localizedMessage, Toast.LENGTH_LONG).show()
+                                null
+                            }
                         }
                     }
                     refreshTokens {
@@ -90,7 +98,7 @@ object AppModule {
                     }
                     sendWithoutRequest { request ->
 
-                        request.url.host == "api.apilayer.com"
+                        request.url.host != "api.apilayer.com"
                     }
                 }
             }

@@ -28,5 +28,6 @@ data class MonthDTO(
     var subscriptions: Float = 0.0f,
     var tattoo: Float = 0.0f,
     var toys: Float = 0.0f,
+    var hubId: String = "",
     val id: String
 )

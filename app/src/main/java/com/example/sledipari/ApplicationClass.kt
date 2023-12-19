@@ -71,3 +71,5 @@ suspend fun getTokens(token: String): BearerTokens {
 
     return BearerTokens(tokenInfo.accessToken, tokenInfo.refreshToken ?: "")
 }
+
+var accessToken: String? = null

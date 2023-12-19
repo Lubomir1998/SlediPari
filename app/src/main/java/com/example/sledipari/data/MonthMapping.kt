@@ -46,6 +46,7 @@ fun MonthDTO.toMonth(): Month {
         subscriptions = this.subscriptions,
         tattoo = this.tattoo,
         toys = this.toys,
+        hubId = this.hubId,
         id = this.id
     )
 }

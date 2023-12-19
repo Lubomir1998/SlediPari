@@ -48,6 +48,7 @@ data class Month(
     var subscriptions: Float = 0.0f,
     var tattoo: Float = 0.0f,
     var toys: Float = 0.0f,
+    var hubId: String = "",
     @PrimaryKey
     val id: String
 )

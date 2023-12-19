@@ -32,6 +32,7 @@ import com.auth0.android.callback.Callback
 import com.auth0.android.provider.WebAuthProvider
 import com.auth0.android.result.Credentials
 import com.example.sledipari.R
+import com.example.sledipari.accessToken
 import com.example.sledipari.ui.destinations.LoginScreenDestination
 import com.example.sledipari.ui.destinations.SplashScreenDestination
 import com.example.sledipari.ui.home
@@ -89,6 +90,7 @@ fun LoginScreen(
                         // This can be used to call APIs
                         val refreshToken = result.refreshToken
 
+                        accessToken = result.idToken
                         viewModel.updateTokenInfo(refreshToken)
                         destinationsNavigator.navigate(SplashScreenDestination) {
                             popUpTo(LoginScreenDestination.route) {

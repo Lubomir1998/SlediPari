@@ -129,7 +129,7 @@ class MonthApi(private val httpClient: HttpClient, private val context: Context)
     suspend fun checkLastModifiedDate(): HttpResponse {
 
         val response = try {
-            httpClient.get(baseUrl() + "getMonthsCheckDate2")
+            httpClient.get(baseUrl() + "getMonthsCheckDate_v2")
         } catch (e: Exception) {
             throw Exception(context.getString(R.string.something_went_wrong))
         }
