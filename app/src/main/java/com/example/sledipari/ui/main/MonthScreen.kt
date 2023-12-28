@@ -3,18 +3,64 @@
 package com.example.sledipari.ui.main
 
 import android.widget.Toast
-import androidx.compose.foundation.*
-import androidx.compose.foundation.layout.*
+import androidx.compose.foundation.Canvas
+import androidx.compose.foundation.ExperimentalFoundationApi
+import androidx.compose.foundation.background
+import androidx.compose.foundation.clickable
+import androidx.compose.foundation.combinedClickable
+import androidx.compose.foundation.layout.Arrangement
+import androidx.compose.foundation.layout.Box
+import androidx.compose.foundation.layout.Column
+import androidx.compose.foundation.layout.PaddingValues
+import androidx.compose.foundation.layout.Row
+import androidx.compose.foundation.layout.Spacer
+import androidx.compose.foundation.layout.fillMaxHeight
+import androidx.compose.foundation.layout.fillMaxSize
+import androidx.compose.foundation.layout.fillMaxWidth
+import androidx.compose.foundation.layout.height
+import androidx.compose.foundation.layout.padding
+import androidx.compose.foundation.layout.size
+import androidx.compose.foundation.layout.width
 import androidx.compose.foundation.lazy.LazyRow
 import androidx.compose.foundation.lazy.itemsIndexed
 import androidx.compose.foundation.lazy.rememberLazyListState
+import androidx.compose.foundation.rememberScrollState
 import androidx.compose.foundation.shape.CircleShape
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.foundation.text.KeyboardOptions
-import androidx.compose.material.*
+import androidx.compose.foundation.verticalScroll
+import androidx.compose.material.BottomSheetScaffold
+import androidx.compose.material.BottomSheetScaffoldState
+import androidx.compose.material.BottomSheetValue
+import androidx.compose.material.Button
+import androidx.compose.material.ButtonDefaults
+import androidx.compose.material.CircularProgressIndicator
+import androidx.compose.material.Divider
+import androidx.compose.material.DropdownMenu
+import androidx.compose.material.ExperimentalMaterialApi
+import androidx.compose.material.Icon
+import androidx.compose.material.LocalTextStyle
+import androidx.compose.material.Switch
+import androidx.compose.material.Text
+import androidx.compose.material.TextField
+import androidx.compose.material.TextFieldDefaults
 import androidx.compose.material.icons.Icons
-import androidx.compose.material.icons.filled.*
-import androidx.compose.runtime.*
+import androidx.compose.material.icons.filled.Add
+import androidx.compose.material.icons.filled.ArrowBack
+import androidx.compose.material.icons.filled.ArrowDropDown
+import androidx.compose.material.icons.filled.Info
+import androidx.compose.material.icons.filled.Settings
+import androidx.compose.material.rememberBottomSheetScaffoldState
+import androidx.compose.material.rememberBottomSheetState
+import androidx.compose.runtime.Composable
+import androidx.compose.runtime.LaunchedEffect
+import androidx.compose.runtime.collectAsState
+import androidx.compose.runtime.getValue
+import androidx.compose.runtime.mutableIntStateOf
+import androidx.compose.runtime.mutableStateOf
+import androidx.compose.runtime.remember
+import androidx.compose.runtime.rememberCoroutineScope
+import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.ExperimentalComposeUiApi
 import androidx.compose.ui.Modifier
@@ -35,22 +81,38 @@ import androidx.compose.ui.text.style.TextDecoration
 import androidx.compose.ui.text.withStyle
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
-import androidx.hilt.navigation.compose.hiltViewModel
+import androidx.navigation.NavController
 import com.example.sledipari.R
 import com.example.sledipari.data.models.Month
-import com.example.sledipari.ui.*
-import com.example.sledipari.ui.destinations.InfoScreenDestination
-import com.example.sledipari.ui.destinations.SettingsScreenDestination
+import com.example.sledipari.ui.divider
+import com.example.sledipari.ui.getRGB
+import com.example.sledipari.ui.home
 import com.example.sledipari.ui.settings.currencies.CurrencyViewModel
-import com.example.sledipari.utility.*
-import com.example.sledipari.utility.extensions.*
+import com.example.sledipari.ui.wash
+import com.example.sledipari.utility.addingOptions
+import com.example.sledipari.utility.cosmeticsToList
+import com.example.sledipari.utility.extensions.flagEmoji
+import com.example.sledipari.utility.extensions.formatPrice
+import com.example.sledipari.utility.extensions.getCurrentCategoryValue
+import com.example.sledipari.utility.extensions.getMonthValueAndColor2
+import com.example.sledipari.utility.extensions.toList
+import com.example.sledipari.utility.extensions.toLocalizable
+import com.example.sledipari.utility.extensions.toPercent
+import com.example.sledipari.utility.extensions.totalSum
+import com.example.sledipari.utility.foodToList
+import com.example.sledipari.utility.formatDate
+import com.example.sledipari.utility.friziorToList
+import com.example.sledipari.utility.getTitle
+import com.example.sledipari.utility.preparatiToList
+import com.example.sledipari.utility.smetkiToList
+import com.example.sledipari.utility.toReadableDate
+import com.example.sledipari.utility.transportToList
 import com.google.accompanist.swiperefresh.SwipeRefresh
 import com.google.accompanist.swiperefresh.SwipeRefreshIndicator
 import com.google.accompanist.swiperefresh.rememberSwipeRefreshState
-import com.ramcosta.composedestinations.annotation.Destination
-import com.ramcosta.composedestinations.navigation.DestinationsNavigator
 import kotlinx.coroutines.launch
-import kotlinx.serialization.*
+import kotlinx.serialization.ExperimentalSerializationApi
+import kotlinx.serialization.encodeToString
 import kotlinx.serialization.json.Json
 
 data class SpItem(
@@ -62,11 +124,10 @@ data class SpItem(
 
 @ExperimentalMaterialApi
 @Composable
-@Destination
 fun MonthScreen(
-    navigator: DestinationsNavigator,
-    viewModel: GetMonthViewModel = hiltViewModel(),
-    currencyViewModel: CurrencyViewModel = hiltViewModel()
+    navController: NavController,
+    viewModel: GetMonthViewModel,
+    currencyViewModel: CurrencyViewModel
 ) {
 
     val context = LocalContext.current
@@ -174,7 +235,7 @@ fun MonthScreen(
         ) {
 
             MonthContent(
-                navigator = navigator,
+                navController = navController,
                 allMonths = allMonths,
                 currentMonthId = currentMonthId,
                 currentMonth = currentMonth,
@@ -545,7 +606,7 @@ fun BottomSheetContent(
 @ExperimentalMaterialApi
 @Composable
 fun MonthContent(
-    navigator: DestinationsNavigator,
+    navController: NavController,
     allMonths: List<Month>,
     currentMonthId: String,
     currentMonth: Month?,
@@ -580,7 +641,7 @@ fun MonthContent(
                     .padding(16.dp)
                     .size(36.dp)
                     .clickable {
-                        navigator.navigate(SettingsScreenDestination)
+                        navController.navigate("settings_screen")
                     }
             )
 
@@ -645,7 +706,7 @@ fun MonthContent(
                     Spacer(modifier = Modifier.size(10.dp))
 
                     PieChart(
-                        navigator = navigator,
+                        navController = navController,
                         list = currentList,
                         totalSum = totalSum,
                         allMonths = allMonths,
@@ -753,7 +814,7 @@ fun MonthItem(
 )
 @Composable
 fun SpendingItem(
-    navigator: DestinationsNavigator,
+    navController: NavController,
     color: Color,
     name: String,
     sum: Float,
@@ -851,15 +912,7 @@ fun SpendingItem(
 
                         val encodedMap = Json.encodeToString(statisticMonths)
 
-                        navigator.navigate(
-                            InfoScreenDestination(
-                                title = name,
-                                encodedMap = encodedMap,
-                                red = color.red,
-                                green = color.green,
-                                blue = color.blue
-                            )
-                        )
+                        navController.navigate("info_screen/$name/$encodedMap/${color.red}/${color.green}/${color.blue}")
                     }
             )
         }
@@ -960,7 +1013,7 @@ fun AllMonthsRow(
 
 @Composable
 fun PieChart(
-    navigator: DestinationsNavigator,
+    navController: NavController,
     list: List<SpItem>,
     totalSum: Float,
     allMonths: List<Month>,
@@ -1002,7 +1055,7 @@ fun PieChart(
         list.forEachIndexed { index, item ->
 
             SpendingItem(
-                navigator = navigator,
+                navController = navController,
                 color = item.color,
                 name = item.name,
                 sum = item.price,

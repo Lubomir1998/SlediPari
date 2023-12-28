@@ -100,4 +100,6 @@
     <string name="months_error_alert_text">There was a problem fetching data. Current data might not be up to date</string>
 
     <string name="login_button_title">Login</string>
+
+    <string name="profile">Profile</string>
 </resources>

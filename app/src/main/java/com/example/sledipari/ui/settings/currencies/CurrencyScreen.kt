@@ -23,17 +23,12 @@ import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.navigation.NavController
 import com.example.sledipari.R
 import com.example.sledipari.ui.AppToolbar
-import com.example.sledipari.utility.Constants
 import com.example.sledipari.utility.extensions.flagEmoji
-import com.ramcosta.composedestinations.annotation.Destination
-import com.ramcosta.composedestinations.navigation.DestinationsNavigator
 import java.util.*
 
 @SuppressLint("UnusedMaterialScaffoldPaddingParameter")
 @Composable
-@Destination
 fun CurrencyScreen(
-    navigator: DestinationsNavigator,
     navController: NavController,
     viewModel: CurrencyViewModel = hiltViewModel()
 ) {
@@ -42,7 +37,6 @@ fun CurrencyScreen(
         topBar = {
             AppToolbar(
                 title = LocalContext.current.getString(R.string.currency),
-                navigator = navigator,
                 navController = navController
             )
         }

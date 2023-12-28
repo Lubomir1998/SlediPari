@@ -8,8 +8,6 @@ import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.items
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material.*
-import androidx.compose.material.icons.Icons
-import androidx.compose.material.icons.filled.ArrowBack
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.collectAsState
@@ -25,7 +23,6 @@ import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
-import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.navigation.NavController
 import com.example.sledipari.R
 import com.example.sledipari.data.models.Transaction
@@ -33,16 +30,12 @@ import com.example.sledipari.ui.AppToolbar
 import com.example.sledipari.utility.extensions.formatPrice
 import com.example.sledipari.utility.extensions.toLocalizable
 import com.example.sledipari.utility.formatDate
-import com.ramcosta.composedestinations.annotation.Destination
-import com.ramcosta.composedestinations.navigation.DestinationsNavigator
 
 @SuppressLint("UnusedMaterialScaffoldPaddingParameter")
 @Composable
-@Destination
 fun HistoryScreen(
-    navigator: DestinationsNavigator,
     navController: NavController,
-    viewModel: HistoryViewModel = hiltViewModel()
+    viewModel: HistoryViewModel
 ) {
 
     val historyItems by viewModel.history.collectAsState()
@@ -57,7 +50,6 @@ fun HistoryScreen(
         topBar = {
             AppToolbar(
                 title = LocalContext.current.getString(R.string.history),
-                navigator = navigator,
                 navController = navController
             )
         }

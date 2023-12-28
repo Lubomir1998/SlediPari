@@ -100,4 +100,6 @@
     <string name="months_error_alert_text">Имаше проблем при получаването на данни. Текущите данни може да не са актуални</string>
 
     <string name="login_button_title">Вход</string>
+
+    <string name="profile">Профил</string>
 </resources>

@@ -1,7 +1,6 @@
 package com.example.sledipari.ui.login
 
 import android.content.SharedPreferences
-import android.util.Log
 import android.widget.Toast
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.background
@@ -26,6 +25,7 @@ import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.lifecycle.ViewModel
+import androidx.navigation.NavController
 import com.auth0.android.Auth0
 import com.auth0.android.authentication.AuthenticationException
 import com.auth0.android.callback.Callback
@@ -33,21 +33,16 @@ import com.auth0.android.provider.WebAuthProvider
 import com.auth0.android.result.Credentials
 import com.example.sledipari.R
 import com.example.sledipari.accessToken
-import com.example.sledipari.ui.destinations.LoginScreenDestination
-import com.example.sledipari.ui.destinations.SplashScreenDestination
 import com.example.sledipari.ui.home
 import com.example.sledipari.utility.Constants.CLIENT_ID
 import com.example.sledipari.utility.Constants.DOMAIN
 import com.example.sledipari.utility.Constants.KEY_REFRESH_TOKEN
-import com.ramcosta.composedestinations.annotation.Destination
-import com.ramcosta.composedestinations.navigation.DestinationsNavigator
 import dagger.hilt.android.lifecycle.HiltViewModel
 import javax.inject.Inject
 
 @Composable
-@Destination
 fun LoginScreen(
-    destinationsNavigator: DestinationsNavigator,
+    navController: NavController,
     viewModel: ShitViewModel = hiltViewModel()
 ) {
 
@@ -91,10 +86,10 @@ fun LoginScreen(
                         // This can be used to call APIs
                         val refreshToken = result.refreshToken
 
-                        accessToken = result.idToken
+                        accessToken = result.accessToken
                         viewModel.updateTokenInfo(refreshToken)
-                        destinationsNavigator.navigate(SplashScreenDestination) {
-                            popUpTo(LoginScreenDestination.route) {
+                        navController.navigate("splash_screen") {
+                            popUpTo("login_screen") {
                                 inclusive = true
                             }
                         }

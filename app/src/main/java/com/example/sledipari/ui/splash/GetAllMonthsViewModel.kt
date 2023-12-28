@@ -82,13 +82,13 @@ class GetAllMonthsViewModel
 
             if (System.currentTimeMillis() >= (repo.getRates()?.timestamp ?: 0L) + GET_RATES_INTERVAL) {
                 if (!USE_LOCALHOST) {
-                    getRates = async {
-                        try {
-                            repo.saveCurrencyRates()
-                        } catch (e: Exception) {
-                            _getRatesException.value = e
-                        }
-                    }
+//                    getRates = async {
+//                        try {
+//                            repo.saveCurrencyRates()
+//                        } catch (e: Exception) {
+//                            _getRatesException.value = e
+//                        }
+//                    }
                 }
             }
 

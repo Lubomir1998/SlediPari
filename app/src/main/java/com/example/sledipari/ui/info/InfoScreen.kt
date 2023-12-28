@@ -25,27 +25,17 @@ import com.example.sledipari.R
 import com.example.sledipari.utility.extensions.formatPrice
 import com.example.sledipari.utility.extensions.toLocalizable
 import com.example.sledipari.utility.toReadableDate
-import com.ramcosta.composedestinations.annotation.Destination
-import com.ramcosta.composedestinations.navigation.DestinationsNavigator
-import kotlinx.serialization.decodeFromString
-import kotlinx.serialization.json.Json
 
 @SuppressLint("UnusedMaterialScaffoldPaddingParameter")
 @Composable
-@Destination
 fun InfoScreen(
-    navigator: DestinationsNavigator,
     navController: NavController,
     title: String,
-    encodedMap: String,
-    red: Float,
-    green: Float,
-    blue: Float
+    map: LinkedHashMap<String, Float>?,
+    rgbColor: Triple<Float, Float, Float>
 ) {
 
-    val map = Json.decodeFromString<LinkedHashMap<String, Float>>(encodedMap)
-
-    val maxValue = if (map.isNotEmpty()) {
+    val maxValue = if (map?.isNotEmpty() == true) {
         map.maxOf { entry ->
             entry.value
         }
@@ -53,7 +43,7 @@ fun InfoScreen(
 
     val statistics = mutableListOf<Pair<String, Float>>()
 
-    if (map.isNotEmpty()) {
+    if (map?.isNotEmpty() == true) {
         map.map { entry ->
             statistics.add(Pair(entry.key, entry.value))
         }
@@ -72,7 +62,7 @@ fun InfoScreen(
                     {
                         IconButton(onClick = {
                             animItems = mutableListOf()
-                            navigator.navigateUp()
+                            navController.navigateUp()
                         }) {
                             Icon(
                                 imageVector = Icons.Filled.ArrowBack,
@@ -91,7 +81,7 @@ fun InfoScreen(
         }) {
 
         MainContent(
-            rgbColor = Triple(red, green, blue),
+            rgbColor = rgbColor,
             statistics = statistics,
             maxValue = maxValue,)
     }

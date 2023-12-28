@@ -18,21 +18,15 @@ import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.unit.dp
-import androidx.hilt.navigation.compose.hiltViewModel
+import androidx.navigation.NavController
 import com.example.sledipari.R
-import com.example.sledipari.ui.destinations.LoginScreenDestination
-import com.example.sledipari.ui.destinations.MonthScreenDestination
-import com.example.sledipari.ui.destinations.SplashScreenDestination
 import com.example.sledipari.utility.formatDate
-import com.ramcosta.composedestinations.annotation.Destination
-import com.ramcosta.composedestinations.navigation.DestinationsNavigator
 
 @OptIn(ExperimentalMaterialApi::class)
 @Composable
-@Destination(start = true)
 fun SplashScreen(
-    navigator: DestinationsNavigator,
-    viewModel: GetAllMonthsViewModel = hiltViewModel()
+    navController: NavController,
+    viewModel: GetAllMonthsViewModel
 ) {
 
     val isLoading by viewModel.loading.collectAsState()
@@ -60,8 +54,8 @@ fun SplashScreen(
             when (state) {
 
                 GetAllMonthsViewModel.State.LOGIN -> {
-                    navigator.navigate(LoginScreenDestination) {
-                        popUpTo(SplashScreenDestination.route) {
+                    navController.navigate("login_screen") {
+                        popUpTo("splash_screen") {
                             inclusive = true
                         }
                     }
@@ -69,8 +63,8 @@ fun SplashScreen(
 
                 GetAllMonthsViewModel.State.MAIN -> {
                     if (getRatesException == null && getMonthsException == null) {
-                        navigator.navigate(MonthScreenDestination) {
-                            popUpTo(SplashScreenDestination.route) {
+                        navController.navigate("main_screen") {
+                            popUpTo("splash_screen") {
                                 inclusive = true
                             }
                         }
@@ -96,7 +90,7 @@ fun SplashScreen(
         getRatesException?.let {
 
             ErrorAlertView(
-                navigator = navigator,
+                navController = navController,
                 exception = it,
                 ratesTimestamp = ratesTimestamp,
                 alertTitle = stringResource(id = R.string.rates_error_dialog_title)
@@ -106,7 +100,7 @@ fun SplashScreen(
         getMonthsException?.let {
 
             ErrorAlertView(
-                navigator = navigator,
+                navController = navController,
                 exception = it,
                 alertTitle = stringResource(id = R.string.months_error_alert_text)
             )
@@ -119,7 +113,7 @@ fun SplashScreen(
 @OptIn(ExperimentalMaterialApi::class)
 @Composable
 fun ErrorAlertView(
-    navigator: DestinationsNavigator,
+    navController: NavController,
     exception: Exception,
     ratesTimestamp: Long = 0L,
     alertTitle: String
@@ -133,8 +127,8 @@ fun ErrorAlertView(
 
     AlertDialog(
         onDismissRequest = {
-            navigator.navigate(MonthScreenDestination) {
-                popUpTo(SplashScreenDestination.route) {
+            navController.navigate("") {
+                popUpTo("splash_screen") {
                     inclusive = true
                 }
             }
@@ -143,8 +137,8 @@ fun ErrorAlertView(
         text = { Text(text = message) },
         confirmButton = {
             Button(onClick = {
-                navigator.navigate(MonthScreenDestination) {
-                    popUpTo(SplashScreenDestination.route) {
+                navController.navigate("main_screen") {
+                    popUpTo("splash_screen") {
                         inclusive = true
                     }
                 }

@@ -13,23 +13,16 @@ import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
-import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.res.colorResource
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.unit.dp
 import androidx.navigation.NavController
 import com.example.sledipari.ui.AppToolbar
-import com.example.sledipari.ui.destinations.CurrencyScreenDestination
-import com.example.sledipari.ui.destinations.HistoryScreenDestination
-import com.ramcosta.composedestinations.annotation.Destination
-import com.ramcosta.composedestinations.navigation.DestinationsNavigator
 
 @SuppressLint("UnusedMaterialScaffoldPaddingParameter")
 @Composable
-@Destination
 fun SettingsScreen(
-    navigator: DestinationsNavigator,
     navController: NavController
 ) {
 
@@ -37,7 +30,6 @@ fun SettingsScreen(
         topBar = {
             AppToolbar(
                 title = LocalContext.current.getString(R.string.settings),
-                navigator = navigator,
                 navController = navController
             )
         }, content = {
@@ -57,7 +49,7 @@ fun SettingsScreen(
                 ) {
 
                     SettingsItem(titleId = R.string.history) {
-                        navigator.navigate(HistoryScreenDestination)
+                        navController.navigate("history_screen")
                     }
 
                     Divider(
@@ -68,7 +60,18 @@ fun SettingsScreen(
                     )
 
                     SettingsItem(titleId = R.string.currency) {
-                        navigator.navigate(CurrencyScreenDestination)
+                        navController.navigate("currency_screen")
+                    }
+
+                    Divider(
+                        modifier = Modifier
+                            .height(1.dp)
+                            .padding(start = 10.dp)
+                            .background(colorResource(id = R.color.divider))
+                    )
+
+                    SettingsItem(titleId = R.string.profile) {
+                        navController.navigate("profile_screen")
                     }
                 }
             }
