@@ -76,7 +76,8 @@ fun LoginScreen(
             WebAuthProvider
                 .login(account)
                 .withScheme("app")
-                .withScope("offline_access")
+                .withScope("offline_access openid profile email")
+                .withAudience("https://dev-j6hq26y1j8pv5deu.us.auth0.com/api/v2/")
                 // Launch the authentication passing the callback where the results will be received
                 .start(context, object : Callback<Credentials, AuthenticationException> {
                     // Called when there is an authentication failure
