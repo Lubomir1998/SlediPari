@@ -71,12 +71,10 @@ class MonthApi(private val httpClient: HttpClient, private val context: Context)
         return response
     }
 
-    suspend fun getAllHubsForUser(email: String): HttpResponse {
+    suspend fun getAllHubsForUser(): HttpResponse {
 
         val response = try {
-            httpClient.get(baseUrl() + "getHubsForEmail") {
-                parameter("email", email)
-            }
+            httpClient.get(baseUrl() + "getHubsForEmail")
         } catch (e: Exception) {
             throw Exception(context.getString(R.string.something_went_wrong))
         }

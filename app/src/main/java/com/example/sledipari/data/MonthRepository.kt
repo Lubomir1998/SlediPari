@@ -13,6 +13,7 @@ import com.example.sledipari.api.models.PostSpendingRequest
 import com.example.sledipari.data.db.MonthDao
 import com.example.sledipari.data.models.Month
 import com.example.sledipari.data.models.CurrencyResponseLocal
+import com.example.sledipari.data.models.Hub
 import com.example.sledipari.data.models.Transaction
 import com.example.sledipari.data.models.mapToRates
 import com.example.sledipari.utility.Constants.HISTORY_DURATION
@@ -117,11 +118,23 @@ class MonthRepository @Inject constructor(
 
     }
 
-    suspend fun getAllHUbsForUser(email: String): List<HubDTO> {
+    suspend fun getAllHubsForUser(): List<Hub> {
 
-        val response = api.getAllHubsForUser(email)
+        val response = api.getAllHubsForUser()
         val hubs = response.body<ApiResponse<List<HubDTO>>>().parse()
-        return hubs
+
+        for (dto in hubs) {
+
+            val hub = dto.toHub()
+            dao.insertHub(hub)
+        }
+
+        return getHubsLocal()
+    }
+
+    private suspend fun getHubsLocal(): List<Hub> {
+
+        return dao.getAllHubs()
     }
 
     suspend fun editHubName(request: EditHubNameRequest): Boolean {
