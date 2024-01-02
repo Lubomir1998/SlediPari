@@ -37,9 +37,7 @@ import com.example.sledipari.ui.settings.profile.ProfileScreen
 import com.example.sledipari.ui.settings.profile.ProfileViewModel
 import com.example.sledipari.ui.splash.GetAllMonthsViewModel
 import com.example.sledipari.ui.splash.SplashScreen
-import com.example.sledipari.utility.Constants.SLEDI_PARI_TOPIC
 import com.google.firebase.ktx.Firebase
-import com.google.firebase.messaging.FirebaseMessaging
 import com.google.firebase.remoteconfig.ktx.remoteConfig
 import com.google.firebase.remoteconfig.ktx.remoteConfigSettings
 import dagger.hilt.android.AndroidEntryPoint
@@ -62,7 +60,6 @@ class MainActivity : ComponentActivity() {
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
 
-        FirebaseMessaging.getInstance().subscribeToTopic(SLEDI_PARI_TOPIC)
         Firebase.remoteConfig.setConfigSettingsAsync(remoteConfigSettings {
             minimumFetchIntervalInSeconds = 0
         })

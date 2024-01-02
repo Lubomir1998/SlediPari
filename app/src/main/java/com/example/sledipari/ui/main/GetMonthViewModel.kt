@@ -2,21 +2,13 @@ package com.example.sledipari.ui.main
 
 import android.annotation.SuppressLint
 import android.content.Context
-import android.content.SharedPreferences
-import androidx.compose.ui.graphics.Color
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.example.sledipari.R
-import com.example.sledipari.api.FirebasePushNotificationsApi
 import com.example.sledipari.api.models.PostSpendingRequest
-import com.example.sledipari.api.models.pushnotifications.NotificationData
-import com.example.sledipari.api.models.pushnotifications.PushNotification
 import com.example.sledipari.data.MonthRepository
 import com.example.sledipari.data.models.Month
 import com.example.sledipari.data.models.Transaction
-import com.example.sledipari.utility.Constants.LAST_MODIFIED_DATE
-import com.example.sledipari.utility.Constants.SLEDI_PARI_TOPIC
-import com.example.sledipari.utility.extensions.formatPrice
 import com.example.sledipari.utility.extensions.toList
 import com.example.sledipari.utility.extensions.totalSum
 import com.example.sledipari.utility.formatDate
@@ -29,7 +21,6 @@ import javax.inject.Inject
 class GetMonthViewModel
 @Inject constructor(
     private val repo: MonthRepository,
-    private val firebaseApi: FirebasePushNotificationsApi,
     @SuppressLint("StaticFieldLeak") private val context: Context
 ): ViewModel() {
 
@@ -139,21 +130,6 @@ class GetMonthViewModel
         }
     }
 
-    private suspend fun sendPushNotification(title: String, price: Float) {
-
-        try {
-            val pushNotification = PushNotification(
-                data = NotificationData(
-                    title = title,
-                    message = price.formatPrice()
-                ),
-                to = "/topics/$SLEDI_PARI_TOPIC"
-            )
-
-            firebaseApi.sendPushNotification(pushNotification)
-        } catch (e: Exception) { }
-    }
-
     fun addSpending(title: Pair<String, String>, price: Float, rgbColor: Triple<Float, Float, Float>, sendNotification: Boolean = false, post: Boolean = true) {
         _isLoading.value = true
 
@@ -182,9 +158,7 @@ class GetMonthViewModel
                             timestamp = System.currentTimeMillis()
                         )
                     )
-                    if (sendNotification) {
-                        sendPushNotification(title.first, price)
-                    }
+
                 }
             } catch (e: Exception) {
 

@@ -7,7 +7,6 @@ import androidx.room.Room
 import androidx.security.crypto.EncryptedSharedPreferences
 import androidx.security.crypto.MasterKeys
 import com.example.sledipari.accessToken
-import com.example.sledipari.api.FirebasePushNotificationsApi
 import com.example.sledipari.api.MonthApi
 import com.example.sledipari.data.db.MonthsDatabase
 import com.example.sledipari.getTokens
@@ -36,15 +35,6 @@ object AppModule {
     @Singleton
     @Provides
     fun provideContext(@ApplicationContext context: Context) = context
-
-
-
-    @Singleton
-    @Provides
-    fun provideFcmApi() =
-        FirebasePushNotificationsApi(HttpClient(CIO) {
-            expectSuccess = false
-        })
 
     @Singleton
     @Provides

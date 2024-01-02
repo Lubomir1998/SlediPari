@@ -17,7 +17,6 @@ object Constants {
     const val KEY_FIREBASE_TOKEN = "KEY_FIREBASE_TOKEN"
     const val KEY_REFRESH_TOKEN = "KEY_REFRESH_TOKEN"
 
-    const val SLEDI_PARI_TOPIC = "SLEDI_PARI_TOPIC"
     const val SERVER_KEY = BuildConfig.SERVER_KEY
     const val SENDER_ID = BuildConfig.SENDER_ID
     const val EXCHANGE_RATES_API_KEY = BuildConfig.EXCHANGE_RATES_API_KEY
