@@ -18,6 +18,7 @@ import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.unit.dp
+import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.navigation.NavController
 import com.example.sledipari.R
 import com.example.sledipari.utility.formatDate
@@ -26,7 +27,7 @@ import com.example.sledipari.utility.formatDate
 @Composable
 fun SplashScreen(
     navController: NavController,
-    viewModel: GetAllMonthsViewModel
+    viewModel: GetAllMonthsViewModel = hiltViewModel()
 ) {
 
     val isLoading by viewModel.loading.collectAsState()
@@ -127,7 +128,7 @@ fun ErrorAlertView(
 
     AlertDialog(
         onDismissRequest = {
-            navController.navigate("") {
+            navController.navigate("main_screen") {
                 popUpTo("splash_screen") {
                     inclusive = true
                 }

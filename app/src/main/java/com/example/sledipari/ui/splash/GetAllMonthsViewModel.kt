@@ -3,6 +3,7 @@ package com.example.sledipari.ui.splash
 import android.content.SharedPreferences
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
+import com.example.sledipari.accessToken
 import com.example.sledipari.data.MonthRepository
 import com.example.sledipari.utility.Constants.DELETE_HISTORY_INTERVAL
 import com.example.sledipari.utility.Constants.GET_RATES_INTERVAL

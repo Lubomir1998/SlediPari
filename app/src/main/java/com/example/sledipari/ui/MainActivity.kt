@@ -2,6 +2,7 @@ package com.example.sledipari.ui
 
 import android.app.AlertDialog
 import android.content.Intent
+import android.content.SharedPreferences
 import android.net.Uri
 import android.os.Bundle
 import androidx.activity.ComponentActivity
@@ -32,6 +33,8 @@ import com.example.sledipari.ui.settings.currencies.CurrencyScreen
 import com.example.sledipari.ui.settings.currencies.CurrencyViewModel
 import com.example.sledipari.ui.settings.history.HistoryScreen
 import com.example.sledipari.ui.settings.history.HistoryViewModel
+import com.example.sledipari.ui.settings.profile.ProfileScreen
+import com.example.sledipari.ui.settings.profile.ProfileViewModel
 import com.example.sledipari.ui.splash.GetAllMonthsViewModel
 import com.example.sledipari.ui.splash.SplashScreen
 import com.example.sledipari.utility.Constants.SLEDI_PARI_TOPIC
@@ -43,12 +46,16 @@ import dagger.hilt.android.AndroidEntryPoint
 import kotlinx.serialization.ExperimentalSerializationApi
 import kotlinx.serialization.decodeFromString
 import kotlinx.serialization.json.Json
+import javax.inject.Inject
 
 @AndroidEntryPoint
 class MainActivity : ComponentActivity() {
 
     private var updateDialog: AlertDialog? = null
     private val _remoteConfigObserver by lazy { Firebase.remoteConfig.updates.observe(this) { checkForUpdates() } }
+
+    @Inject
+    lateinit var sharedPreferences: SharedPreferences
 
     @OptIn(ExperimentalSerializationApi::class)
     @ExperimentalMaterialApi
@@ -63,10 +70,12 @@ class MainActivity : ComponentActivity() {
         setContent {
 
             val navController = rememberNavController()
+
             val getMonthViewModel: GetMonthViewModel = viewModel()
             val historyViewModel: HistoryViewModel = viewModel()
             val currencyViewModel: CurrencyViewModel = viewModel()
             val getAllMonthsViewModel: GetAllMonthsViewModel = viewModel()
+            val profileViewModel: ProfileViewModel = viewModel()
 
             NavHost(
                 navController = navController,
@@ -74,8 +83,7 @@ class MainActivity : ComponentActivity() {
             ) {
                 composable("splash_screen") {
                     SplashScreen(
-                        navController = navController,
-                        viewModel = getAllMonthsViewModel
+                        navController = navController
                     )
                 }
 
@@ -151,6 +159,13 @@ class MainActivity : ComponentActivity() {
                     CurrencyScreen(
                         navController = navController,
                         viewModel = currencyViewModel
+                    )
+                }
+
+                composable("profile_screen") {
+                    ProfileScreen(
+                        navController = navController,
+                        profileViewModel = profileViewModel
                     )
                 }
             }
