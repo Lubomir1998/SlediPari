@@ -11,6 +11,7 @@ import com.example.sledipari.api.MonthApi
 import com.example.sledipari.data.db.MonthsDatabase
 import com.example.sledipari.getTokens
 import com.example.sledipari.jsonInstance
+import com.example.sledipari.tryLogin
 import com.example.sledipari.utility.Constants.ENCRYPTED_SHARED_PREFS_NAME
 import com.example.sledipari.utility.Constants.KEY_REFRESH_TOKEN
 import dagger.Module
@@ -82,7 +83,7 @@ object AppModule {
                         try {
                             getTokens(token)
                         } catch (t: Throwable) {
-                            Toast.makeText(context, t.localizedMessage, Toast.LENGTH_LONG).show()
+                            tryLogin(context)
                             null
                         }
                     }

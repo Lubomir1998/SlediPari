@@ -1,8 +1,11 @@
 package com.example.sledipari
 
 import android.app.Application
+import android.content.Context
+import android.content.Intent
 import com.example.sledipari.api.models.auth.OAuth2Error
 import com.example.sledipari.api.models.auth.TokenInfo
+import com.example.sledipari.ui.MainActivity
 import com.example.sledipari.utility.Constants.CLIENT_ID
 import com.example.sledipari.utility.Constants.CLIENT_SECRET
 import com.example.sledipari.utility.Constants.DOMAIN
@@ -50,6 +53,14 @@ val basicClient = HttpClient(OkHttp) {
         socketTimeoutMillis = 60_000
         requestTimeoutMillis = 60_000
     }
+}
+
+fun tryLogin(context: Context) {
+
+    val intent = Intent(context, MainActivity::class.java)
+    intent.flags = Intent.FLAG_ACTIVITY_CLEAR_TASK
+    intent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK)
+    context.startActivity(intent)
 }
 
 suspend fun getTokens(token: String): BearerTokens {
