@@ -83,6 +83,7 @@ object AppModule {
                         try {
                             getTokens(token)
                         } catch (t: Throwable) {
+                            sharedPreferences.edit().putString(KEY_REFRESH_TOKEN, null).apply()
                             tryLogin(context)
                             null
                         }
