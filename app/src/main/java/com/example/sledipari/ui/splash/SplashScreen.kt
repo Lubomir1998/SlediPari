@@ -32,7 +32,7 @@ fun SplashScreen(
 
     val isLoading by viewModel.loading.collectAsState()
     val getRatesException by viewModel.getRatesException.collectAsState()
-    val getMonthsException by viewModel.getMonthsException.collectAsState()
+    val getMonthsException by viewModel.getHubsException.collectAsState()
 
     val state by viewModel.state.collectAsState()
 

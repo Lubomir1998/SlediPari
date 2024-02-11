@@ -103,4 +103,10 @@
     <string name="logout_button_title">Изход</string>
 
     <string name="profile">Профил</string>
+
+    <string name="hub">Хъб</string>
+    <string name="hubs">Хъбове</string>
+    <string name="create_hub">Създай хъб</string>
+    <string name="edit">Редактирай</string>
+    <string name="done">Готово</string>
 </resources>

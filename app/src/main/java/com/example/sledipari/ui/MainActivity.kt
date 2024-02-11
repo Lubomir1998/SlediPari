@@ -26,8 +26,10 @@ import com.elders.EldersFirebaseRemoteConfig.updates
 import com.example.sledipari.R
 import com.example.sledipari.ui.info.InfoScreen
 import com.example.sledipari.ui.login.LoginScreen
-import com.example.sledipari.ui.main.GetMonthViewModel
-import com.example.sledipari.ui.main.MonthScreen
+import com.example.sledipari.ui.main.hubs.HubScreen
+import com.example.sledipari.ui.main.hubs.HubsViewModel
+import com.example.sledipari.ui.main.months.GetMonthViewModel
+import com.example.sledipari.ui.main.months.MonthScreen
 import com.example.sledipari.ui.settings.SettingsScreen
 import com.example.sledipari.ui.settings.currencies.CurrencyScreen
 import com.example.sledipari.ui.settings.currencies.CurrencyViewModel
@@ -73,6 +75,7 @@ class MainActivity : ComponentActivity() {
             val currencyViewModel: CurrencyViewModel = viewModel()
             val getAllMonthsViewModel: GetAllMonthsViewModel = viewModel()
             val profileViewModel: ProfileViewModel = viewModel()
+            val hubsViewModel: HubsViewModel = viewModel()
 
             NavHost(
                 navController = navController,
@@ -86,15 +89,34 @@ class MainActivity : ComponentActivity() {
 
                 composable("login_screen") {
                     LoginScreen(
-                        navController = navController
+                        navController = navController,
+                        profileViewModel = profileViewModel
                     )
                 }
 
-                composable("main_screen") {
+                composable("hubs_screen") {
+                    HubScreen(
+                        navController = navController,
+                        viewModel = hubsViewModel
+                    )
+                }
+
+                composable(
+                    "main_screen/{hubId}",
+                    arguments = listOf(
+                        navArgument("hubId") {
+                            type = NavType.StringType
+                        }
+                    )
+                ) {
+
+                    val hubId = it.arguments?.getString("hubId") ?: ""
+
                     MonthScreen(
                         navController = navController,
                         viewModel = getMonthViewModel,
-                        currencyViewModel = currencyViewModel
+                        currencyViewModel = currencyViewModel,
+                        hubId = hubId
                     )
                 }
 

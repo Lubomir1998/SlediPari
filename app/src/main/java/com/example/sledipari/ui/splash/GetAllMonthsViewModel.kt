@@ -3,7 +3,6 @@ package com.example.sledipari.ui.splash
 import android.content.SharedPreferences
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
-import com.example.sledipari.accessToken
 import com.example.sledipari.data.MonthRepository
 import com.example.sledipari.utility.Constants.DELETE_HISTORY_INTERVAL
 import com.example.sledipari.utility.Constants.GET_RATES_INTERVAL
@@ -38,8 +37,8 @@ class GetAllMonthsViewModel
     private val _getRatesException = MutableStateFlow<Exception?>(null)
     val getRatesException = _getRatesException.asStateFlow()
 
-    private val _getMonthsException = MutableStateFlow<Exception?>(null)
-    val getMonthsException = _getMonthsException.asStateFlow()
+    private val _getHubsException = MutableStateFlow<Exception?>(null)
+    val getHubsException = _getHubsException.asStateFlow()
 
     private fun getState(): String? {
 
@@ -60,7 +59,7 @@ class GetAllMonthsViewModel
             _ratesTimestamp.value = repo.getRates()?.timestamp ?: 0L
 
             var deletingHistory: Deferred<Unit>? = null
-            val gettingMonths: Deferred<Unit>?
+            val gettingHubs: Deferred<Unit>?
             var getRates: Deferred<Unit>? = null
 
             if (System.currentTimeMillis() >= sharedPrefs.getLong(HISTORY_TIMESTAMP, 0L)) {
@@ -73,11 +72,11 @@ class GetAllMonthsViewModel
                 }
             }
 
-            gettingMonths = async {
+            gettingHubs = async {
                 try {
-                    repo.getMonthsOnStart()
+                    repo.getAllHubsForUser()
                 } catch (e: Exception) {
-                    _getMonthsException.value = e
+                    _getHubsException.value = e
                 }
             }
 
@@ -93,7 +92,7 @@ class GetAllMonthsViewModel
                 }
             }
 
-            gettingMonths.await()
+            gettingHubs.await()
             deletingHistory?.await()
             getRates?.await()
 

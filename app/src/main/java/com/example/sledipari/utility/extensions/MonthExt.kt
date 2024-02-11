@@ -1,11 +1,10 @@
 package com.example.sledipari.utility.extensions
 
 import android.content.Context
-import androidx.compose.ui.graphics.Color
 import com.example.sledipari.R
 import com.example.sledipari.data.models.Month
 import com.example.sledipari.ui.*
-import com.example.sledipari.ui.main.SpItem
+import com.example.sledipari.ui.main.months.SpItem
 import com.example.sledipari.utility.formatDate
 
 fun Month.toList(): List<SpItem> {

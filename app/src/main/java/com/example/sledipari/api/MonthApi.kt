@@ -60,10 +60,12 @@ class MonthApi(private val httpClient: HttpClient, private val context: Context)
         return response
     }
 
-    suspend fun getAllMonths(): HttpResponse {
+    suspend fun getAllMonths(hubId: String): HttpResponse {
 
         val response = try {
-            httpClient.get( baseUrl() + "getAllMonths_v3")
+            httpClient.get( baseUrl() + "getAllMonths_v3") {
+                parameter("hubId", hubId)
+            }
         } catch (e: Exception) {
             throw Exception(context.getString(R.string.something_went_wrong))
         }
@@ -74,7 +76,7 @@ class MonthApi(private val httpClient: HttpClient, private val context: Context)
     suspend fun getAllHubsForUser(): HttpResponse {
 
         val response = try {
-            httpClient.get(baseUrl() + "getHubsForEmail")
+            httpClient.get(baseUrl() + "getHubsForUser")
         } catch (e: Exception) {
             throw Exception(context.getString(R.string.something_went_wrong))
         }
@@ -128,6 +130,32 @@ class MonthApi(private val httpClient: HttpClient, private val context: Context)
 
         val response = try {
             httpClient.get(baseUrl() + "getMonthsCheckDate_v2")
+        } catch (e: Exception) {
+            throw Exception(context.getString(R.string.something_went_wrong))
+        }
+
+        return response
+    }
+
+    suspend fun getUserByEmail(email: String?): HttpResponse {
+
+        val response = try {
+            httpClient.get(baseUrl() + "getUserByEmail") {
+                email?.let { parameter("email", it) }
+            }
+        } catch (e: Exception) {
+            throw Exception(context.getString(R.string.something_went_wrong))
+        }
+
+        return response
+    }
+
+    suspend fun getUserById(id: String?): HttpResponse {
+
+        val response = try {
+            httpClient.get(baseUrl() + "getUserById") {
+                id?.let { parameter("email", it) }
+            }
         } catch (e: Exception) {
             throw Exception(context.getString(R.string.something_went_wrong))
         }

@@ -1,4 +1,4 @@
-package com.example.sledipari.ui.main
+package com.example.sledipari.ui.main.months
 
 import android.annotation.SuppressLint
 import android.content.Context
@@ -57,17 +57,17 @@ class GetMonthViewModel
     private val _currentList = MutableStateFlow(_month.value?.toList() ?: listOf())
     val currentList = _currentList.asStateFlow()
 
-    fun getMonthLocal(monthId: String) {
+    fun getMonthLocal(monthId: String, hubId: String) {
 
         _isLoading.value = true
 
         viewModelScope.launch {
-            _month.value = repo.getMonthLocal(monthId)
+            _month.value = repo.getMonthLocal(monthId, hubId)
             _isLoading.value = false
         }
     }
 
-    fun getAllMonthsFromApi() {
+    fun getAllMonthsFromApi(hubId: String) {
 
         viewModelScope.launch {
 
@@ -75,7 +75,7 @@ class GetMonthViewModel
 
             try {
 
-                _allMonths.value = repo.getAllMonths()
+                _allMonths.value = repo.getAllMonths(hubId)
 
                 if (_monthId.value == System.currentTimeMillis().formatDate("yyyy-MM") && _allMonths.value.last().id == System.currentTimeMillis().formatDate("yyyy-MM")) {
                     _month.value = _allMonths.value.last()
@@ -90,14 +90,14 @@ class GetMonthViewModel
         }
     }
 
-    fun getMonth(timestamp: String) {
+    fun getMonth(timestamp: String, hubId: String) {
         _isLoading.value = true
 
         viewModelScope.launch {
 
             try {
 
-                _month.value = repo.getMonth(timestamp)
+                _month.value = repo.getMonth(timestamp, hubId)
                 _monthId.value = _month.value!!.id
             } catch (e: Exception) {
 
@@ -109,12 +109,13 @@ class GetMonthViewModel
         }
     }
 
-    fun getAllMonths() {
+    fun getAllMonths(hubId: String) {
 
         viewModelScope.launch {
 
             try {
 
+                repo.getMonthsOnStart(hubId)
                 _allMonths.value = repo.getAllMonthsLocal()
 
                 if (!(_allMonths.value.contains(_month.value))) {

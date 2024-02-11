@@ -103,4 +103,10 @@
     <string name="logout_button_title">Logout</string>
 
     <string name="profile">Profile</string>
+
+    <string name="hub">Hub</string>
+    <string name="hubs">Hubs</string>
+    <string name="create_hub">Create a hub</string>
+    <string name="edit">Edit</string>
+    <string name="done">Done</string>
 </resources>

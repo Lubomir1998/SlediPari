@@ -10,6 +10,7 @@ import com.example.sledipari.api.models.EditHubNameRequest
 import com.example.sledipari.api.models.HubDTO
 import com.example.sledipari.api.models.MonthDTO
 import com.example.sledipari.api.models.PostSpendingRequest
+import com.example.sledipari.api.models.UserDTO
 import com.example.sledipari.data.db.MonthDao
 import com.example.sledipari.data.models.Month
 import com.example.sledipari.data.models.CurrencyResponseLocal
@@ -29,29 +30,29 @@ class MonthRepository @Inject constructor(
     private val sharedPreferences: SharedPreferences
 ) {
 
-    suspend fun getMonthsOnStart() {
+    suspend fun getMonthsOnStart(hubId: String) {
 
         val response = api.checkLastModifiedDate()
         val lastModified = response.headers[HttpHeaders.LastModified]?.toLong() ?: 0L
 
         if (sharedPreferences.getLong(LAST_MODIFIED_DATE, -1L) < lastModified) {
-            getAllMonths()
+            getAllMonths(hubId)
         }
     }
-    suspend fun getMonth(monthId: String): Month {
+    suspend fun getMonth(monthId: String, hubId: String): Month {
 
         val response = api.getMonth(monthId)
         val month = response.parse().toMonth()
         if (month.isCurrent()) {
             dao.insertMonth(month)
         }
-        return dao.getMonth(monthId)
+        return dao.getMonth(monthId, hubId)
     }
 
-    suspend fun getMonthLocal(monthId: String): Month? {
+    suspend fun getMonthLocal(monthId: String, hubId: String): Month? {
 
         return try {
-            dao.getMonth(monthId)
+            dao.getMonth(monthId, hubId)
         } catch (e: Exception) {
             null
         }
@@ -92,9 +93,9 @@ class MonthRepository @Inject constructor(
         return dao.getAllMonths()
     }
 
-    suspend fun getAllMonths(): List<Month> {
+    suspend fun getAllMonths(hubId: String): List<Month> {
 
-        val response = api.getAllMonths()
+        val response = api.getAllMonths(hubId)
         val months = response.body<ApiResponse<List<MonthDTO>>>().parse()
 
         response.headers[HttpHeaders.LastModified]?.toLong()?.let { lastModified ->
@@ -102,7 +103,6 @@ class MonthRepository @Inject constructor(
             sharedPreferences.edit().putLong(LAST_MODIFIED_DATE, lastModified).apply()
         }
 
-        dao.deleteAllMonths()
         for (month in months) {
             dao.insertMonth(month.toMonth())
         }
@@ -147,6 +147,20 @@ class MonthRepository @Inject constructor(
 
         val response = api.addUserToHub(request)
         return response.body<ApiResponse<Boolean>>().isSuccess
+    }
+
+    suspend fun getUserByEmail(email: String?): UserDTO {
+
+        val response = api.getUserByEmail(email)
+        val user = response.body<ApiResponse<UserDTO>>().parse()
+        return user
+    }
+
+    suspend fun getUserById(id: String?): UserDTO {
+
+        val response = api.getUserById(id)
+        val user = response.body<ApiResponse<UserDTO>>().parse()
+        return user
     }
 
     suspend fun addTransactionInHistory(transaction: Transaction) {

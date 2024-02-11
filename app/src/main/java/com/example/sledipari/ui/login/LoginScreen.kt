@@ -11,6 +11,7 @@ import androidx.compose.material.Button
 import androidx.compose.material.ButtonDefaults
 import androidx.compose.material.Text
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
@@ -34,6 +35,7 @@ import com.auth0.android.result.Credentials
 import com.example.sledipari.R
 import com.example.sledipari.accessToken
 import com.example.sledipari.ui.home
+import com.example.sledipari.ui.settings.profile.ProfileViewModel
 import com.example.sledipari.utility.Constants.CLIENT_ID
 import com.example.sledipari.utility.Constants.DOMAIN
 import com.example.sledipari.utility.Constants.KEY_REFRESH_TOKEN
@@ -43,6 +45,7 @@ import javax.inject.Inject
 @Composable
 fun LoginScreen(
     navController: NavController,
+    profileViewModel: ProfileViewModel,
     viewModel: ShitViewModel = hiltViewModel()
 ) {
 
@@ -50,6 +53,8 @@ fun LoginScreen(
     var _error by remember {
         mutableStateOf<String?>(null)
     }
+
+    val userProfile by profileViewModel.userProfile.collectAsState()
 
     Box(
         contentAlignment = Alignment.Center,

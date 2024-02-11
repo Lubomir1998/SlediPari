@@ -1,7 +1,6 @@
 package com.example.sledipari.api
 
 import android.content.Context
-import android.content.SharedPreferences
 import androidx.room.Room
 import com.example.sledipari.api.models.CurrencyRatesResponse
 import com.example.sledipari.api.models.PostSpendingRequest
@@ -18,9 +17,6 @@ import org.junit.Before
 import org.junit.Test
 import org.junit.runner.RunWith
 import org.robolectric.RobolectricTestRunner
-import kotlinx.serialization.decodeFromString
-import kotlinx.serialization.encodeToString
-import kotlinx.serialization.json.Json
 
 @RunWith(RobolectricTestRunner::class)
 class MonthRepositoryTest {
@@ -44,14 +40,14 @@ class MonthRepositoryTest {
     @Test
     fun testGetMonth() = runBlocking {
 
-        repo.getAllMonths()
-        repo.getMonth("2022-1-8")
+        repo.getAllMonths("")
+        repo.getMonth("2022-1-8", "")
         Assert.assertEquals(2, repo.getAllMonthsLocal().size)
-        Assert.assertEquals(3.0f, repo.getMonth("2022-1-8").home)
-        Assert.assertEquals(0.0f, repo.getMonth("2022-1-8").domPotrebi)
+        Assert.assertEquals(3.0f, repo.getMonth("2022-1-8", "").home)
+        Assert.assertEquals(0.0f, repo.getMonth("2022-1-8", "").domPotrebi)
 
         Assert.assertEquals(2, repo.getAllMonthsLocal().size)
-        Assert.assertEquals(20.4f, repo.getMonth("2022-1-7").clothes)
+        Assert.assertEquals(20.4f, repo.getMonth("2022-1-7", "").clothes)
     }
 
     @Test
@@ -60,24 +56,24 @@ class MonthRepositoryTest {
         val month = Month(wash = 40.2f, id = "abv")
         dao.insertMonth(month)
         Assert.assertEquals(1, dao.getAllMonths().size)
-        Assert.assertEquals(40.2f, dao.getMonth("abv").wash)
+        Assert.assertEquals(40.2f, dao.getMonth("abv", "").wash)
 
         month.internet = 21.8f
         dao.insertMonth(month)
         Assert.assertEquals(1, dao.getAllMonths().size)
-        Assert.assertEquals(21.8f, dao.getMonth("abv").internet)
-        Assert.assertEquals(40.2f, dao.getMonth("abv").wash)
+        Assert.assertEquals(21.8f, dao.getMonth("abv", "").internet)
+        Assert.assertEquals(40.2f, dao.getMonth("abv", "").wash)
 
         val nextMonth = Month(clothes = 14.0f, id = "abv.bg")
         dao.insertMonth(nextMonth)
         Assert.assertEquals(2, dao.getAllMonths().size)
-        Assert.assertEquals(14.0f, dao.getMonth("abv.bg").clothes)
+        Assert.assertEquals(14.0f, dao.getMonth("abv.bg", "").clothes)
 
         nextMonth.voda = 9.9f
         dao.insertMonth(nextMonth)
         Assert.assertEquals(2, dao.getAllMonths().size)
-        Assert.assertEquals(14.0f, dao.getMonth("abv.bg").clothes)
-        Assert.assertEquals(9.9f, dao.getMonth("abv.bg").voda)
+        Assert.assertEquals(14.0f, dao.getMonth("abv.bg", "").clothes)
+        Assert.assertEquals(9.9f, dao.getMonth("abv.bg", "").voda)
     }
 
     @Test
@@ -85,21 +81,21 @@ class MonthRepositoryTest {
 
         var month = Month(wash = 40.2f, id = "abv")
         dao.insertMonth(month)
-        Assert.assertEquals(40.2f, dao.getMonth("abv").wash)
+        Assert.assertEquals(40.2f, dao.getMonth("abv", "").wash)
 
         month = Month(clean = 31.0f, id = "abv")
         dao.insertMonth(month)
-        Assert.assertEquals(0.0f, dao.getMonth("abv").wash)
+        Assert.assertEquals(0.0f, dao.getMonth("abv", "").wash)
     }
 
     @Test
     fun testRestoreMonths() = runBlocking {
 
-        repo.getAllMonths()
+        repo.getAllMonths("")
         Assert.assertEquals(2, repo.getAllMonthsLocal().size)
-        Assert.assertEquals(1.2f, dao.getMonth("2022-1-8").workout)
-        Assert.assertEquals(0.0f, dao.getMonth("2022-1-8").tok)
-        Assert.assertEquals(20.0f, dao.getMonth("2022-1-8").gifts)
+        Assert.assertEquals(1.2f, dao.getMonth("2022-1-8", "").workout)
+        Assert.assertEquals(0.0f, dao.getMonth("2022-1-8", "").tok)
+        Assert.assertEquals(20.0f, dao.getMonth("2022-1-8", "").gifts)
     }
 
     @Test

@@ -20,7 +20,6 @@ import javax.inject.Inject
 @HiltViewModel
 class ProfileViewModel
 @Inject constructor(
-    private val context: Context,
     private val sharedPreferences: SharedPreferences
 ): ViewModel() {
 

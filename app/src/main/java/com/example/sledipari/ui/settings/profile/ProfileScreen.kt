@@ -1,7 +1,6 @@
 package com.example.sledipari.ui.settings.profile
 
 import android.annotation.SuppressLint
-import android.content.SharedPreferences
 import android.widget.Toast
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.background
@@ -30,13 +29,10 @@ import androidx.compose.runtime.getValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
-import androidx.compose.ui.graphics.ColorFilter
-import androidx.compose.ui.graphics.vector.ImageVector
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.res.colorResource
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.res.stringResource
-import androidx.compose.ui.res.vectorResource
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.Dp
 import androidx.compose.ui.unit.dp
@@ -52,10 +48,7 @@ import com.auth0.android.provider.WebAuthProvider
 import com.auth0.android.result.UserProfile
 import com.example.sledipari.R
 import com.example.sledipari.ui.AppToolbar
-import com.example.sledipari.ui.home
-import com.example.sledipari.ui.splash.GetAllMonthsViewModel
 import com.example.sledipari.utility.Constants
-import io.ktor.http.ContentType
 
 @SuppressLint("UnusedMaterialScaffoldPaddingParameter")
 @Composable

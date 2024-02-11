@@ -1,6 +1,6 @@
 @file:OptIn(ExperimentalFoundationApi::class)
 
-package com.example.sledipari.ui.main
+package com.example.sledipari.ui.main.months
 
 import android.widget.Toast
 import androidx.compose.foundation.Canvas
@@ -127,7 +127,8 @@ data class SpItem(
 fun MonthScreen(
     navController: NavController,
     viewModel: GetMonthViewModel,
-    currencyViewModel: CurrencyViewModel
+    currencyViewModel: CurrencyViewModel,
+    hubId: String
 ) {
 
     val context = LocalContext.current
@@ -152,14 +153,14 @@ fun MonthScreen(
     }
 
     LaunchedEffect(key1 = true) {
-        viewModel.getMonthLocal(currentMonthId)
-        viewModel.getAllMonths()
+        viewModel.getMonthLocal(currentMonthId, hubId)
+        viewModel.getAllMonths(hubId)
         currencyViewModel.getRates()
         currencyViewModel.getCurrentRate()
     }
 
     LaunchedEffect(key1 = currentMonthId) {
-        viewModel.getMonthLocal(currentMonthId)
+        viewModel.getMonthLocal(currentMonthId, hubId)
     }
 
     LaunchedEffect(key1 = currentMonth) {
@@ -209,7 +210,8 @@ fun MonthScreen(
                 bottomSheetScaffoldState = bottomSheetScaffoldState,
                 viewModel = viewModel,
                 rates = rates,
-                currentRate = currentRate
+                currentRate = currentRate,
+                hubId = hubId
             )
         },
         sheetPeekHeight = 0.dp
@@ -220,7 +222,7 @@ fun MonthScreen(
         SwipeRefresh(
             state = swipeRefreshState,
             onRefresh = {
-                viewModel.getAllMonthsFromApi()
+                viewModel.getAllMonthsFromApi(hubId)
             },
             indicator = { state, refreshTrigger ->
                 SwipeRefreshIndicator(
@@ -260,6 +262,7 @@ fun BottomSheetContent(
     viewModel: GetMonthViewModel,
     rates: Map<String, Double>,
     currentRate: String,
+    hubId: String,
     modifier: Modifier = Modifier
 ) {
 
@@ -332,7 +335,7 @@ fun BottomSheetContent(
             currentSelectedOption = null
             currentSelectedQuantity = 1
             bottomSheetScaffoldState.bottomSheetState.collapse()
-            viewModel.getMonth(System.currentTimeMillis().formatDate("yyyy-MM"))
+            viewModel.getMonth(System.currentTimeMillis().formatDate("yyyy-MM"), hubId)
         }
     }
 

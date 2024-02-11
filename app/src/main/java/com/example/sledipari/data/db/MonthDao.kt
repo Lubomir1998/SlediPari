@@ -12,8 +12,8 @@ interface MonthDao {
     @Insert(onConflict = OnConflictStrategy.REPLACE)
     suspend fun insertMonth(month: Month)
 
-    @Query("SELECT * FROM Month WHERE id = :month")
-    suspend fun getMonth(month: String): Month
+    @Query("SELECT * FROM Month WHERE id = :month AND hubId = :hubId")
+    suspend fun getMonth(month: String, hubId: String): Month
 
     @Query("SELECT * FROM Month ORDER BY id ASC")
     suspend fun getAllMonths(): List<Month>
